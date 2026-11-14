@@ -3,6 +3,24 @@ import '../api/models.dart';
 import '../import/document_picker.dart';
 import 'local_store.dart';
 
+/// Where documents live: the Paperless server ([ApiClient]) or Google Drive
+/// ([DriveLibrary]). The sync engine only needs these three calls.
+abstract class RemoteLibrary {
+  /// One page of changes since [cursor] (null = everything).
+  Future<SyncPage> sync({String? cursor, int limit = 200});
+
+  /// All current documents of one space.
+  Future<List<DocumentInfo>> documents(String spaceId);
+
+  Future<DocumentInfo> upload({
+    required String spaceId,
+    required String filename,
+    required int length,
+    required Stream<List<int>> content,
+    String? title,
+  });
+}
+
 /// A file that waits on this device until the server is reachable.
 class PendingUpload {
   const PendingUpload({
@@ -185,7 +203,7 @@ class SyncEngine {
   ///
   /// Throws [ConnectionFailed] when the server is unreachable and [ApiException] for
   /// errors of the feed itself (e.g. 401). The cache stays as it was in that case.
-  Future<void> sync(ApiClient client) async {
+  Future<void> sync(RemoteLibrary client) async {
     await _flushQueue(client);
 
     final hadCursor = cursor != null;
@@ -224,7 +242,7 @@ class SyncEngine {
     await _save();
   }
 
-  Future<void> _flushQueue(ApiClient client) async {
+  Future<void> _flushQueue(RemoteLibrary client) async {
     if (queue.isEmpty) return;
     for (final item in List.of(queue)) {
       if (item.error != null) continue;

@@ -8,6 +8,9 @@
 - D1 part 1: client-side vault (X25519 + Ed25519 keys, Argon2id password, recovery code),
   space keys wrapped per member, document encryption with context binding, signatures.
   `docs/DRIVE_CRYPTO.md`, 14 new tests.
+- D2 part 1: Drive document library (signed manifest, encrypted append-only change logs,
+  ordered replay, upload checks) against an in-memory Drive; the sync engine works with
+  server or Drive. `docs/DRIVE_SYNC.md`, 10 new tests.
 
 ## 0.8.0 — Sync between phone and PC
 
