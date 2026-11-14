@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../pages/dashboard_page.dart';
+import '../pages/documents_page.dart';
 import '../pages/placeholder_page.dart';
+import '../pages/settings_page.dart';
 
 /// One top-level section of the app.
 class AppDestination {
@@ -39,11 +41,7 @@ final List<AppDestination> appDestinations = [
     label: 'Dokumente',
     icon: Icons.folder_outlined,
     selectedIcon: Icons.folder,
-    builder: (_) => const PlaceholderPage(
-      icon: Icons.folder_outlined,
-      title: 'Noch keine Dokumente',
-      message: 'Dein Archiv, nach Bereichen und Kategorien sortiert.',
-    ),
+    builder: (_) => const DocumentsPage(),
   ),
   AppDestination(
     label: 'Fristen',
@@ -59,10 +57,6 @@ final List<AppDestination> appDestinations = [
     label: 'Einstellungen',
     icon: Icons.settings_outlined,
     selectedIcon: Icons.settings,
-    builder: (_) => const PlaceholderPage(
-      icon: Icons.settings_outlined,
-      title: 'Einstellungen',
-      message: 'Familie, Bereiche, Sicherung und Synchronisierung.',
-    ),
+    builder: (_) => const SettingsPage(),
   ),
 ];

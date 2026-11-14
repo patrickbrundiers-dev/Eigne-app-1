@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.0 — Flutter: server login and document import
+
+- Login page (server, e-mail, password); token in secure storage, restored on start,
+  dropped automatically when the server rejects it.
+- HTTPS required, plain HTTP only for localhost / Android emulator.
+- "Dokument importieren" works: file dialog (PDF, PNG, JPEG, TIFF, WebP), choice of
+  target space when several are writable, German messages for every server error code.
+- Documents page: space selector, list, preview dialog. Settings: account and logout.
+- Android: INTERNET permission. New packages: http, file_picker, flutter_secure_storage.
+- 13 new Flutter tests (fake backend), 20 in total.
+
 ## 0.5.0 — Documents API
 
 - `GET /api/v1/spaces`, `GET/POST /api/v1/spaces/{id}/documents`,
