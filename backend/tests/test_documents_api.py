@@ -16,16 +16,18 @@ from paperless_api.db.models import (
     SpaceRole,
     SpaceType,
 )
+from paperless_api.documents.crypto import MAGIC, generate_master_key
 from paperless_api.main import app
 from tests.fixtures import make_image, make_pdf
 
 PW = "correct horse battery"
+MASTER_KEY = generate_master_key()
 
 
 @pytest.fixture
 def world(db, client, tmp_path):
     settings = Settings(
-        storage_dir=str(tmp_path / "data"), allow_unencrypted_storage=True, app_env="test"
+        storage_dir=str(tmp_path / "data"), storage_master_key=MASTER_KEY, app_env="test"
     )
     app.dependency_overrides[get_settings] = lambda: settings
     anna = create_user(db, email="anna@example.test", display_name="Anna", password=PW)
@@ -188,7 +190,29 @@ def test_delete_is_tombstone(client, world, db) -> None:
     assert _upload(client, world["anna"], world["shared"], make_image("PNG")).status_code == 201
 
 
+def test_files_and_previews_are_encrypted_on_disk(client, world) -> None:
+    from pathlib import Path
+
+    data = make_pdf(2)
+    doc = _upload(client, world["anna"], world["shared"], data).json()
+    assert (
+        client.get(f"/api/v1/documents/{doc['id']}/preview", headers=world["anna"]).status_code
+        == 200
+    )
+    root = Path(world["settings"].storage_dir)
+    stored = [p for sub in ("blobs", "derived") for p in (root / sub).rglob("*") if p.is_file()]
+    assert len(stored) == 2  # original + preview
+    for p in stored:
+        raw = p.read_bytes()
+        assert raw.startswith(MAGIC)
+        assert b"%PDF" not in raw and b"PNG" not in raw
+    assert not any((root / "tmp").iterdir())  # plaintext temp copies are cleaned up
+    file = client.get(f"/api/v1/documents/{doc['id']}/file", headers=world["anna"])
+    assert file.content == data
+
+
 def test_storage_not_configured_is_503(client, world) -> None:
+    world["settings"].storage_master_key = None
     world["settings"].allow_unencrypted_storage = False
     world["settings"].storage_dir = world["settings"].storage_dir + "-other"
     r = _upload(client, world["anna"], world["shared"], make_pdf())

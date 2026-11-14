@@ -172,12 +172,12 @@ def test_blob_store_put_is_read_only_and_rejects_bad_keys(tmp_path: Path) -> Non
     staged.write_bytes(b"data")
     key = store.put(staged)
     assert not staged.exists()
-    assert store.open(key).read() == b"data"
-    mode = store.local_path(key).stat().st_mode
+    assert store.read(key) == b"data"
+    mode = store._path(key).stat().st_mode  # noqa: SLF001
     assert not mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
     for bad in ["../../etc/passwd", "ab", key.upper(), key + "/x"]:
         with pytest.raises(ValueError):
-            store.open(bad)
+            store.read(bad)
 
 
 # --- preview -------------------------------------------------------------------------------

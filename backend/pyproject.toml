@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paperless-ai-backend"
-version = "0.5.0"
+version = "0.7.0"
 description = "Paperless AI API scaffold"
 requires-python = ">=3.12"
 dependencies = [
@@ -19,6 +19,7 @@ dependencies = [
   "pillow>=11.0,<14.0",
   "argon2-cffi>=23.1,<26.0",
   "python-multipart>=0.0.9,<1.0",
+  "cryptography>=43.0,<51.0",
 ]
 
 [project.scripts]

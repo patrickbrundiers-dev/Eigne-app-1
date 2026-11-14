@@ -18,7 +18,13 @@ class Settings(BaseSettings):
 
     # Document storage. Staging lives below storage_dir so promotion is an atomic rename.
     storage_dir: str = "./data"
-    # LocalBlobStore keeps PLAINTEXT. Only for synthetic test documents; refused in production.
+    # Master key for encryption at rest (base64, 32 bytes): `paperless-admin generate-key`.
+    # Prefer STORAGE_MASTER_KEY_FILE (e.g. a Docker secret) over putting the key in the env.
+    storage_master_key: str | None = None
+    storage_master_key_file: str | None = None
+    # Comma-separated previous master keys, still accepted for decryption during rotation.
+    storage_old_master_keys: str | None = None
+    # Without a master key: plaintext storage, only for synthetic test documents in development.
     allow_unencrypted_storage: bool = False
     max_upload_bytes: int = 50 * 1024 * 1024
     max_pdf_pages: int = 500

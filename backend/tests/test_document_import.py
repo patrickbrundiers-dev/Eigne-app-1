@@ -97,7 +97,7 @@ def test_import_pdf_creates_document_and_first_version(env) -> None:
     assert version.page_count == 2
     assert version.mime_type == "application/pdf"
     assert version.original_filename == "Rechnung März.pdf"
-    assert env["store"].open(version.storage_key).read() == data  # original unchanged
+    assert env["store"].read(version.storage_key) == data  # original unchanged
 
 
 def test_explicit_title_wins(env) -> None:

@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from paperless_api.auth.passwords import WeakPassword
 from paperless_api.auth.service import EmailTaken, create_user, normalize_email, set_password
+from paperless_api.config import get_settings
 from paperless_api.db.models import (
     Family,
     FamilyMember,
@@ -28,6 +29,10 @@ from paperless_api.db.models import (
     User,
 )
 from paperless_api.db.session import make_engine
+from paperless_api.documents.blobstore import EncryptedBlobStore
+from paperless_api.documents.crypto import generate_master_key
+from paperless_api.documents.maintenance import encrypt_and_rotate
+from paperless_api.documents.storage_config import build_blob_store
 
 
 def _read_password(args: argparse.Namespace) -> str:
@@ -111,6 +116,22 @@ def cmd_grant(db: Session, args: argparse.Namespace) -> None:
     print("ok")
 
 
+def cmd_generate_key(_db: Session | None, _args: argparse.Namespace) -> None:
+    print(generate_master_key())
+
+
+def cmd_encrypt_storage(_db: Session | None, _args: argparse.Namespace) -> None:
+    settings = get_settings()
+    store = build_blob_store(settings)
+    if not isinstance(store, EncryptedBlobStore):
+        raise SystemExit("STORAGE_MASTER_KEY oder STORAGE_MASTER_KEY_FILE ist nicht gesetzt.")
+    report = encrypt_and_rotate(store)
+    print(
+        f"verschlüsselt: {report['encrypted']}, neu verschlüsselt: {report['rotated']}, "
+        f"unverändert: {report['unchanged']}"
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="paperless-admin", description="Paperless AI Verwaltung")
     sub = p.add_subparsers(dest="command", required=True)
@@ -150,11 +171,23 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--email", required=True)
     c.add_argument("--role", choices=[r.value for r in SpaceRole], required=True)
     c.set_defaults(func=cmd_grant)
+
+    c = sub.add_parser("generate-key", help="Neuen Hauptschlüssel für die Ablage erzeugen")
+    c.set_defaults(func=cmd_generate_key, needs_db=False)
+
+    c = sub.add_parser(
+        "encrypt-storage",
+        help="Unverschlüsselte Dateien verschlüsseln und auf den aktuellen Schlüssel umstellen",
+    )
+    c.set_defaults(func=cmd_encrypt_storage, needs_db=False)
     return p
 
 
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
+    if not getattr(args, "needs_db", True):
+        args.func(None, args)
+        return
     engine = make_engine()
     with Session(engine) as db:
         args.func(db, args)

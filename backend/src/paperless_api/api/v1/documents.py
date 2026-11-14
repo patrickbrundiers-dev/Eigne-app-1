@@ -12,6 +12,7 @@ from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
+from urllib.parse import quote
 
 from fastapi import (
     APIRouter,
@@ -23,24 +24,23 @@ from fastapi import (
     UploadFile,
     status,
 )
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from paperless_api.api.deps import AppSettings, CurrentUser, DbSession
 from paperless_api.authz import Action, allowed_actions, load_access_context
+from paperless_api.config import Settings
 from paperless_api.db.base import utcnow
 from paperless_api.db.models import Document, FamilyMember, FileVersion, Space, User
 from paperless_api.documents.blobstore import (
     BlobStore,
-    LocalBlobStore,
-    UnencryptedStorageNotAllowed,
 )
 from paperless_api.documents.errors import DuplicateDocument, ImportRejected, PreviewFailed
 from paperless_api.documents.preview import render_preview
 from paperless_api.documents.service import import_document, limits_from_settings
 from paperless_api.documents.staging import StagingArea
+from paperless_api.documents.storage_config import StorageNotConfigured, build_blob_store
 
 router = APIRouter(tags=["documents"])
 
@@ -48,16 +48,28 @@ router = APIRouter(tags=["documents"])
 
 
 @lru_cache(maxsize=4)
-def _store_for(root: str, allow: bool, env: str) -> LocalBlobStore:
-    return LocalBlobStore(Path(root), allow_unencrypted=allow, app_env=env)
+def _store_for(settings_key: tuple) -> BlobStore:
+    return build_blob_store(Settings(**dict(settings_key)))
 
 
 def get_blob_store(settings: AppSettings) -> BlobStore:
-    try:
-        return _store_for(
-            settings.storage_dir, settings.allow_unencrypted_storage, settings.app_env
+    key = tuple(
+        sorted(
+            settings.model_dump(
+                include={
+                    "storage_dir",
+                    "storage_master_key",
+                    "storage_master_key_file",
+                    "storage_old_master_keys",
+                    "allow_unencrypted_storage",
+                    "app_env",
+                }
+            ).items()
         )
-    except UnencryptedStorageNotAllowed:
+    )
+    try:
+        return _store_for(key)
+    except StorageNotConfigured:
         raise HTTPException(
             status.HTTP_503_SERVICE_UNAVAILABLE, "document storage is not configured"
         ) from None
@@ -67,15 +79,8 @@ def get_staging(settings: AppSettings) -> StagingArea:
     return StagingArea(Path(settings.storage_dir) / "staging")
 
 
-def get_preview_dir(settings: AppSettings) -> Path:
-    path = Path(settings.storage_dir) / "previews"
-    path.mkdir(parents=True, exist_ok=True, mode=0o700)
-    return path
-
-
 Store = Annotated[BlobStore, Depends(get_blob_store)]
 Staging = Annotated[StagingArea, Depends(get_staging)]
-PreviewDir = Annotated[Path, Depends(get_preview_dir)]
 
 
 # --- schemas -------------------------------------------------------------------------------
@@ -267,24 +272,20 @@ def delete_document(document_id: uuid.UUID, user: CurrentUser, db: DbSession) ->
     response_class=Response,
     responses={200: {"content": {"image/png": {}}}},
 )
-def get_preview(
-    document_id: uuid.UUID, user: CurrentUser, db: DbSession, store: Store, previews: PreviewDir
-) -> Response:
+def get_preview(document_id: uuid.UUID, user: CurrentUser, db: DbSession, store: Store) -> Response:
     doc = _document_for(db, user, document_id, Action.READ)
     version = _latest(doc)
     if version is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "document has no file")
-    cached = previews / f"{version.id.hex}.png"
-    if cached.exists():
-        data = cached.read_bytes()
-    else:
+    name = f"preview-{version.id.hex}.png"
+    data = store.get_derived(name)
+    if data is None:
         try:
-            data = render_preview(store.local_path(version.storage_key), version.mime_type)
+            with store.materialize(version.storage_key) as plain:
+                data = render_preview(plain, version.mime_type)
         except PreviewFailed:
             raise HTTPException(422, "preview could not be generated") from None
-        tmp = cached.with_suffix(".tmp")
-        tmp.write_bytes(data)
-        tmp.replace(cached)  # versions are immutable, so the cache never goes stale
+        store.put_derived(name, data)  # versions are immutable, so the cache never goes stale
     return Response(
         content=data,
         media_type="image/png",
@@ -292,10 +293,10 @@ def get_preview(
     )
 
 
-@router.get("/documents/{document_id}/file", response_class=FileResponse)
+@router.get("/documents/{document_id}/file", response_class=Response)
 def download_file(
     document_id: uuid.UUID, user: CurrentUser, db: DbSession, store: Store
-) -> FileResponse:
+) -> Response:
     doc = _document_for(db, user, document_id, Action.READ)
     version = _latest(doc)
     if version is None:
@@ -303,12 +304,12 @@ def download_file(
     ext = {"application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg"}.get(
         version.mime_type, "bin"
     )
-    return FileResponse(
-        store.local_path(version.storage_key),
+    name = version.original_filename or f"dokument.{ext}"
+    return Response(
+        content=store.read(version.storage_key),
         media_type=version.mime_type,
-        filename=version.original_filename or f"dokument.{ext}",
-        content_disposition_type="attachment",  # never render inline in the API origin
         headers={
+            "content-disposition": f"attachment; filename*=UTF-8''{quote(name)}",
             "content-security-policy": "sandbox; default-src 'none'",
             "cache-control": "private, no-store",
         },
