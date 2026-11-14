@@ -7,8 +7,9 @@ Built by GitHub Actions: `.github/workflows/build-apps.yml`.
   `windows` (installer `PaperlessAI-Setup-<version>.exe` + portable ZIP) and `android`
   (`PaperlessAI-Android-<version>.apk`). Artifacts are kept for 90 days.
 - **On demand:** Actions → "Build apps" → *Run workflow*.
-- **Release:** push a tag, e.g. `git tag v0.7.0 && git push origin v0.7.0`. The files are
-  attached to a GitHub Release with that name.
+- **Release:** Actions tab -> "Build apps" -> "Run workflow", enter a version such as `v0.7.0`
+  under `release_tag`. The workflow builds, creates the tag on the built commit and publishes a
+  GitHub Release with the installer, the portable ZIP and the APK.
 
 ## Installing
 - **Windows:** run `PaperlessAI-Setup-<version>.exe` (installs per user, no admin rights).
