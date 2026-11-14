@@ -4,9 +4,9 @@ Local-first document management for Android and Windows, with optional self-host
 
 ## Status
 **Phase 1, in progress.** Done: backend baseline (`/api/v1`, settings, redacting JSON logs),
-data model with migrations, authorization policy with full test matrix, responsive Flutter
-navigation shell with light/dark themes. Not implemented yet: authentication, document import,
-production encryption, OCR, AI and synchronization. See `CHANGELOG.md`.
+data model with migrations, authorization policy, authentication with device sessions,
+document import with safe preview and a documents API, responsive Flutter shell.
+Not implemented yet: encrypted storage, OCR, AI and synchronization. See `CHANGELOG.md`.
 
 ## Stack
 - Flutter/Dart: Android + Windows clients

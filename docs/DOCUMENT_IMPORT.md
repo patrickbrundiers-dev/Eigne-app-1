@@ -1,8 +1,24 @@
 # Document import (T5)
 
-Status: implemented as a backend service (`backend/src/paperless_api/documents/`).
-There is **no HTTP upload endpoint yet** on purpose: it needs authentication first.
-The Flutter import button stays disabled until then.
+Status: implemented (`backend/src/paperless_api/documents/`, HTTP API in `api/v1/documents.py`).
+
+## HTTP API (bearer token required, see AUTHENTICATION.md)
+
+| Method | Path | Permission | |
+|---|---|---|---|
+| GET | `/api/v1/spaces` | read | spaces the user can see, with own permissions |
+| GET | `/api/v1/spaces/{id}/documents` | read | non-deleted documents, newest first |
+| POST | `/api/v1/spaces/{id}/documents` | write | multipart `file`, optional `title` → 201 |
+| GET | `/api/v1/documents/{id}` | read | metadata of latest version |
+| GET | `/api/v1/documents/{id}/preview` | read | PNG of page 1, cached per immutable version |
+| GET | `/api/v1/documents/{id}/file` | read | original, always `attachment`, `CSP: sandbox` |
+| DELETE | `/api/v1/documents/{id}` | delete_document | tombstone; same file can be imported again |
+
+Status codes: 404 when the space/document is not readable (existence is hidden), 403 when
+readable but the action is not allowed, 409 duplicate (with `existing_document_id`),
+413 too large, 422 rejected file (`detail.code`), 503 storage not configured.
+Requests with a `Content-Length` above the limit are refused before the body is read; also set
+a body limit in the reverse proxy (e.g. nginx `client_max_body_size 51m`).
 
 ## Pipeline
 
@@ -55,7 +71,6 @@ or hang in the renderer cannot affect the API. Output is freshly encoded, so EXI
 GPS positions is dropped. pdfium is used without form/JavaScript support.
 
 ## Not done yet (next steps)
-- HTTP upload + preview endpoints (after authentication).
 - Encrypted blob store (after the key design in SECURITY.md is approved).
 - Staging cleanup job for files left behind by a crashed process.
 - Malware scanning hook (e.g. ClamAV) if files are shared with other devices.

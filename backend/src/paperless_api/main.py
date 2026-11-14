@@ -3,6 +3,7 @@ import time
 import uuid
 
 from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
 
 from paperless_api import __version__
 from paperless_api.api.v1 import router as api_v1_router
@@ -10,6 +11,9 @@ from paperless_api.config import get_settings
 from paperless_api.logging_config import configure_logging
 
 logger = logging.getLogger("paperless_api.request")
+
+# Multipart framing on top of the file itself.
+MULTIPART_OVERHEAD = 64 * 1024
 
 
 def create_app() -> FastAPI:
@@ -19,13 +23,26 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         version=__version__,
-        description=(
-            "Development build. Authentication and document APIs are not implemented yet."
-        ),
+        description=("Development build. Not production-ready: blob storage is not encrypted yet."),
         # Interactive docs only outside production.
         docs_url=None if settings.app_env == "production" else "/docs",
         redoc_url=None,
     )
+
+    max_body = settings.max_upload_bytes + MULTIPART_OVERHEAD
+
+    @app.middleware("http")
+    async def limit_body_size(request: Request, call_next) -> Response:
+        """Reject oversized bodies before they are read. Chunked bodies without
+        Content-Length are still capped by the import pipeline; set a body limit in the
+        reverse proxy too (see docs/DOCUMENT_IMPORT.md)."""
+        length = request.headers.get("content-length")
+        if length and length.isdigit() and int(length) > max_body:
+            return JSONResponse(
+                status_code=413,
+                content={"detail": {"code": "too_large", "message": "request body is too large"}},
+            )
+        return await call_next(request)
 
     @app.middleware("http")
     async def request_log(request: Request, call_next) -> Response:
@@ -44,6 +61,8 @@ def create_app() -> FastAPI:
             },
         )
         response.headers["x-request-id"] = request_id
+        response.headers.setdefault("x-content-type-options", "nosniff")
+        response.headers.setdefault("referrer-policy", "no-referrer")
         return response
 
     @app.get("/health", tags=["system"])
