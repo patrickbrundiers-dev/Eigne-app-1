@@ -29,6 +29,7 @@ production encryption, OCR, AI and synchronization. See `CHANGELOG.md`.
    pip install -e ./backend[dev]
    cd backend
    alembic upgrade head        # creates the schema (SQLite file by default)
+   paperless-admin create-user --email you@example.org --name You   # see docs/AUTHENTICATION.md
    uvicorn paperless_api.main:app --reload --app-dir src
    ```
 4. Open `http://127.0.0.1:8000/docs` (health: `/api/v1/health`).
@@ -61,4 +62,4 @@ Android and Windows platform folders are already generated.
 - Every feature needs tests and documentation.
 
 ## Roadmap
-See `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/AUTHORIZATION.md` and `docs/SECURITY.md`.
+See `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/AUTHENTICATION.md`, `docs/DOCUMENT_IMPORT.md`, `docs/DATA_MODEL.md`, `docs/AUTHORIZATION.md` and `docs/SECURITY.md`.
