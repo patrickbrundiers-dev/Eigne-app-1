@@ -3,10 +3,11 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
+import '../sync/sync_engine.dart';
 import 'models.dart';
 
 /// Thin client for the Paperless AI backend. One instance per server + token.
-class ApiClient {
+class ApiClient implements RemoteLibrary {
   ApiClient({required this.baseUrl, this.token, http.Client? httpClient})
       : _http = httpClient ?? http.Client();
 
@@ -88,6 +89,7 @@ class ApiClient {
     ];
   }
 
+  @override
   Future<List<DocumentInfo>> documents(String spaceId) async {
     final r = await _send(
         () => _http.get(_u('/spaces/$spaceId/documents'), headers: _headers));
@@ -98,6 +100,7 @@ class ApiClient {
   }
 
   /// One page of the change feed. Pass the cursor of the previous page or sync.
+  @override
   Future<SyncPage> sync({String? cursor, int limit = 200}) async {
     final uri = _u('/sync').replace(queryParameters: {
       if (cursor != null) 'cursor': cursor,
@@ -107,6 +110,7 @@ class ApiClient {
     return SyncPage.fromJson(_json(r) as Map<String, dynamic>);
   }
 
+  @override
   Future<DocumentInfo> upload({
     required String spaceId,
     required String filename,
