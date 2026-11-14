@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../api/models.dart';
 import '../app_state.dart';
+import '../sync/sync_engine.dart';
 import 'login_page.dart';
 import 'placeholder_page.dart';
 
@@ -16,20 +17,6 @@ class DocumentsPage extends StatefulWidget {
 
 class _DocumentsPageState extends State<DocumentsPage> {
   String? _spaceId;
-  Future<List<DocumentInfo>>? _docs;
-  int _loadedVersion = -1;
-  String? _loadedSpace;
-
-  void _reload(AppState state) {
-    final client = state.client;
-    if (client == null || _spaceId == null) {
-      _docs = null;
-      return;
-    }
-    _loadedVersion = state.documentsVersion;
-    _loadedSpace = _spaceId;
-    _docs = client.documents(_spaceId!);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +44,47 @@ class _DocumentsPageState extends State<DocumentsPage> {
     if (_spaceId == null || !state.spaces.any((s) => s.id == _spaceId)) {
       _spaceId = state.spaces.first.id;
     }
-    if (_docs == null ||
-        _loadedVersion != state.documentsVersion ||
-        _loadedSpace != _spaceId) {
-      _reload(state);
+    final docs = state.sync.documentsIn(_spaceId!);
+    final pending = state.sync.pendingIn(_spaceId!);
+    final neverSynced = state.sync.lastSyncedAt == null;
+
+    Widget list;
+    if (docs.isEmpty && pending.isEmpty) {
+      list = neverSynced && state.syncing
+          ? const Center(child: CircularProgressIndicator())
+          : const PlaceholderPage(
+              icon: Icons.folder_outlined,
+              title: 'Noch keine Dokumente',
+              message: 'Importiere ein Dokument über die Übersicht.',
+            );
+    } else {
+      list = ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: pending.length + docs.length,
+        separatorBuilder: (_, __) => const Divider(height: 1),
+        itemBuilder: (context, i) => i < pending.length
+            ? _PendingTile(item: pending[i])
+            : _DocumentTile(doc: docs[i - pending.length]),
+      );
     }
 
     return Column(
       children: [
+        if (state.offline)
+          const MaterialBanner(
+            key: Key('documents.offline'),
+            leading: Icon(Icons.cloud_off_outlined),
+            content: Text('Offline: Du siehst den zuletzt synchronisierten '
+                'Stand. Neue Dokumente werden hochgeladen, sobald der Server '
+                'wieder erreichbar ist.'),
+            actions: [SizedBox.shrink()],
+          ),
+        if (state.syncError != null)
+          MaterialBanner(
+            leading: const Icon(Icons.sync_problem_outlined),
+            content: Text('Abgleich fehlgeschlagen: ${state.syncError}'),
+            actions: const [SizedBox.shrink()],
+          ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
           child: DropdownButtonFormField<String>(
@@ -79,44 +99,36 @@ class _DocumentsPageState extends State<DocumentsPage> {
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<DocumentInfo>>(
-            future: _docs,
-            builder: (context, snap) {
-              if (snap.connectionState != ConnectionState.done) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snap.hasError) {
-                final e = snap.error;
-                return PlaceholderPage(
-                  icon: Icons.error_outline,
-                  title: 'Laden fehlgeschlagen',
-                  message: e is ApiException
-                      ? e.userMessage
-                      : e is ConnectionFailed
-                          ? e.userMessage
-                          : 'Unerwarteter Fehler.',
-                );
-              }
-              final docs = snap.data!;
-              if (docs.isEmpty) {
-                return const PlaceholderPage(
-                  icon: Icons.folder_outlined,
-                  title: 'Noch keine Dokumente',
-                  message: 'Importiere ein Dokument über die Übersicht.',
-                );
-              }
-              return RefreshIndicator(
-                onRefresh: () async => setState(() => _reload(state)),
-                child: ListView.separated(
-                  itemCount: docs.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemBuilder: (context, i) => _DocumentTile(doc: docs[i]),
-                ),
-              );
-            },
+          child: RefreshIndicator(
+            onRefresh: state.syncNow,
+            child: list,
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PendingTile extends StatelessWidget {
+  const _PendingTile({required this.item});
+
+  final PendingUpload item;
+
+  @override
+  Widget build(BuildContext context) {
+    final failed = item.error != null;
+    return ListTile(
+      key: Key('documents.pending.${item.id}'),
+      leading: Icon(failed ? Icons.error_outline : Icons.cloud_upload_outlined),
+      title: Text(item.filename),
+      subtitle: Text(failed ? item.error! : 'Wartet auf Upload'),
+      trailing: failed
+          ? IconButton(
+              tooltip: 'Verwerfen',
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () => AppScope.of(context).discardUpload(item.id),
+            )
+          : null,
     );
   }
 }

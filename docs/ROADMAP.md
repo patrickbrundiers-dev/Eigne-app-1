@@ -28,10 +28,10 @@
 
 ## Phase 4 — Sync and optional cloud
 - [ ] Device enrollment
-- [ ] Idempotent sync API
+- [x] Sync change feed (`/api/v1/sync`, see docs/SYNC.md)
 - [ ] Conflict handling
 - [ ] Encrypted backup target adapters
-- [ ] Offline queue and retry
+- [x] Offline cache, upload queue and retry in the app
 
 ## Phase 5 — Hardening
 - [ ] Security review

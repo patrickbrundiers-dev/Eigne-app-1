@@ -97,6 +97,16 @@ class ApiClient {
     ];
   }
 
+  /// One page of the change feed. Pass the cursor of the previous page or sync.
+  Future<SyncPage> sync({String? cursor, int limit = 200}) async {
+    final uri = _u('/sync').replace(queryParameters: {
+      if (cursor != null) 'cursor': cursor,
+      'limit': '$limit',
+    });
+    final r = await _send(() => _http.get(uri, headers: _headers));
+    return SyncPage.fromJson(_json(r) as Map<String, dynamic>);
+  }
+
   Future<DocumentInfo> upload({
     required String spaceId,
     required String filename,

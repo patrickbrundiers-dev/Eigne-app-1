@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0 — Sync between phone and PC
+
+- Change feed `GET /api/v1/sync`: changed and deleted documents of all readable spaces,
+  cursor paging with a two-minute overlap, current space list; migration 0004 (index).
+- App: offline cache of the document list, start without network from the cache with an
+  offline banner, upload queue for imports without network, sync on start, on resume,
+  every 5 minutes, after imports and on pull-to-refresh. Sign-out wipes the cache.
+- Docs: `docs/SYNC.md`, Tailscale guide `docs/TAILSCALE.de.md`. 10 backend and 13 client tests.
+
 ## App builds
 
 - GitHub Actions workflow "Build apps": Windows installer (Inno Setup) + portable ZIP and
