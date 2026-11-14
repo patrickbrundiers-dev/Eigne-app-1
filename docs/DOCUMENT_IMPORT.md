@@ -31,7 +31,7 @@ upload stream
                   for executable actions; image: header-only size check + verify()
   -> authz        actor needs WRITE on the space (docs/AUTHORIZATION.md)
   -> duplicates   same SHA-256 in the same space (non-deleted) -> rejected with id of existing
-  -> blob store   hard-link into data/blobs/<k[:2]>/<key>, read-only, opaque random key
+  -> blob store   AES-256-GCM encrypted, data/blobs/<k[:2]>/<key>, write-once, read-only
   -> metadata     Document + FileVersion v1 in one transaction; blob discarded on failure
 ```
 
@@ -46,7 +46,8 @@ Authorization is checked first, before any bytes are read.
 | `MAX_IMAGE_PIXELS` | 80000000 | About A4 at 1200 dpi; stops decompression bombs |
 | `REJECT_PDF_ACTIVE_CONTENT` | true | Reject PDFs with JavaScript, Launch, SubmitForm, ImportData |
 | `STORAGE_DIR` | `./data` | Staging and blobs |
-| `ALLOW_UNENCRYPTED_STORAGE` | false | Must be `true` to use the plaintext local store; ignored in production |
+| `STORAGE_MASTER_KEY(_FILE)` | – | Master key for encryption at rest (STORAGE_ENCRYPTION.md) |
+| `ALLOW_UNENCRYPTED_STORAGE` | false | Without master key: plaintext store for development; refused in production |
 
 ## Rejection codes
 `unsupported_type`, `too_large`, `empty_file`, `too_many_pages`, `encrypted_pdf`,
@@ -71,7 +72,6 @@ or hang in the renderer cannot affect the API. Output is freshly encoded, so EXI
 GPS positions is dropped. pdfium is used without form/JavaScript support.
 
 ## Not done yet (next steps)
-- Encrypted blob store (after the key design in SECURITY.md is approved).
 - Staging cleanup job for files left behind by a crashed process.
 - Malware scanning hook (e.g. ClamAV) if files are shared with other devices.
 - Flutter: pick file, local import, preview with pdfium on the device.

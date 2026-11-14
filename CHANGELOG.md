@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 — Encryption at rest
+
+- Documents and preview images are encrypted with AES-256-GCM (envelope encryption, one
+  data key per file, bound to its storage key, tamper-evident).
+- Master key from `STORAGE_MASTER_KEY_FILE` or `STORAGE_MASTER_KEY`; rotation via
+  `STORAGE_OLD_MASTER_KEYS`.
+- `paperless-admin generate-key` and `paperless-admin encrypt-storage` (encrypts old plaintext
+  files and rotates to the current key; idempotent, verified, atomic).
+- Preview cache moved into the store (encrypted); downloads decrypt in memory.
+- Docs: `docs/STORAGE_ENCRYPTION.md` incl. threat model. 14 new tests.
+
 ## 0.6.0 — Flutter: server login and document import
 
 - Login page (server, e-mail, password); token in secure storage, restored on start,
