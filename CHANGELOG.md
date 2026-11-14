@@ -1,5 +1,13 @@
 # Changelog
 
+## App builds
+
+- GitHub Actions workflow "Build apps": Windows installer (Inno Setup) + portable ZIP and
+  Android APK as downloadable artifacts; tags `v*` publish a GitHub Release.
+- Android release signing from repository secrets (falls back to debug key).
+- App name "Paperless AI" on Android and Windows; app version 0.7.0+7.
+- Docs: `docs/BUILDS.md`.
+
 ## 0.7.0 — Encryption at rest
 
 - Documents and preview images are encrypted with AES-256-GCM (envelope encryption, one
