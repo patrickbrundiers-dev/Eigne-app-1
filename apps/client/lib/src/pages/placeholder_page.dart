@@ -7,11 +7,13 @@ class PlaceholderPage extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.message,
+    this.action,
   });
 
   final IconData icon;
   final String title;
   final String message;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class PlaceholderPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text(message,
                 style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+            if (action != null) ...[const SizedBox(height: 20), action!],
           ],
         ),
       ),

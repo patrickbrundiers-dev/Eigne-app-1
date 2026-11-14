@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 
+import '../app_state.dart';
+import '../import/import_flow.dart';
+import 'login_page.dart';
+
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final state = AppScope.of(context);
+    final canImport = state.isSignedIn && state.writableSpaces.isNotEmpty;
+    final String hint;
+    if (!state.isSignedIn) {
+      hint =
+          'Zum Importieren zuerst mit deinem Server verbinden (Einstellungen).';
+    } else if (!canImport) {
+      hint = 'Du hast in keinem Bereich Schreibrechte.';
+    } else {
+      hint =
+          'PDF oder Bild auswählen. Die Datei wird am Server geprüft und unverändert archiviert.';
+    }
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -44,21 +60,30 @@ class DashboardPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FilledButton.icon(
-                // Import is enabled once encrypted local storage is approved (T5).
-                onPressed: null,
-                icon: const Icon(Icons.add),
-                label: const Text('Dokument importieren'),
-              ),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                FilledButton.icon(
+                  key: const Key('dashboard.import'),
+                  onPressed: canImport
+                      ? () => runImport(context, state, state.picker)
+                      : null,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Dokument importieren'),
+                ),
+                if (!state.isSignedIn)
+                  OutlinedButton.icon(
+                    key: const Key('dashboard.connect'),
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const LoginPage())),
+                    icon: const Icon(Icons.cloud_outlined),
+                    label: const Text('Mit Server verbinden'),
+                  ),
+              ],
             ),
             const SizedBox(height: 8),
-            Text(
-              'Hinweis: Dies ist ein UI-Prototyp. Import, Speicherung, '
-              'Benutzerkonten und Synchronisierung folgen in den nächsten Arbeitspaketen.',
-              style: textTheme.bodySmall,
-            ),
+            Text(hint, style: textTheme.bodySmall),
           ],
         ),
       ),

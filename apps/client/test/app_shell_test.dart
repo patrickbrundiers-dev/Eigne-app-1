@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:paperless_ai/src/app.dart';
+import 'package:paperless_ai/src/app_state.dart';
+import 'package:paperless_ai/src/auth/token_store.dart';
 import 'package:paperless_ai/src/shell/app_shell.dart';
 import 'package:paperless_ai/src/shell/destinations.dart';
 
@@ -11,7 +13,8 @@ Future<void> pumpAt(WidgetTester tester, Size size,
   tester.platformDispatcher.platformBrightnessTestValue = brightness;
   addTearDown(tester.view.reset);
   addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
-  await tester.pumpWidget(const PaperlessAiApp());
+  await tester.pumpWidget(
+      PaperlessAiApp(state: AppState(tokenStore: MemoryTokenStore())));
   await tester.pumpAndSettle();
 }
 
@@ -68,6 +71,7 @@ void main() {
       await tester.tap(find.text('Fristen').first);
       await tester.pumpAndSettle();
       expect(find.text('Keine Fristen'), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   });
 
