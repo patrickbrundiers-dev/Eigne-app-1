@@ -15,6 +15,7 @@ from sqlalchemy import (
     CheckConstraint,
     Enum,
     ForeignKey,
+    Index,
     Integer,
     String,
     UniqueConstraint,
@@ -161,7 +162,11 @@ class SpaceMembership(UuidPk, Timestamps, Base):
 
 class Document(UuidPk, Timestamps, Base):
     __tablename__ = "documents"
-    __table_args__ = (CheckConstraint("revision >= 1", name="revision_positive"),)
+    __table_args__ = (
+        CheckConstraint("revision >= 1", name="revision_positive"),
+        # change feed (/api/v1/sync) pages by (updated_at, id) within the readable spaces
+        Index("ix_documents_space_id_updated_at", "space_id", "updated_at"),
+    )
 
     space_id: Mapped[uuid.UUID] = mapped_column(
         Uuid, ForeignKey("spaces.id", ondelete="RESTRICT"), nullable=False, index=True

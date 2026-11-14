@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 
 from paperless_api import __version__
-from paperless_api.api.v1 import auth, documents
+from paperless_api.api.v1 import auth, documents, sync
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth.router)
 router.include_router(documents.router)
+router.include_router(sync.router)
 
 
 @router.get("/health", tags=["system"])

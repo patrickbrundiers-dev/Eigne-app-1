@@ -14,6 +14,15 @@ This document is a design checklist, not a security certification.
 8. Test backup restore and key recovery.
 9. Perform dependency and static security scans.
 
+## Data on devices
+
+- The app's offline cache holds document **metadata** (titles, sizes, dates, space names)
+  as JSON in the app's private support directory. It is not encrypted by the app; it relies
+  on the operating system's app sandbox and device encryption.
+- Files imported while offline wait in the same private directory until they are uploaded.
+- Sign-out deletes cache, queue and queued files. A cache is only used for the same server
+  and the same account. See docs/SYNC.md.
+
 ## Key architecture questions
 - Who can decrypt a private adult space?
 - Can a server operator read document contents? Default answer should be no.

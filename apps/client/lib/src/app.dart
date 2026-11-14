@@ -23,14 +23,28 @@ class PaperlessAiApp extends StatefulWidget {
   State<PaperlessAiApp> createState() => _PaperlessAiAppState();
 }
 
-class _PaperlessAiAppState extends State<PaperlessAiApp> {
+class _PaperlessAiAppState extends State<PaperlessAiApp>
+    with WidgetsBindingObserver {
   late final AppState _state =
       widget.state ?? AppState(tokenStore: SecureTokenStore());
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (widget.state == null) _state.restore();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Back in the foreground: pick up what other devices changed meanwhile.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState lifecycle) {
+    if (lifecycle == AppLifecycleState.resumed) _state.syncNow();
   }
 
   @override

@@ -167,8 +167,8 @@ def _doc_out(doc: Document) -> DocumentOut:
 # --- spaces --------------------------------------------------------------------------------
 
 
-@router.get("/spaces", response_model=list[SpaceOut])
-def list_spaces(user: CurrentUser, db: DbSession) -> list[SpaceOut]:
+def readable_spaces(db: Session, user: User) -> list[SpaceOut]:
+    """All spaces of the user's families that the user may read, with their permissions."""
     family_ids = select(FamilyMember.family_id).where(FamilyMember.user_id == user.id)
     spaces = db.scalars(
         select(Space).where(Space.family_id.in_(family_ids)).order_by(Space.name)
@@ -187,6 +187,11 @@ def list_spaces(user: CurrentUser, db: DbSession) -> list[SpaceOut]:
                 )
             )
     return out
+
+
+@router.get("/spaces", response_model=list[SpaceOut])
+def list_spaces(user: CurrentUser, db: DbSession) -> list[SpaceOut]:
+    return readable_spaces(db, user)
 
 
 @router.get("/spaces/{space_id}/documents", response_model=list[DocumentOut])

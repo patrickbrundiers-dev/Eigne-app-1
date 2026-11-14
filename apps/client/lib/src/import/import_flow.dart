@@ -35,6 +35,17 @@ Future<void> runImport(
         );
   if (space == null) return;
 
+  Future<void> queue() async {
+    await state.queueUpload(picked, space);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+          content: Text('Kein Server erreichbar. „${picked.name}“ wird '
+              'automatisch hochgeladen, sobald die Verbindung wieder da ist.')));
+  }
+
+  if (state.offline) return queue();
+
   messenger.showSnackBar(
     SnackBar(content: Text('„${picked.name}“ wird hochgeladen …')),
   );
@@ -54,9 +65,7 @@ Future<void> runImport(
     messenger
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(e.userMessage)));
-  } on ConnectionFailed catch (e) {
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(e.userMessage)));
+  } on ConnectionFailed {
+    await queue();
   }
 }

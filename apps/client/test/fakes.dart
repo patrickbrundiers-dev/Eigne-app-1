@@ -6,6 +6,7 @@ import 'package:paperless_ai/src/api/api_client.dart';
 import 'package:paperless_ai/src/app_state.dart';
 import 'package:paperless_ai/src/auth/token_store.dart';
 import 'package:paperless_ai/src/import/document_picker.dart';
+import 'package:paperless_ai/src/sync/local_store.dart';
 
 const pdfBytes = [0x25, 0x50, 0x44, 0x46, 0x2d, 0x31, 0x2e, 0x37]; // %PDF-1.7
 
@@ -27,7 +28,12 @@ class FakeBackend {
   ];
   final docs = <Map<String, dynamic>>[];
 
+  /// Simulates an unreachable server (network error on every request).
+  bool offline = false;
+  int syncCalls = 0;
+
   late final MockClient client = MockClient.streaming((request, body) async {
+    if (offline) throw http.ClientException('network unreachable');
     requests.add(request);
     final path = request.url.path;
     final auth = request.headers['authorization'];
@@ -66,6 +72,18 @@ class FakeBackend {
     if (path.endsWith('/spaces')) {
       return json(200, spaces);
     }
+    if (path.endsWith('/sync')) {
+      syncCalls++;
+      return json(200, {
+        'server_time': '2026-11-14T09:00:00Z',
+        'cursor': 'c$syncCalls',
+        'has_more': false,
+        'spaces': spaces,
+        'documents': [
+          for (final d in docs) {...d, 'deleted': false}
+        ],
+      });
+    }
     if (path.endsWith('/documents') && request.method == 'GET') {
       return json(200, docs);
     }
@@ -103,11 +121,15 @@ class FakeBackend {
     return json(404, {'detail': 'not found'});
   });
 
-  AppState state({TokenStore? store, DocumentPicker? picker}) => AppState(
+  AppState state(
+          {TokenStore? store, DocumentPicker? picker, LocalStore? local}) =>
+      AppState(
         tokenStore: store ?? MemoryTokenStore(),
         clientFactory: (base, token) =>
             ApiClient(baseUrl: base, token: token, httpClient: client),
         picker: picker ?? FakePicker(),
+        localStore: local ?? MemoryLocalStore(),
+        autoSyncEvery: null,
       );
 }
 
