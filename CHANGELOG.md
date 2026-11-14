@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 — T5: document import pipeline
+
+- New `paperless_api.documents`: streaming staging area with SHA-256 and size limit,
+  content-based type detection (PDF, PNG, JPEG, TIFF, WebP allowlist), PDF inspection
+  (page limit, encrypted PDFs rejected, JavaScript/Launch actions rejected, attachments
+  such as ZUGFeRD XML allowed), image pixel limit, duplicate check per space,
+  write-once read-only blob store, import service with authorization and rollback.
+- Safe preview: page 1 rendered to PNG in a separate, time- and memory-limited process;
+  metadata (EXIF/GPS) dropped.
+- Plaintext blob store must be enabled explicitly and is refused in production.
+- Migration `0002`: `file_versions.page_count`, `file_versions.original_filename`.
+- Docs: `docs/DOCUMENT_IMPORT.md`. 46 new tests (164 in total).
+
 ## 0.2.0 — Phase 1: backend baseline, data model, authorization, navigation shell
 
 ### Backend

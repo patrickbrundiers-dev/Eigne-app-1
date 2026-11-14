@@ -174,6 +174,10 @@ class FileVersion(UuidPk, Base):
     size_bytes: Mapped[int] = mapped_column(BigInteger, nullable=False)
     # MIME type detected from content (not filename), see DEVELOPMENT_TASKS T5.
     mime_type: Mapped[str] = mapped_column(String(127), nullable=False)
+    # Pages (PDF) or frames (multi-page TIFF). NULL if unknown.
+    page_count: Mapped[int | None] = mapped_column(Integer)
+    # Name as uploaded, sanitised (no path parts). Metadata only, never used as a path.
+    original_filename: Mapped[str | None] = mapped_column(String(255))
     # Opaque key into encrypted blob storage. Never a user-supplied path.
     storage_key: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     created_by: Mapped[uuid.UUID | None] = mapped_column(

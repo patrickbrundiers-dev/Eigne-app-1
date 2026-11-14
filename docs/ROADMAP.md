@@ -8,7 +8,7 @@
 - [x] Family, user, space and membership model
 - [x] Authorization policy tests
 - [ ] Local encrypted storage design and implementation review
-- [ ] Document import and PDF preview
+- [ ] Document import and PDF preview (backend pipeline done; endpoint + UI pending auth)
 - [ ] Search and categories
 - [ ] Backup and restore proof
 

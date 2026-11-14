@@ -29,12 +29,12 @@
 - [x] Add authorization matrix and tests (`docs/AUTHORIZATION.md`).
 
 ## T5 — Document lifecycle
-- [ ] Define import staging area.
-- [ ] Validate file type by content, not filename alone.
-- [ ] Set file size and page-count limits.
-- [ ] Calculate content hash for duplicate detection.
-- [ ] Add safe PDF preview.
-- [ ] Keep original file immutable.
+- [x] Define import staging area (`docs/DOCUMENT_IMPORT.md`).
+- [x] Validate file type by content, not filename alone.
+- [x] Set file size and page-count limits.
+- [x] Calculate content hash for duplicate detection.
+- [x] Add safe PDF preview (backend renderer; UI follows with the upload endpoint).
+- [x] Keep original file immutable.
 
 ## Definition of Done
 A task is complete only when code, tests, documentation and acceptance evidence are included. Never use real family documents in development tests.

@@ -16,6 +16,15 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     log_json: bool = True
 
+    # Document storage. Staging lives below storage_dir so promotion is an atomic rename.
+    storage_dir: str = "./data"
+    # LocalBlobStore keeps PLAINTEXT. Only for synthetic test documents; refused in production.
+    allow_unencrypted_storage: bool = False
+    max_upload_bytes: int = 50 * 1024 * 1024
+    max_pdf_pages: int = 500
+    max_image_pixels: int = 80_000_000
+    reject_pdf_active_content: bool = True
+
 
 @lru_cache
 def get_settings() -> Settings:

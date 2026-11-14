@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paperless-ai-backend"
-version = "0.2.0"
+version = "0.3.0"
 description = "Paperless AI API scaffold"
 requires-python = ">=3.12"
 dependencies = [
@@ -14,6 +14,9 @@ dependencies = [
   "sqlalchemy>=2.0.30,<3.0",
   "alembic>=1.13,<2.0",
   "psycopg[binary]>=3.2,<4.0",
+  "pypdf>=5.0,<8.0",
+  "pypdfium2>=4.30,<6.0",
+  "pillow>=11.0,<14.0",
 ]
 
 [project.optional-dependencies]
