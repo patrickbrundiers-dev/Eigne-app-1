@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Direction: the apps will sync directly over Google Drive without a server (plan linked in
+  `docs/ROADMAP.md`). The server stays as an optional variant.
+- Docs: `docs/GOOGLE_SETUP.de.md`, setup of the Android signing key and the Google Cloud project.
+
 ## 0.8.0 — Sync between phone and PC
 
 - Change feed `GET /api/v1/sync`: changed and deleted documents of all readable spaces,
