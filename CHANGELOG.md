@@ -5,6 +5,9 @@
 - Direction: the apps will sync directly over Google Drive without a server (plan linked in
   `docs/ROADMAP.md`). The server stays as an optional variant.
 - Docs: `docs/GOOGLE_SETUP.de.md`, setup of the Android signing key and the Google Cloud project.
+- D1 part 1: client-side vault (X25519 + Ed25519 keys, Argon2id password, recovery code),
+  space keys wrapped per member, document encryption with context binding, signatures.
+  `docs/DRIVE_CRYPTO.md`, 14 new tests.
 
 ## 0.8.0 — Sync between phone and PC
 
