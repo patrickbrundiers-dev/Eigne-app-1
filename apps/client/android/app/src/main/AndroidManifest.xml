@@ -2,7 +2,7 @@
     <!-- Talk to the optional Paperless server. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="paperless_ai"
+        android:label="Paperless AI"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

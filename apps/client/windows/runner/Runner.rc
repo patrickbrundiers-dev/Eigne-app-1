@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "dev.paperlessai" "\0"
-            VALUE "FileDescription", "paperless_ai" "\0"
+            VALUE "FileDescription", "Paperless AI" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "paperless_ai" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 dev.paperlessai. All rights reserved." "\0"
             VALUE "OriginalFilename", "paperless_ai.exe" "\0"
-            VALUE "ProductName", "paperless_ai" "\0"
+            VALUE "ProductName", "Paperless AI" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
