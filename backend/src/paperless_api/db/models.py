@@ -61,8 +61,35 @@ class User(UuidPk, Timestamps, Base):
     email: Mapped[str] = mapped_column(String(320), nullable=False, unique=True)
     display_name: Mapped[str] = mapped_column(String(120), nullable=False)
     disabled_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
+    # argon2id hash. NULL -> the account cannot log in with a password (e.g. invited, not set).
+    password_hash: Mapped[str | None] = mapped_column(String(255))
+    failed_logins: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
+    locked_until: Mapped[datetime | None] = mapped_column(UTCDateTime)
 
     memberships: Mapped[list[FamilyMember]] = relationship(back_populates="user")
+    sessions: Mapped[list[DeviceSession]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
+
+
+class DeviceSession(UuidPk, Base):
+    """One logged-in device. The bearer token itself is never stored, only its SHA-256."""
+
+    __tablename__ = "device_sessions"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    device_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(UTCDateTime, nullable=False, default=utcnow)
+    last_used_at: Mapped[datetime] = mapped_column(UTCDateTime, nullable=False, default=utcnow)
+    expires_at: Mapped[datetime] = mapped_column(UTCDateTime, nullable=False)
+    revoked_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
+
+    user: Mapped[User] = relationship(back_populates="sessions")
 
 
 class Family(UuidPk, Timestamps, Base):

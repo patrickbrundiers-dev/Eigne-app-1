@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0 — Authentication
+
+- Accounts with argon2id password hashes; lockout after repeated failures; one generic
+  error for every failed login.
+- Device sessions with opaque bearer tokens (only SHA-256 stored), absolute and idle expiry,
+  per-device revoke. Password change ends all sessions.
+- API: `/api/v1/auth/login`, `/logout`, `/me`, `/sessions`, `DELETE /sessions/{id}`.
+- Admin CLI `paperless-admin` to create users, families, members, spaces and grants.
+- Migration `0003`: `users.password_hash`, `failed_logins`, `locked_until`, table `device_sessions`.
+- Alembic renders `UTCDateTime` as `sa.DateTime(timezone=True)` in generated migrations.
+- Docs: `docs/AUTHENTICATION.md`. 26 new tests.
+
 ## 0.3.0 — T5: document import pipeline
 
 - New `paperless_api.documents`: streaming staging area with SHA-256 and size limit,

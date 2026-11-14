@@ -25,6 +25,12 @@ class Settings(BaseSettings):
     max_image_pixels: int = 80_000_000
     reject_pdf_active_content: bool = True
 
+    # Authentication
+    session_ttl_days: int = 30  # absolute lifetime of a device session
+    session_idle_days: int = 14  # session ends after this long without use
+    max_failed_logins: int = 5
+    lockout_minutes: int = 15
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from paperless_api.config import get_settings
 from paperless_api.db import models  # noqa: F401  (registers tables on Base.metadata)
-from paperless_api.db.base import Base
+from paperless_api.db.base import Base, UTCDateTime
 from paperless_api.db.session import make_engine
 
 config = context.config
@@ -13,6 +13,13 @@ if config.config_file_name is not None and config.attributes.get("configure_logg
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
+
+def _render_item(type_, obj, autogen_context):
+    """Render our TypeDecorators as their plain SQLAlchemy type in migration files."""
+    if type_ == "type" and isinstance(obj, UTCDateTime):
+        return "sa.DateTime(timezone=True)"
+    return False
 
 
 def _url() -> str:
@@ -27,6 +34,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         render_as_batch=True,
         compare_type=True,
+        render_item=_render_item,
     )
     with context.begin_transaction():
         context.run_migrations()
@@ -48,6 +56,7 @@ def _run(connection) -> None:
         target_metadata=target_metadata,
         render_as_batch=True,  # SQLite needs batch mode for ALTER TABLE
         compare_type=True,
+        render_item=_render_item,
     )
     with context.begin_transaction():
         context.run_migrations()
