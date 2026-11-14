@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0 — Documents API
+
+- `GET /api/v1/spaces`, `GET/POST /api/v1/spaces/{id}/documents`,
+  `GET/DELETE /api/v1/documents/{id}`, `GET .../preview`, `GET .../file`.
+- 404 for unreadable spaces/documents, 403 for readable but forbidden actions,
+  error bodies with stable `code`.
+- Preview cache per immutable file version; downloads always as attachment with
+  `Content-Security-Policy: sandbox`; `nosniff` and `no-referrer` on all responses.
+- Oversized requests rejected by `Content-Length` before the body is read.
+- 10 new API tests.
+
 ## 0.4.0 — Authentication
 
 - Accounts with argon2id password hashes; lockout after repeated failures; one generic
