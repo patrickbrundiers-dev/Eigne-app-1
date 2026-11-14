@@ -214,7 +214,8 @@ def test_load_access_context_end_to_end(session: Session) -> None:
     assert acts(outsider, private) == frozenset()
     assert Action.MANAGE_MEMBERS in acts(admin, kid)  # guardian rule
     assert acts(child, kid) == {Action.READ}
-    assert acts(adult, kid) == frozenset()
+    assert Action.READ in acts(adult, kid)  # second parent is guardian too
+    assert acts(outsider, kid) == frozenset()
 
     adult.disabled_at = datetime.now(UTC)
     session.commit()

@@ -6,8 +6,8 @@ from the database. The full rule set is documented in docs/AUTHORIZATION.md; kee
 
 Default is deny. Access is only granted by
   1. an explicit SpaceMembership, or
-  2. the guardian rule: a family *admin* acts as owner of *child-managed* spaces.
-A family admin has NO implicit access to private or shared spaces.
+  2. the guardian rule: family *admins and adults* act as owners of *child-managed* spaces.
+Neither admins nor adults have implicit access to private or shared spaces.
 """
 
 from __future__ import annotations
@@ -47,6 +47,9 @@ ROLE_ACTIONS: dict[SpaceRole, frozenset[Action]] = {
 # Children never manage memberships or delete spaces, whatever their space role says.
 CHILD_FORBIDDEN: frozenset[Action] = frozenset({Action.MANAGE_MEMBERS, Action.DELETE_SPACE})
 
+# Family roles that act as guardians (owner) of every child-managed space in the family.
+GUARDIAN_ROLES: frozenset[FamilyRole] = frozenset({FamilyRole.ADMIN, FamilyRole.ADULT})
+
 # Private spaces cannot be shared; convert to a shared space instead.
 PRIVATE_FORBIDDEN: frozenset[Action] = frozenset({Action.MANAGE_MEMBERS})
 
@@ -70,7 +73,7 @@ def allowed_actions(ctx: AccessContext) -> frozenset[Action]:
     if (
         role is None
         and ctx.space_type is SpaceType.CHILD_MANAGED
-        and ctx.family_role is FamilyRole.ADMIN
+        and ctx.family_role in GUARDIAN_ROLES
     ):
         role = SpaceRole.OWNER  # guardian rule
 

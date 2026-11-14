@@ -59,7 +59,7 @@ MATRIX: dict[tuple[SpaceType, FamilyRole | None, SpaceRole | None], set[Action]]
     (S, CHILD, EDITOR): EDIT,
     (S, CHILD, VIEWER): VIEW,
     (S, CHILD, None): NONE,
-    # Child-managed: family admins are guardians (owner-equivalent); others need membership.
+    # Child-managed: admins and adults are guardians (owner-equivalent); children need membership.
     (C, ADMIN, OWNER): OWN,
     (C, ADMIN, EDITOR): EDIT,
     (C, ADMIN, VIEWER): VIEW,
@@ -67,7 +67,7 @@ MATRIX: dict[tuple[SpaceType, FamilyRole | None, SpaceRole | None], set[Action]]
     (C, ADULT, OWNER): OWN,
     (C, ADULT, EDITOR): EDIT,
     (C, ADULT, VIEWER): VIEW,
-    (C, ADULT, None): NONE,
+    (C, ADULT, None): OWN,
     (C, CHILD, OWNER): EDIT,
     (C, CHILD, EDITOR): EDIT,
     (C, CHILD, VIEWER): VIEW,
