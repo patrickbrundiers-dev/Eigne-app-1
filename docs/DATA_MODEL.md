@@ -1,6 +1,6 @@
 # Data model (server metadata)
 
-Status: implemented in `backend/src/paperless_api/db/models.py`, migration `0001`.
+Status: implemented in `backend/src/paperless_api/db/models.py`, migrations `0001`–`0002`.
 The server stores **metadata only**. Document bytes live in (encrypted) blob storage and are
 referenced by an opaque `storage_key`.
 
@@ -45,7 +45,9 @@ erDiagram
                     string sha256
                     bigint size_bytes
                     string mime_type
-                    string storage_key UK }
+                    string storage_key UK
+                    int page_count
+                    string original_filename }
 ```
 
 All tables except `file_versions` also carry `created_at` / `updated_at`.

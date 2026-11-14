@@ -20,7 +20,9 @@ dist/
 build/
 *.egg-info/
 
-# Local development databases
+# Local development data
+backend/data/
+data/
 *.db
 *.sqlite3
 
