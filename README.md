@@ -3,7 +3,10 @@
 Local-first document management for Android and Windows, with optional self-hosted sync and local AI.
 
 ## Status
-**Phase 1 scaffold** — repository structure and development foundations only. Authentication, production encryption, OCR, AI and synchronization are not implemented yet.
+**Phase 1, in progress.** Done: backend baseline (`/api/v1`, settings, redacting JSON logs),
+data model with migrations, authorization policy with full test matrix, responsive Flutter
+navigation shell with light/dark themes. Not implemented yet: authentication, document import,
+production encryption, OCR, AI and synchronization. See `CHANGELOG.md`.
 
 ## Stack
 - Flutter/Dart: Android + Windows clients
@@ -24,9 +27,13 @@ Local-first document management for Android and Windows, with optional self-host
    # Windows: .venv\\Scripts\\activate
    # Linux/macOS: source .venv/bin/activate
    pip install -e ./backend[dev]
-   uvicorn paperless_api.main:app --reload --app-dir backend/src
+   cd backend
+   alembic upgrade head        # creates the schema (SQLite file by default)
+   uvicorn paperless_api.main:app --reload --app-dir src
    ```
-4. Open `http://127.0.0.1:8000/docs`.
+4. Open `http://127.0.0.1:8000/docs` (health: `/api/v1/health`).
+5. Tests and lint: `pytest` and `ruff check . && ruff format --check .` in `backend/`.
+   Set `TEST_POSTGRES_URL` to an empty, disposable database to also test migrations on PostgreSQL.
 
 ### Docker services
 ```bash
@@ -39,10 +46,11 @@ Install Flutter and enable the Windows desktop target if developing on Windows:
 ```bash
 flutter doctor
 cd apps/client
-flutter create . --platforms=android,windows
+flutter pub get
+flutter test
 flutter run -d windows
 ```
-The `lib/` directory contains the initial application entry point. Run `flutter create .` only after installing Flutter.
+Android and Windows platform folders are already generated.
 
 ## Development rules
 - Never commit `.env`, credentials, real personal documents or encryption keys.
@@ -53,4 +61,4 @@ The `lib/` directory contains the initial application entry point. Run `flutter 
 - Every feature needs tests and documentation.
 
 ## Roadmap
-See `docs/ROADMAP.md`, `docs/ARCHITECTURE.md` and `docs/SECURITY.md`.
+See `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/AUTHORIZATION.md` and `docs/SECURITY.md`.

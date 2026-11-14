@@ -6,27 +6,27 @@
 - [ ] Record tested tool versions in `docs/TOOLCHAIN.md`.
 
 ## T1 — Repository baseline
-- [ ] Initialize Git and create `main` plus feature branches.
+- [x] Initialize Git and create `main` plus feature branches.
 - [ ] Add branch protection when remote hosting is configured.
 - [ ] Require CI checks on pull requests.
 - [ ] Add issue templates and pull request template.
 
 ## T2 — Flutter shell
-- [ ] Run `flutter create . --platforms=android,windows` in `apps/client`.
-- [ ] Verify light/dark system theme.
-- [ ] Add navigation shell and responsive layout tests.
+- [x] Run `flutter create . --platforms=android,windows` in `apps/client`.
+- [x] Verify light/dark system theme (widget test `themes`).
+- [x] Add navigation shell and responsive layout tests (`test/app_shell_test.dart`).
 
 ## T3 — Backend baseline
-- [ ] Install backend package.
-- [ ] Verify `/health`.
-- [ ] Add structured logging with sensitive-data redaction.
-- [ ] Add API version prefix `/api/v1`.
+- [x] Install backend package.
+- [x] Verify `/health`.
+- [x] Add structured logging with sensitive-data redaction (`logging_config.py`).
+- [x] Add API version prefix `/api/v1`.
 
 ## T4 — Data model design
-- [ ] ER diagram for users, families, spaces, memberships, documents and file versions.
-- [ ] Define UUID strategy and timestamps.
-- [ ] Define migrations and test migration rollback.
-- [ ] Add authorization matrix and tests.
+- [x] ER diagram for users, families, spaces, memberships, documents and file versions (`docs/DATA_MODEL.md`).
+- [x] Define UUID strategy and timestamps.
+- [x] Define migrations and test migration rollback (Alembic, SQLite + PostgreSQL).
+- [x] Add authorization matrix and tests (`docs/AUTHORIZATION.md`).
 
 ## T5 — Document lifecycle
 - [ ] Define import staging area.

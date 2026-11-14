@@ -1,12 +1,12 @@
 # Roadmap
 
 ## Phase 1 — Foundation
-- [ ] Repository and CI
-- [ ] Flutter Android/Windows shell with light/dark themes
-- [ ] Backend health endpoint
-- [ ] Database schema and migrations
-- [ ] Family, user, space and membership model
-- [ ] Authorization policy tests
+- [ ] Repository and CI (workflows exist; remote repo + branch protection pending)
+- [x] Flutter Android/Windows shell with light/dark themes
+- [x] Backend health endpoint
+- [x] Database schema and migrations
+- [x] Family, user, space and membership model
+- [x] Authorization policy tests
 - [ ] Local encrypted storage design and implementation review
 - [ ] Document import and PDF preview
 - [ ] Search and categories
