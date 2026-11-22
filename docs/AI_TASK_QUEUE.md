@@ -67,7 +67,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 6.1 | ✅ Health Connect: Schritte, Training, Gewicht lesen; Mahlzeiten schreiben | H | L | M | – | Unit-Tests Zuordnung, manuell auf Gerät |
-| 6.2 | Garmin Connect lesen und schreiben (Phase-2-Thread). Voraussetzungen an Patrick gemeldet (2026-11-22): Business-Zugang im Garmin Connect Developer Program (Antrag Patrick, laut Terra derzeit pausiert), OAuth 2.0 + Server-Endpunkt für Push; kein Schreiben von Ernährung/Gewicht möglich, nur Workouts/Strecken. Empfehlung: mit Sync (Phase 4) | H | L | H (API-Zugang) | 6.1 | Mock-Tests |
+| 6.2 | ⏸️ Vorerst verworfen (Patrick 2026-11-22 19:22): direkte Garmin-API braucht Business-Zugang (laut Terra derzeit pausiert), OAuth 2.0 + Server-Endpunkt; Ernährung/Gewicht lassen sich nicht schreiben. Garmin-Daten weiter über Health Connect (6.1) | H | L | H (API-Zugang) | 6.1 | – |
 | 6.3 | Sync über PostgreSQL EU + gemeinsamer Katalog (Phase-2-Thread) | H | L | H (**Freigabe** für Anbieter/Konto) | – | Konflikt-Tests |
 | 6.4 | ✅ Homescreen-Widget Android (W13): „Kalorien übrig“, „+ 250 ml Wasser“, Schnell-Eintrag „+ Essen“ | M | M | N | – | manuell |
 
@@ -84,4 +84,4 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 
 Reihenfolge (Plan vom 22.11.2026, Thread „Sattly auf Niveau führender Apps“): **2.1 + 2.2** Heute-Seite mit
 Gewichts-Kachel, dann **3.2** Portionen lernen, **5.1** Gewohnheiten, **5.2** Stagnations-Analyse, **2.3**
-Barrierefreiheit, **3.4** OFF-Textsuche. Phase-2-Thread: 5.4, dann 6.1/6.2. Freigabe nötig: 5.3, 6.3.
+Barrierefreiheit, **3.4** OFF-Textsuche. Phase-2-Thread: 5.4, dann 6.1 (6.2 vorerst verworfen). Freigabe nötig: 5.3, 6.3.
