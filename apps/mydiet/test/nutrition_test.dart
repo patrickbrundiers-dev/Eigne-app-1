@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mydiet_ai/src/core/day_budget.dart';
 import 'package:mydiet_ai/src/core/nutrition.dart';
+import 'package:mydiet_ai/src/data/database.dart' show baseFoods;
 import 'package:mydiet_ai/src/data/seed_foods.dart';
+import 'package:mydiet_ai/src/data/seed_usda.dart';
 
 void main() {
   group('Nährwerte', () {
@@ -55,7 +57,7 @@ void main() {
     });
 
     test('Alle Basis-Lebensmittel sind plausibel', () {
-      for (final f in referenceFoods) {
+      for (final f in baseFoods) {
         final n = Nutrients(
           kcal: f.kcal,
           protein: f.protein,
@@ -73,8 +75,17 @@ void main() {
     });
 
     test('Basis-Lebensmittel haben keine Duplikate', () {
-      final keys = referenceFoods.map((f) => foodKey(f.name, null)).toList();
+      final keys = baseFoods.map((f) => foodKey(f.name, null)).toList();
       expect(keys.toSet().length, keys.length);
+    });
+
+    test('USDA-Lebensmittel: genug Auswahl, nur bekannte Kategorien', () {
+      final categories = referenceFoods.map((f) => f.category).toSet();
+      expect(usdaFoods.length, greaterThan(200));
+      for (final f in usdaFoods) {
+        expect(categories, contains(f.category), reason: f.name);
+        expect(f.carbs, greaterThanOrEqualTo(f.sugar), reason: f.name);
+      }
     });
   });
 

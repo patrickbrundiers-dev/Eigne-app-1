@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+"""Erzeugt lib/src/data/seed_usda.dart aus USDA FoodData Central (SR Legacy, gemeinfrei/CC0).
+
+Aufruf (im Ordner apps/mydiet):
+    python3 tool/usda/generate.py <Ordner mit den entpackten SR-Legacy-CSV-Dateien>
+
+Quelle: https://fdc.nal.usda.gov/download-datasets (FoodData_Central_sr_legacy_food_csv_2018-04.zip).
+Die Auswahl und die deutschen Namen stehen in tool/usda/auswahl.csv. Spalte "mikros" = nein:
+in den USA meist angereicherte Produkte (Mehl, Brot, Pflanzendrinks); dort werden keine
+Vitamine und Mineralstoffe übernommen. Nährwerte werden nur
+umgerechnet, nie geschätzt:
+  - Kohlenhydrate nach EU-Konvention = "Carbohydrate, by difference" (1005) minus Ballaststoffe (1079),
+    mindestens aber der gemessene Zucker (2000)
+  - Salz = Natrium (1093, mg) * 2,5 / 1000
+  - Omega-3 = EPA (1278) + DHA (1272), g -> mg
+Lebensmittel, denen ein Hauptwert fehlt (Energie, Eiweiß, Fett, KH, Ballaststoffe, Zucker,
+gesättigte Fettsäuren, Natrium), werden nicht übernommen und am Ende gemeldet.
+"""
+import csv
+import os
+import sys
+
+MAIN = {
+    'kcal': '1008',
+    'protein': '1003',
+    'fat': '1004',
+    'carbs_diff': '1005',
+    'fiber': '1079',
+    'sugar': '2000',
+    'sat': '1258',
+    'sodium': '1093',
+}
+MICROS = {  # app id -> (FDC nutrient id, factor to the app unit)
+    'vit_d': ('1114', 1),  # µg
+    'vit_b12': ('1178', 1),  # µg
+    'folate': ('1177', 1),  # µg, Folat gesamt
+    'vit_c': ('1162', 1),  # mg
+    'calcium': ('1087', 1),  # mg
+    'magnesium': ('1090', 1),  # mg
+    'iron': ('1089', 1),  # mg
+    'zinc': ('1095', 1),  # mg
+    'potassium': ('1092', 1),  # mg
+}
+OMEGA3 = ('1278', '1272')  # EPA, DHA in g
+
+
+def num(x):
+    """Kurze Dart-Zahl: höchstens 2 Nachkommastellen, ohne überflüssige Nullen."""
+    r = round(x, 2)
+    if r == int(r):
+        return str(int(r))
+    return ('%.2f' % r).rstrip('0').rstrip('.')
+
+
+def dart_str(s):
+    return "'" + s.replace('\\', '\\\\').replace("'", "\\'") + "'"
+
+
+def main():
+    if len(sys.argv) != 2:
+        sys.exit(__doc__)
+    src = sys.argv[1]
+    here = os.path.dirname(os.path.abspath(__file__))
+    out = os.path.join(here, '..', '..', 'lib', 'src', 'data', 'seed_usda.dart')
+
+    selection = list(csv.DictReader(open(os.path.join(here, 'auswahl.csv'), encoding='utf-8'), delimiter=';'))
+    wanted = {r['fdc_id'] for r in selection}
+    names = {}
+    for r in selection:
+        if r['name'] in names:
+            sys.exit('Doppelter Name in auswahl.csv: ' + r['name'])
+        names[r['name']] = r['fdc_id']
+
+    desc = {}
+    for r in csv.DictReader(open(os.path.join(src, 'food.csv'), encoding='utf-8')):
+        if r['fdc_id'] in wanted:
+            desc[r['fdc_id']] = r['description']
+    missing_ids = wanted - desc.keys()
+    if missing_ids:
+        sys.exit('Nicht in food.csv: ' + ', '.join(sorted(missing_ids)))
+
+    values = {i: {} for i in wanted}
+    for r in csv.DictReader(open(os.path.join(src, 'food_nutrient.csv'), encoding='utf-8')):
+        if r['fdc_id'] in wanted and r['amount'] != '':
+            values[r['fdc_id']][r['nutrient_id']] = float(r['amount'])
+
+    foods, micros, skipped, adjusted = [], [], [], []
+    for r in selection:
+        v = values[r['fdc_id']]
+        lacking = [k for k, nid in MAIN.items() if nid not in v]
+        if lacking:
+            skipped.append('%s (%s): fehlt %s' % (r['name'], r['fdc_id'], ', '.join(lacking)))
+            continue
+        carbs = max(0.0, v[MAIN['carbs_diff']] - v[MAIN['fiber']])
+        # Die Differenzmethode kann unter dem gemessenen Zucker liegen; Zucker ist Teil der
+        # Kohlenhydrate, also gilt KH mindestens = Zucker.
+        if v[MAIN['sugar']] > carbs:
+            adjusted.append('%s (%s): KH %.2f -> %.2f (Zucker)' % (r['name'], r['fdc_id'], carbs, v[MAIN['sugar']]))
+            carbs = v[MAIN['sugar']]
+        salt = v[MAIN['sodium']] * 2.5 / 1000
+        args = [
+            dart_str(r['name']),
+            dart_str(r['kategorie']),
+            num(v[MAIN['kcal']]),
+            num(v[MAIN['protein']]),
+            num(carbs),
+            num(v[MAIN['sugar']]),
+            num(v[MAIN['fat']]),
+            num(v[MAIN['sat']]),
+            num(v[MAIN['fiber']]),
+            num(salt),
+        ]
+        foods.append('  // FDC %s: %s\n  SeedFood(%s),' % (r['fdc_id'], desc[r['fdc_id']], ', '.join(args)))
+        m = {}
+        if r.get('mikros', 'ja') == 'nein':
+            v = {}  # US-Produkt meist angereichert: Vitamine/Mineralstoffe nicht übertragbar
+        for app_id, (nid, factor) in MICROS.items():
+            if nid in v:
+                m[app_id] = v[nid] * factor
+        if all(n in v for n in OMEGA3):
+            m['omega3'] = (v[OMEGA3[0]] + v[OMEGA3[1]]) * 1000
+        if m:
+            micros.append('  %s: {%s},' % (dart_str(r['name']), ', '.join("'%s': %s" % (k, num(x)) for k, x in m.items())))
+
+    with open(out, 'w', encoding='utf-8') as f:
+        f.write('// GENERATED by tool/usda/generate.py – nicht von Hand ändern.\n')
+        f.write('// ignore_for_file: lines_longer_than_80_chars\n\n')
+        f.write('/// Basis-Lebensmittel aus USDA FoodData Central, SR Legacy (April 2018), gemeinfrei (CC0).\n')
+        f.write('///\n')
+        f.write('/// Werte je 100 g, unverändert übernommen bis auf: Kohlenhydrate ohne Ballaststoffe (EU, mindestens Zucker),\n')
+        f.write('/// Salz = Natrium x 2,5. Auswahl und deutsche Namen: tool/usda/auswahl.csv.\n')
+        f.write('library;\n\n')
+        f.write("import 'seed_foods.dart';\n\n")
+        f.write('const usdaFoods = <SeedFood>[\n')
+        f.write('\n'.join(foods))
+        f.write('\n];\n\n')
+        f.write('/// Vitamine und Mineralstoffe derselben Lebensmittel (Katalog-Einheiten aus core/supplements.dart).\n')
+        f.write('/// Fehlt ein Wert, ist er unbekannt.\n')
+        f.write('const usdaMicros = <String, Map<String, double>>{\n')
+        f.write('\n'.join(micros))
+        f.write('\n};\n')
+
+    print('%d Lebensmittel geschrieben, %d übersprungen.' % (len(foods), len(skipped)))
+    for s in skipped:
+        print('  übersprungen: ' + s)
+    for s in adjusted:
+        print('  angepasst: ' + s)
+
+
+if __name__ == '__main__':
+    main()

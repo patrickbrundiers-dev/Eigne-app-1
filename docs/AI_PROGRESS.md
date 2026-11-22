@@ -15,6 +15,21 @@ Phase-2-Thread. Knopf `widget_add` öffnet `sattly://add` (`isAddFoodWidgetLink`
 ruft in `home_shell.dart` `addNow` auf (wie Strg+E: Suche für die fällige Mahlzeit heute). Kein Schema, keine
 Abhängigkeit. Tests: `home_widget_test.dart` (Link, Rückruf). Auf dem Gerät ungeprüft.
 
+## 2026-11-22 – Basisdatenbank aus USDA erweitert (Aufgabe 3.6, Teil Daten)
+
+Patrick hat den Download von `fdc.nal.usda.gov` freigegeben (Entscheidungskarte), Host in der Cloud-Umgebung
+erlaubt. `tool/usda/auswahl.csv` (FDC-Nummer, deutscher Name, Kategorie, Mikros ja/nein) und
+`tool/usda/generate.py` erzeugen `lib/src/data/seed_usda.dart` (219 Lebensmittel, Mikronährstoffe für die
+meisten). Danach `dart format lib/src/data/seed_usda.dart`. `baseFoods` = Referenz + USDA; `seedVersion` 2
+fügt nur fehlende ein und berücksichtigt jetzt auch Namen gelöschter Lebensmittel (kein Wiederauftauchen);
+`microSeedVersion` 2 ergänzt Mikros über `baseMicros()`. Kein Schema, D-19, Rechenweg in BERECHNUNGEN.
+
+Tests: Plausibilität aller Basis-Lebensmittel (jetzt inkl. USDA), keine Duplikate, USDA-Mikros plausibel,
+Datenbanktest „Neue Basis-Lebensmittel kommen dazu, gelöschte nicht zurück“.
+
+Offen: FTS5-Suche (Schema v7 war reserviert) zurückgestellt, bis die Datenbank deutlich wächst; alkoholische
+Getränke brauchen ein Alkohol-Feld; weitere Lebensmittel einfach in `auswahl.csv` ergänzen und neu erzeugen.
+
 ## 2026-11-22 – Tagebuch als Tabelle am PC (Aufgabe 2.5 fertig)
 
 Phase-2-Thread. `features/diary/diary_table.dart` (`DiaryColumn`, `DiaryTable`, Setting `diaryTableColumns`),

@@ -19,7 +19,7 @@ extension MicrosDao on AppDatabase {
       await batch((b) {
         for (final f in base) {
           if (withData.contains(f.id)) continue;
-          final m = referenceMicros[f.name];
+          final m = baseMicros(f.name);
           if (m == null) continue;
           for (final e in m.entries) {
             b.insert(
