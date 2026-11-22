@@ -89,11 +89,12 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
+            // CompanyName/ProductName bleiben "MyDiet AI": daraus bildet Windows den Datenordner (AppData\Roaming\MyDiet AI\MyDiet AI).
             VALUE "CompanyName", "MyDiet AI" "\0"
-            VALUE "FileDescription", "MyDiet AI" "\0"
+            VALUE "FileDescription", "Sattly" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "mydiet_ai" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 MyDiet AI" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Sattly" "\0"
             VALUE "OriginalFilename", "mydiet_ai.exe" "\0"
             VALUE "ProductName", "MyDiet AI" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
