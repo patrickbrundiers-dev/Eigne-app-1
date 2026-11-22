@@ -122,6 +122,11 @@ void main() {
     expect(find.text('Frühstück'), findsWidgets);
     expect(find.text('Skyr natur'), findsOneWidget);
     expect(find.textContaining(RegExp(r'Protein \d+ / \d+ g')), findsWidgets); // Anteil am Tagesziel je Mahlzeit
+    // Design 2: Tageskopf als Kennzahl-Leiste, Eintrag mit Anfangsbuchstabe und Makros in der zweiten Zeile.
+    expect(find.text('GEGESSEN'), findsOneWidget);
+    expect(find.text('ÜBRIG'), findsOneWidget);
+    expect(find.text('S'), findsWidgets);
+    expect(find.textContaining('P ', findRichText: true), findsWidgets);
 
     // Profil: auf dem Handy über den Avatar oben auf „Heute“.
     await tester.tap(find.text('Heute').last);
