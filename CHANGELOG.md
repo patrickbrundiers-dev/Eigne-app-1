@@ -7,6 +7,8 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Gewohnheiten: Isst du dieselbe Kombination mindestens dreimal in vier Wochen zur selben Mahlzeit, schlägt die
+  App beim Eintragen vor, sie als Vorlage zu speichern (ablehnen möglich, dann nicht wieder)
 - Portionen lernen: Beim Eintragen ist die Menge vorausgefüllt, die du für dieses Lebensmittel meistens nimmst
   (Chip „Wie üblich“), auch im Text-Eintrag
 

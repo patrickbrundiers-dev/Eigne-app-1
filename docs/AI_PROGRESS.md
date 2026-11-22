@@ -4,6 +4,12 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Gewohnheiten erkennen (Aufgabe 5.1)
+
+`core/habits.dart` (`findHabits`), `data/habits_data.dart` (Vorschläge aus 28 Tagen, Ablehnen per Setting
+`habitsDismissed`, Speichern über `saveTemplateFromMeal`). Karte „Wiederkehrend: …“ oben in der Auswahl beim
+Eintragen. Kein Schema. Tests: `test/habits_test.dart` (6), Suite grün. Nächster Schritt: 5.2.
+
 ## 2026-11-22 – Portionen lernen (Aufgabe 3.2)
 
 `core/portion_memory.dart` (`usualAmount`), `recentAmounts`/`usualLoggedAmount` in `data/meal_text_match.dart`.

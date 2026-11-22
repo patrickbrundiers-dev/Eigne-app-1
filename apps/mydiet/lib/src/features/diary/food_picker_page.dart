@@ -2,7 +2,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../data/database.dart';
+import '../../core/habits.dart';
 import '../../data/food_search.dart';
+import '../../data/habits_data.dart';
 import '../../data/meal_text_match.dart' show usualLoggedAmount;
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
@@ -44,6 +46,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   List<Food> _favorites = [];
   List<Recipe> _recipeResults = [];
   List<Recipe> _favRecipes = [];
+  List<HabitSuggestion> _habits = [];
   int _added = 0;
 
   @override
@@ -84,8 +87,10 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     final templates = await db.watchTemplates().first;
     final favs = await db.watchFoods(onlyFavorites: true).first;
     final favRecipes = await db.watchRecipes(onlyFavorites: true).first;
+    final habits = await habitSuggestions(db, slotId: widget.mealSlotId);
     if (mounted) {
       setState(() {
+        _habits = habits;
         _recent = recent;
         _suggested = suggested;
         // Templates saved from this meal first, the rest after (stable otherwise).
@@ -97,6 +102,48 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
         _favRecipes = favRecipes;
       });
     }
+  }
+
+  Future<void> _saveHabit(HabitSuggestion h) async {
+    final slotName = widget.slots.where((s) => s.id == h.slotId).firstOrNull?.name ?? 'Mahlzeit';
+    final c = TextEditingController(text: 'Mein $slotName');
+    final name = await showDialog<String>(
+      context: context,
+      builder: (d) => AlertDialog(
+        title: const Text('Als Vorlage speichern'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(h.title),
+            const SizedBox(height: 12),
+            TextField(
+              controller: c,
+              autofocus: true,
+              decoration: const InputDecoration(labelText: 'Name der Vorlage'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(d), child: const Text('Abbrechen')),
+          FilledButton(onPressed: () => Navigator.pop(d, c.text), child: const Text('Speichern')),
+        ],
+      ),
+    );
+    c.dispose();
+    if (name == null || name.trim().isEmpty || !mounted) return;
+    try {
+      await saveHabitAsTemplate(context.db, h, name: name);
+      if (mounted) showMessage(context, 'Vorlage „${name.trim()}“ gespeichert');
+    } catch (e) {
+      if (mounted) showMessage(context, errorText(e));
+    }
+    _loadLists();
+  }
+
+  Future<void> _dismissHabit(HabitSuggestion h) async {
+    await dismissHabit(context.db, h);
+    _loadLists();
   }
 
   Future<void> _search(String q) async {
@@ -303,6 +350,31 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                         ),
                       for (final f in _results) _FoodTile(food: f, onTap: () => _pick(f)),
                     ] else ...[
+                      for (final h in _habits)
+                        Card(
+                          margin: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                          child: ListTile(
+                            leading: const Icon(Icons.repeat),
+                            title: Text('Wiederkehrend: ${h.title}'),
+                            subtitle: Text('${h.reason}. Als Vorlage speichern, dann mit einem Tipp eintragen.'),
+                            isThreeLine: true,
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  tooltip: 'Nicht mehr vorschlagen',
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () => _dismissHabit(h),
+                                ),
+                                IconButton(
+                                  tooltip: 'Als Vorlage speichern',
+                                  icon: const Icon(Icons.bookmark_add_outlined),
+                                  onPressed: () => _saveHabit(h),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       if (_templates.isNotEmpty) ...[
                         _header(context, 'Vorlagen'),
                         for (final tpl in _templates)

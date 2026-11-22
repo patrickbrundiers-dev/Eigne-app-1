@@ -196,6 +196,14 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Gewicht: 7-Tage-Mittel am Sonntag gegen das 7-Tage-Mittel eine Woche davor.
 - Höchstens drei Vorschläge; ohne Auffälligkeiten „So weitermachen“ mit Verweis auf das adaptive Ziel.
 
+## Gewohnheiten (`core/habits.dart`)
+
+Mahlzeit = alle Lebensmittel/Rezepte eines Tages in einer Mahlzeit (Schnell-Einträge zählen nicht). Kandidat ist
+jede Mahlzeit der letzten 28 Tage mit mindestens 2 Bestandteilen. Vorschlag, wenn mindestens 3 Mahlzeiten derselben
+Mahlzeit-Art alle Bestandteile enthalten (Extras erlaubt). Eine Teilmenge entfällt, wenn eine größere Kombination
+gleich oft vorkommt. Schon gespeicherte Vorlagen und abgelehnte Vorschläge entfallen. Höchstens 3, häufigste zuerst.
+Die Vorlage wird erst nach Bestätigung vom letzten Tag mit genau dieser Mahlzeit kopiert (Mengen von dort).
+
 ## Übliche Portion (`core/portion_memory.dart`)
 
 Von den letzten 10 Einträgen eines Lebensmittels (auf ganze g/ml gerundet) die häufigste Menge, bei Gleichstand
