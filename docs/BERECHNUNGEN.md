@@ -204,6 +204,27 @@ Mahlzeit-Art alle Bestandteile enthalten (Extras erlaubt). Eine Teilmenge entfä
 gleich oft vorkommt. Schon gespeicherte Vorlagen und abgelehnte Vorschläge entfallen. Höchstens 3, häufigste zuerst.
 Die Vorlage wird erst nach Bestätigung vom letzten Tag mit genau dieser Mahlzeit kopiert (Mengen von dort).
 
+## Health Connect (`core/health_import.dart`)
+
+- Gelesen werden Schritte (Tagessumme von Health Connect, ohne Doppelzählung mehrerer Quellen), aktive
+  Kalorien, Trainings und Gewicht. Garmin Connect, Samsung Health, Google Fit u. a. schreiben dorthin.
+- Jedes Training wird ein Aktivitätseintrag „<Art> (Health Connect)“ mit Dauer (Ende − Beginn, höchstens 24 h)
+  und den Kalorien des Trainings (0, wenn die Quelle keine liefert).
+- Pro Tag ein Eintrag „Alltag (Health Connect)“: Schritte und aktive Kalorien minus Trainingskalorien des Tages
+  (nicht unter 0), damit nichts doppelt zählt. Ein Wert, der über Mitternacht reicht, zählt für den Starttag.
+- Gewicht: der letzte Wert des Tages, nur 25–400 kg, auf 0,1 kg gerundet, und nur für Tage ohne eigenen Eintrag.
+- Erneutes Übernehmen aktualisiert Einträge über ihre Kennung (`hc:<id>`, `hc-day:<Tag>`); selbst gelöschte
+  Einträge kommen nicht wieder. Wie stark Aktivität das Tagesbudget erhöht, regelt weiterhin das Profil.
+- Automatisch beim Öffnen nur wenn eingeschaltet, höchstens alle 3 Stunden, die letzten 7 Tage (beim ersten
+  Verbinden 30 Tage).
+- Schreiben (`core/health_export.dart`, eigener Schalter und eigene Freigabe): je Tag und Mahlzeit eine
+  Ernährungs-Aufzeichnung mit der Summe der Einträge (kcal, Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte
+  Fettsäuren, Ballaststoffe, Natrium = Salz ÷ 2,5). Mahlzeiten unter 1 kcal entfallen. Zeit = eingestellte Uhrzeit
+  der Mahlzeit, sonst typisch (Frühstück 8:00, Mittag 12:30, Abend 18:30, Snack 15:30), Dauer 30 Minuten. Die Art
+  (Frühstück/Mittag/Abend/Snack) folgt dem Namen, sonst der Uhrzeit. Bei jedem Abgleich werden die letzten 7 Tage
+  neu geschrieben: zuerst wird gelöscht, was Sattly für den Tag geschrieben hat (Health Connect erlaubt nur das
+  Löschen eigener Daten), dann neu geschrieben. So kommen Änderungen und Löschungen an, nichts doppelt.
+
 ## Übliche Portion (`core/portion_memory.dart`)
 
 Von den letzten 10 Einträgen eines Lebensmittels (auf ganze g/ml gerundet) die häufigste Menge, bei Gleichstand
