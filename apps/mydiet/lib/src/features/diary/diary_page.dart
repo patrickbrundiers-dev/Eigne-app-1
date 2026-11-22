@@ -12,6 +12,7 @@ import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../home_shell.dart';
 import 'amount_sheet.dart';
+import 'diary_table.dart';
 import 'food_picker_page.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -53,6 +54,7 @@ class _DiaryPageState extends State<DiaryPage> {
     final db = context.db;
     final key = dayKey(_day);
     final isToday = key == todayDayKey();
+    final wide = MediaQuery.sizeOf(context).width >= 900;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tagebuch'),
@@ -83,6 +85,7 @@ class _DiaryPageState extends State<DiaryPage> {
           db.watchSetting(budgetModeKey),
           db.watchSetting(hideNumbersKey),
           db.watchDailyTotals(dayKey(mondayOf(_day)), dayKey(DateTime(_day.year, _day.month, _day.day - 1))),
+          db.watchSetting(diaryTableColumnsKey),
         ]),
         builder: (context, snap) {
           final v = snap.data;
@@ -107,8 +110,9 @@ class _DiaryPageState extends State<DiaryPage> {
           final orphans = entries.where((e) => !slotIds.contains(e.mealSlotId)).toList();
           final shares = proteinPerMeal(targets.proteinG.toDouble(), [for (final s in slots) s.minuteOfDay != null]);
           final perMeal = {for (final (i, s) in slots.indexed) s.id: shares[i]};
+          final columns = wide ? visibleDiaryColumns(parseDiaryColumns(v[7] as String?), hideNumbers: hide) : null;
           return PageBody(
-            maxWidth: 900,
+            maxWidth: wide ? 1280 : 900,
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
               children: [
@@ -122,6 +126,22 @@ class _DiaryPageState extends State<DiaryPage> {
                   fatG: targets.fatG,
                 ),
                 const SizedBox(height: 12),
+                if (wide)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: ActionChip(
+                        avatar: const Icon(Icons.view_column_outlined, size: 18),
+                        label: const Text('Spalten'),
+                        tooltip: 'Spalten im Tagebuch wählen',
+                        onPressed: () async {
+                          final next = await chooseDiaryColumns(context, parseDiaryColumns(v[7] as String?));
+                          if (next != null) await db.setSetting(diaryTableColumnsKey, encodeDiaryColumns(next));
+                        },
+                      ),
+                    ),
+                  ),
                 for (final s in slots) ...[
                   _MealCard(
                     day: key,
@@ -130,11 +150,12 @@ class _DiaryPageState extends State<DiaryPage> {
                     entries: entries.where((e) => e.mealSlotId == s.id).toList(),
                     hideNumbers: hide,
                     proteinTargetG: perMeal[s.id],
+                    columns: columns,
                   ),
                   const SizedBox(height: 12),
                 ],
                 if (orphans.isNotEmpty)
-                  _MealCard(day: key, slot: null, slots: slots, entries: orphans, hideNumbers: hide),
+                  _MealCard(day: key, slot: null, slots: slots, entries: orphans, hideNumbers: hide, columns: columns),
               ],
             ),
           );
@@ -248,8 +269,12 @@ class _MealCard extends StatelessWidget {
     required this.entries,
     this.hideNumbers = false,
     this.proteinTargetG,
+    this.columns,
   });
   final bool hideNumbers;
+
+  /// Wide screens: show the entries as a table with these columns; null = list.
+  final List<DiaryColumn>? columns;
   final String day;
   final MealSlot? slot;
 
@@ -328,6 +353,16 @@ class _MealCard extends StatelessWidget {
               child: Text(
                 'Noch nichts eingetragen.',
                 style: t.textTheme.bodyMedium?.copyWith(color: t.colorScheme.onSurfaceVariant),
+              ),
+            )
+          else if (columns != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: DiaryTable(
+                entries: entries,
+                columns: columns!,
+                onEdit: (e) => _edit(context, e),
+                onDelete: (e) => _delete(context, e),
               ),
             )
           else

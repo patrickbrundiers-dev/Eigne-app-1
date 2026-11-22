@@ -2,6 +2,12 @@
 
 ## Nächste Version (in Arbeit)
 
+- Homescreen-Widget: zeigt jetzt auch das heute getrunkene Wasser; der Knopf „+ 250 ml Wasser“ trägt es mit einem
+  Tipp ein (öffnet kurz die App)
+
+- PC: Tagebuch als Tabelle je Mahlzeit; „Spalten“ wählt aus Menge, Marke, kcal, Eiweiß, Kohlenhydrate, Zucker,
+  Fett, gesättigte Fettsäuren, Ballaststoffe und Salz. Zeile antippen ändert, Papierkorb entfernt (mit Rückgängig)
+
 ## 0.5.0 – App-Sperre, Homescreen-Widget, Barrierefreiheit, Open-Food-Facts-Suche (2026-11-22)
 
 - Intern: Dashboard-Kacheln in eigene Dateien aufgeteilt (keine Änderung am Verhalten)

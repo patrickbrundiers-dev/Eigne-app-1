@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:material_ui/material_ui.dart';
 
 import '../../data/database.dart';
 import '../../ui/format.dart';
+import '../../ui/table_columns.dart';
 
 /// Columns of the food table on wide screens (PC). Values per 100 g/ml.
 enum FoodColumn {
@@ -50,20 +49,9 @@ const foodTableColumnsKey = 'foodTableColumns';
 const defaultFoodColumns = [FoodColumn.brand, FoodColumn.kcal, FoodColumn.protein, FoodColumn.carbs, FoodColumn.fat];
 
 /// Reads the stored column choice; unknown names are ignored, order follows [FoodColumn].
-List<FoodColumn> parseFoodColumns(String? json) {
-  if (json == null) return defaultFoodColumns;
-  try {
-    final names = {for (final e in jsonDecode(json) as List) e as String};
-    return [
-      for (final c in FoodColumn.values)
-        if (names.contains(c.name)) c,
-    ];
-  } catch (_) {
-    return defaultFoodColumns;
-  }
-}
+List<FoodColumn> parseFoodColumns(String? json) => parseColumns(json, FoodColumn.values, defaultFoodColumns);
 
-String encodeFoodColumns(Iterable<FoodColumn> cols) => jsonEncode([for (final c in cols) c.name]);
+String encodeFoodColumns(Iterable<FoodColumn> cols) => encodeColumns(cols);
 
 /// Sorts [items] by [column] (null = name).
 List<Food> sortFoods(List<Food> items, FoodColumn? column, {bool ascending = true}) {
@@ -149,48 +137,4 @@ class _FoodTableState extends State<FoodTable> {
 
 /// Dialog to choose the visible columns. Returns the new choice or null.
 Future<List<FoodColumn>?> chooseFoodColumns(BuildContext context, List<FoodColumn> current) =>
-    showDialog<List<FoodColumn>>(
-      context: context,
-      builder: (_) => _ColumnsDialog(current: current),
-    );
-
-class _ColumnsDialog extends StatefulWidget {
-  const _ColumnsDialog({required this.current});
-  final List<FoodColumn> current;
-
-  @override
-  State<_ColumnsDialog> createState() => _ColumnsDialogState();
-}
-
-class _ColumnsDialogState extends State<_ColumnsDialog> {
-  late final Set<FoodColumn> _on = widget.current.toSet();
-
-  @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Spalten wählen'),
-    content: SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final c in FoodColumn.values)
-            CheckboxListTile(
-              dense: true,
-              value: _on.contains(c),
-              title: Text(c.label),
-              onChanged: (v) => setState(() => v == true ? _on.add(c) : _on.remove(c)),
-            ),
-        ],
-      ),
-    ),
-    actions: [
-      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Abbrechen')),
-      FilledButton(
-        onPressed: () => Navigator.pop(context, [
-          for (final c in FoodColumn.values)
-            if (_on.contains(c)) c,
-        ]),
-        child: const Text('Übernehmen'),
-      ),
-    ],
-  );
-}
+    chooseColumns(context, all: FoodColumn.values, current: current, label: (c) => c.label);
