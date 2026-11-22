@@ -590,6 +590,28 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Gewicht: mehr als 120 Einträge, ältere lassen sich nachladen', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      final now = DateTime.now();
+      for (var i = 1; i <= 130; i++) {
+        await db.saveWeight(day: dayKey(DateTime(now.year, now.month, now.day - i)), weightKg: 100 + i / 100);
+      }
+    });
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Gewicht').last);
+    await pumpApp(tester, db);
+    final more = find.textContaining('Ältere anzeigen (noch 11)');
+    await tester.scrollUntilVisible(more, 2000, scrollable: find.byType(Scrollable).last);
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -300)); // nicht hinter dem Knopf „Eintragen“
+    await tester.pumpAndSettle();
+    await tester.tap(more);
+    await pumpApp(tester, db);
+    expect(find.textContaining('Ältere anzeigen'), findsNothing);
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Gewicht: Fortschritt mit Start, Trend, Bilanz und Proteinziel', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await tester.runAsync(() async {

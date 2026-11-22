@@ -23,6 +23,8 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Gewicht → Einträge: Nach 120 Messungen zeigt „Ältere anzeigen“ die übrigen an, statt sie still wegzulassen
+
 - Open Food Facts auch ohne Barcode: In der Suche beim Eintragen „Bei Open Food Facts suchen“ findet Produkte
   nach Name oder Marke. Es wird nur der Suchbegriff gesendet und nur auf Knopfdruck; jedes Produkt wird vor dem
   Speichern im Formular geprüft

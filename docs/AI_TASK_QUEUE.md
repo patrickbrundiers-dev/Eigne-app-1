@@ -12,7 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 3.4 Open-Food-Facts-Textsuche | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
+| 1.3 Gewichtsliste nachladen | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -20,6 +20,9 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 |---|---|---|---|---|---|---|
 | 1.3 | Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
 | 1.4 ✅ | `AppDatabase` je Bereich aufteilen (rein strukturell; als Extensions in `data/dao/*.dart`) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
+
+| 1.3 | ✅ Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
+| 1.4 | `AppDatabase` in DatabaseAccessors je Bereich aufteilen (rein strukturell) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
 | 1.5 | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
 
 ## Priorität 2 – Kernfunktionen und Bedienbarkeit
