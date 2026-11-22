@@ -13,6 +13,7 @@ import 'dashboard/dashboard_page.dart';
 import 'diary/diary_page.dart';
 import 'foods/food_hub_page.dart';
 import 'profile/profile_page.dart';
+import '../data/health_sync.dart';
 import 'settings/reminders_page.dart';
 import 'weight/weight_page.dart';
 
@@ -102,6 +103,7 @@ class HomeShellState extends State<HomeShell> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (_reminders == null) unawaited(autoImportHealth(context.db));
     _reminders ??= startReminderSync(context.db);
   }
 

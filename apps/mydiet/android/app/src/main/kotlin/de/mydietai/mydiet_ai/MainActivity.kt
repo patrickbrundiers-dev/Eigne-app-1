@@ -1,5 +1,6 @@
 package de.mydietai.mydiet_ai
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+// FlutterFragmentActivity: needed for the Health Connect permission dialog (health plugin).
+class MainActivity : FlutterFragmentActivity()

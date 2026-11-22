@@ -78,7 +78,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
   freigibt, kann jeder finden und nutzen. Läuft auf derselben Datenbank im kostenlosen Tarif, also ohne
   Mehrkosten, solange die Nutzerzahl klein bleibt. Tagebuch, Gewicht, Profil und Supplemente bleiben privat.
   Einzelheiten in [DATENMODELL.md](DATENMODELL.md#gemeinsamer-katalog-phase-4)
-- ⬜ Google Health Connect (Schritte, Aktivitätskalorien, Training, Herzfrequenz, Schlaf)
+- ✅ Google Health Connect: Schritte, Aktivitätskalorien, Training und Gewicht lesen (auch von Garmin Connect),
+  Mahlzeiten mit Nährwerten schreiben. Herzfrequenz und Schlaf später
 - ⬜ Garmin Connect, Apple Health (mit iOS-App)
 - ⬜ Erweiterte Auswertungen und eigene Diagramme
 
