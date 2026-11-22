@@ -180,6 +180,22 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Vorausgewählt sind nur Zeilen ohne jede Annahme; alles andere braucht ein Häkchen. Nicht gefundene
   Lebensmittel bekommen keine Werte.
 
+## Wochenbericht (`core/weekly_report.dart`)
+
+- Woche = Montag bis Sonntag; Standard ist die letzte abgeschlossene Woche, sonntags die laufende.
+- Es zählen nur Tage ab 800 kcal (sonst „nicht vollständig eingetragen“). Unter 4 Tagen wird darauf hingewiesen,
+  dass die Durchschnitte unsicher sind.
+- Kalorien: Ø gegen das Ziel; „im Zielbereich“ bei ±10 %; Tage im Bereich ±10 % gezählt; Vergleich zur Vorwoche.
+  Unter 80 % des Ziels zusätzlich der Hinweis, nicht zu knapp zu essen (keine Empfehlung unter das Ziel).
+- Wochenende: Ø Sa/So minus Ø Mo–Fr; ab 300 kcal ein Hinweis mit Vorschlag zum Einplanen.
+- Protein: „meistens erreicht“, wenn an ≥ 70 % der Tage ≥ 90 % des Ziels; sonst Vorschlag mit Eiweißquellen, die
+  Ernährungsweise, Unverträglichkeiten und Abneigungen beachten (`proteinIdeas`).
+- Ballaststoffe: Hinweis unter 70 % des Ziels.
+- Vitamine/Mineralstoffe: Ø Prozent des D-A-CH-Ziels über die Tage mit Werten (mind. 2 Tage); unter 70 % werden
+  die drei niedrigsten genannt, ohne Diagnose.
+- Gewicht: 7-Tage-Mittel am Sonntag gegen das 7-Tage-Mittel eine Woche davor.
+- Höchstens drei Vorschläge; ohne Auffälligkeiten „So weitermachen“ mit Verweis auf das adaptive Ziel.
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

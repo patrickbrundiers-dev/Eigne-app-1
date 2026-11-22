@@ -14,7 +14,8 @@ enum DashTile {
   meals('Mahlzeiten heute'),
   supplements('Supplemente heute', wide: true),
   fasting('Intervallfasten', wide: true),
-  micros('Vitamine und Mineralstoffe', wide: true);
+  micros('Vitamine und Mineralstoffe', wide: true),
+  weeklyReport('Wochenbericht', wide: true);
 
   const DashTile(this.label, {this.wide = false});
   final String label;
