@@ -4,6 +4,19 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Dashboard „Eintragen“ und Gewichtstempo (Aufgaben 2.1 + 2.2)
+
+Erledigt:
+- `features/dashboard/quick_log_sheet.dart`: Knopf „Eintragen“ auf dem Dashboard, Mahlzeit per Uhrzeit
+  vorausgewählt (`currentMealIndex`), Wege Suchen/Barcode/Text/Nur Kalorien/Gewicht.
+- `FoodPickerPage(start: PickerStart.…)` startet direkt mit Scanner, Text-Eintrag oder Schnell-Eintrag.
+- Gewichtskachel: „30 Tage: −x kg/Woche · Aussagekraft“ aus `trendWindow` (vorhandene Rechnung).
+- Bewusst nicht umgebaut: Kalorienring und Makros waren schon die Hauptzahlen; keine neue Kachel, kein
+  Eingriff in die Kachel-Reihenfolge (vermeidet Konflikte mit dem Wochenbericht des Phase-2-Threads).
+
+Tests: Widget-Test „Dashboard: Eintragen in drei Taps“, gesamte Suite grün.
+Nächster Schritt: 3.2 Portionen lernen.
+
 ## 2026-11-22 – Tippfehlertolerante Suche (Aufgabe 3.3)
 
 Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es` (nach PR #35).
