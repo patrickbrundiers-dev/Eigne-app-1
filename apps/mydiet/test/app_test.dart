@@ -153,7 +153,7 @@ void main() {
 
     await tester.runAsync(() => db.setSetting('hideNumbers', 'false'));
     await pumpApp(tester, db);
-    expect(find.text('Heute aus Wochenbudget'), findsOneWidget);
+    expect(find.text('HEUTE AUS WOCHENBUDGET'), findsOneWidget); // Kennzahl-Leiste (Design 2)
     expect(find.text('189 kcal'), findsWidgets);
     await closeDb(tester, db);
   });

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mydiet_ai/src/app.dart' show buildTheme, colorSchemes;
+import 'package:mydiet_ai/src/ui/design/components.dart';
 import 'package:mydiet_ai/src/ui/design/theme.dart';
 import 'package:mydiet_ai/src/ui/design/tokens.dart';
 import 'package:mydiet_ai/src/ui/widgets.dart';
@@ -75,5 +76,31 @@ void main() {
     );
     expect(MacroColors.protein(ctx), SattlyTokens.light.protein);
     expect(MacroColors.water(ctx), SattlyTokens.light.water);
+  });
+
+  testWidgets('Ringe und Kennzahl-Leiste: Screenreader-Text, Beschriftung groß', (tester) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: sattlyTheme(Brightness.dark),
+        home: const Scaffold(
+          body: Column(
+            children: [
+              ConcentricRings(
+                size: 120,
+                rings: [RingValue(1.2, Colors.green), RingValue(0.5, Colors.purple)],
+                semanticLabel: 'Kalorien heute: 100 kcal zu viel',
+              ),
+              StatStrip(items: [('Gegessen', '982 kcal', Colors.orange)]),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(find.bySemanticsLabel('Kalorien heute: 100 kcal zu viel'), findsOneWidget);
+    expect(find.text('GEGESSEN'), findsOneWidget);
+    expect(find.text('982 kcal'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    handle.dispose();
   });
 }

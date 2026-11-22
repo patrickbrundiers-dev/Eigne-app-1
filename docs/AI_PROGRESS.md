@@ -4,6 +4,14 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign Schritt 3: Startseite (Design 2)
+
+Neue Bausteine `lib/src/ui/design/components.dart`: `ConcentricRings` (Kalorien außen, Protein, Wasser),
+`StatStrip` (Kennzahlen mit farbiger Kante, Beschriftung groß), `LegendRow`. Kachel „Kalorien heute“: Ringe,
+große Zahl „kcal übrig“, Legende in Prozent, Leiste Gegessen · Tagesbudget · Bewegt. Makros untereinander mit
+Prozent (`MacroBar(showPercent:)`). Zahlen ausblenden und Wochenbudget wie bisher. Tests: Komponenten-Test in
+`design_tokens_test.dart`, `app_test.dart` an große Beschriftung angepasst. Nächster Schritt: Tagebuch.
+
 ## 2026-11-22 – Redesign Schritt 2: Navigation mit zentralem Plus
 
 Handy: eigene untere Leiste (`_BottomBar` in `home_shell.dart`) Heute · Tagebuch · **+** · Fortschritt · Essen;

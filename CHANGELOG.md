@@ -7,6 +7,8 @@
   die Farbschemata in den Einstellungen ändern weiterhin die Akzentfarbe
 - Neue Navigation: großes Plus in der Mitte zum Eintragen (Suchen, Barcode, Text, Nur Kalorien, Gewicht).
   „Gewicht“ heißt jetzt „Fortschritt“, das Profil öffnest du auf dem Handy über deinen Avatar oben auf „Heute“
+- Startseite: Ringe für Kalorien, Protein und Wasser auf einen Blick, große Zahl „kcal übrig“, Leiste mit
+  Gegessen, Tagesbudget und Bewegung, Makronährstoffe mit Prozent vom Ziel
 
 - Lebensmittelsuche: Findet deine eigene Datenbank kaum etwas, sucht Sattly nach einer kurzen Tipp-Pause
   automatisch bei Open Food Facts und zeigt die Treffer direkt unter den eigenen an (auch bei der Zutatensuche
