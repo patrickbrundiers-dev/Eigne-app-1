@@ -10,7 +10,6 @@ import '../../data/csv_export.dart';
 import '../../data/display_prefs.dart';
 import 'backup_card.dart';
 import '../../ui/widgets.dart';
-import 'app_update_ui.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -83,8 +82,8 @@ class SettingsPage extends StatelessWidget {
                   children: [
                     Text(
                       'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
-                      'Ins Internet gehen nur ein gescannter Barcode (an Open Food Facts) und die Update-Prüfung '
-                      '(GitHub), beide ohne persönliche Daten. Die Synchronisierung zwischen Handy und PC '
+                      'Ins Internet gehen nur ein gescannter Barcode (an Open Food Facts) '
+                      '(ohne persönliche Daten). Die Synchronisierung zwischen Handy und PC '
                       'folgt in Phase 4. Bis dahin sichert die App täglich automatisch (siehe Sicherungen).',
                       style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
                     ),
@@ -154,8 +153,6 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              const UpdateCard(),
               const SizedBox(height: 12),
               SectionCard(
                 title: 'Über MyDiet AI',

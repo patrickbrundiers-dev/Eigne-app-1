@@ -39,9 +39,6 @@
   dem Speichern zur Prüfung vorausgefüllt; Prüfziffer wird kontrolliert
 - Datenqualität sichtbar: Quelle (Basis, eigen, Open Food Facts, KI) und Stufe (Richtwert, vom Etikett,
   vollständig, prüfen, Schätzung) als Symbol in Liste und Suche; Open-Food-Facts-Werte mit Energie-Check
-- Online-Update: die App prüft täglich die GitHub Releases (abschaltbar) und zeigt neue Versionen mit Notizen;
-  unter Windows wird das Setup geladen, geprüft (Größe, SHA-256) und still installiert, unter Android die APK
-  über den Browser geladen; Einstellungen → Updates zeigt die installierte Version
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 
