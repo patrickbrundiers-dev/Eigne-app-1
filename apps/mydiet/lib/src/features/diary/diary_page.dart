@@ -25,6 +25,28 @@ class _DiaryPageState extends State<DiaryPage> {
 
   void _shift(int days) => setState(() => _day = DateTime(_day.year, _day.month, _day.day + days));
 
+  DateNav? _nav;
+  HomeShellState? _shell;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_nav != null) return;
+    _shell = HomeShellState.of(context);
+    _nav = DateNav(
+      isActive: () => mounted && _shell?.index == 1,
+      shift: _shift,
+      today: () => setState(() => _day = dateOnly(DateTime.now())),
+    );
+    _shell?.addDateNav(_nav!);
+  }
+
+  @override
+  void dispose() {
+    if (_nav != null) _shell?.removeDateNav(_nav!);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final db = context.db;

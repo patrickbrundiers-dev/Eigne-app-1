@@ -4,6 +4,32 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung
+
+Thread „MyDiet AI Phase 2 entwickeln“, Branch `claude/project-thread-k8k628`.
+
+Erledigt:
+- Erinnerungen (#27) und W5 Mikronährstoffe mit Schema 6 (#29) sind auf main.
+- W8 PC-Planung:
+  - `features/plan/plan_view.dart`: `planColumns` (ab ca. 550 px Tage nebeneinander, bis 7 Spalten), Einträge
+    ziehbar (Maus sofort, Touch per langem Drücken), Ablegen auf einem Tag verschiebt, mit Strg kopiert,
+    Menüpunkte „Auf anderen Tag verschieben/kopieren …“, Rückgängig. Einträge, die schon im Tagebuch stehen,
+    werden nicht verschoben (nur kopiert).
+  - `AppDatabase.copyPlanEntry`.
+  - `features/home_shell.dart`: Tastenkürzel (`shortcutHelp`, F1/Strg+/ zeigt die Übersicht, Tastatur-Knopf
+    in der Seitennavigation), `DateNav` für Seiten mit Datum (Tagebuch, Wochenplan).
+  - `core/meal_time.dart`: `currentMealIndex` wählt für Strg+E die fällige Mahlzeit.
+  - Essen-Bereich: Wochenplan bis 1800 px breit, die anderen Tabs bleiben bei 900 px.
+
+Tests: `flutter analyze` ohne Befund, neue Unit-Tests `test/meal_time_test.dart`, Widget-Test
+„PC: Wochenplan nebeneinander, Ziehen auf anderen Tag, Tastenkürzel“.
+
+Offen: Tabellen mit wählbaren Spalten (Aufgabe 2.5). Online-Update wartet auf die Android-Signatur-Secrets
+(Code in Commit 1265bf6, Anleitung docs/UPDATES.md im Branch-Verlauf).
+
+Nächster Schritt dieses Threads: W9 Rezept-Import (3.5), sobald der Text-Parser 3.1 auf main ist; bis dahin
+Phase-4-Vorbereitung (Sync-Konzept) oder 4.1.
+
 ## 2026-11-22 – Bestandsaufnahme, Wettbewerb, Gewichts-Dashboard
 
 Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es`.

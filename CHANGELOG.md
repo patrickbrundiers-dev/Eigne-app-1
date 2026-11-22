@@ -2,6 +2,11 @@
 
 ## Nächste Version (in Arbeit)
 
+- PC als Planungs-Arbeitsplatz: der Wochenplan zeigt im breiten Fenster die Tage nebeneinander; Einträge lassen
+  sich mit der Maus (am Handy lange drücken) auf einen anderen Tag ziehen, mit Strg kopieren, oder über das Menü
+  „Auf anderen Tag verschieben/kopieren“, jeweils mit Rückgängig. Tastenkürzel: Strg+E Eintragen für die
+  aktuelle Mahlzeit, Strg+1–5 Bereiche, Alt+←/→ Tag bzw. Woche wechseln, Alt+Pos1 heute, F1 Übersicht
+
 - Vitamine und Mineralstoffe: Tagessumme aus Essen und Supplementen zusammen (Vitamin D, B12, Folat, C,
   Calcium, Magnesium, Eisen, Zink, Jod, Kalium, Omega-3) mit Ziel nach D-A-CH, Ampel und EFSA-Höchstmengen;
   Richtwerte für 100 Basis-Lebensmittel, eigene Werte im Lebensmittel-Formular, Werte aus Open Food Facts;
