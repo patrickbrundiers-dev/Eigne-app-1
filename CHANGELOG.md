@@ -2,6 +2,18 @@
 
 ## Nächste Version (in Arbeit)
 
+- Lebensmittelsuche: Findet deine eigene Datenbank kaum etwas, sucht Sattly nach einer kurzen Tipp-Pause
+  automatisch bei Open Food Facts und zeigt die Treffer direkt unter den eigenen an (auch bei der Zutatensuche
+  für Rezepte). Gesendet wird nur der Suchbegriff; Treffer werden wie bisher erst nach dem Prüfen gespeichert.
+  Ohne Internet suchst du wie gewohnt in deiner Datenbank, es erscheint nur ein kurzer Hinweis. Abschaltbar unter
+  Einstellungen → Lebensmittelsuche
+
+- Basisdatenbank: rund 470 weitere Lebensmittel mit deutschen Namen, zusammen jetzt rund 790. Neu sind vor
+  allem Wurst und Aufschnitt, Fleischstücke roh und gegart, Fisch und Meeresfrüchte, Brot und Gebäck, Kuchen,
+  Süßes, Snacks, Saucen, Dressings, Brühen, Gewürze und Kräuter sowie Fertiggerichte und Suppen. Werte aus USDA
+  FoodData Central (gemeinfrei). Kommt beim Update automatisch dazu; eigene und gelöschte Lebensmittel bleiben
+  unberührt
+
 ## 0.6.0 – Widget mit Wasser und Essen, 220 neue Lebensmittel, Tagebuch-Tabelle am PC (2026-11-22)
 
 - Homescreen-Widget: Knopf „+ Essen“ öffnet direkt die Suche für die Mahlzeit, die gerade dran ist
