@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../branding.dart';
+
 import 'dashboard/dashboard_page.dart';
 import 'diary/diary_page.dart';
 import 'foods/food_hub_page.dart';
@@ -44,9 +46,9 @@ class HomeShellState extends State<HomeShell> {
               labelType: NavigationRailLabelType.all,
               leading: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                  child: Icon(Icons.eco, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                child: Tooltip(
+                  message: appName,
+                  child: Image.asset(appLogoAsset, width: 40, height: 40, semanticLabel: appName),
                 ),
               ),
               destinations: [

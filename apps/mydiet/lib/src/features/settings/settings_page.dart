@@ -1,3 +1,5 @@
+import '../../branding.dart';
+
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
@@ -155,7 +157,7 @@ class SettingsPage extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               SectionCard(
-                title: 'Über MyDiet AI',
+                title: 'Über $appName',
                 icon: Icons.info_outline,
                 child: Text(
                   'Daten zu Lebensmitteln mit Barcode: Open Food Facts (ODbL).\n'

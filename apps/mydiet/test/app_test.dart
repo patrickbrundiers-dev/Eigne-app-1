@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mydiet_ai/src/app.dart';
+import 'package:mydiet_ai/src/branding.dart';
 import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
@@ -73,7 +74,7 @@ void main() {
   testWidgets('Ohne Profil startet die Einrichtung', (tester) async {
     final db = (await tester.runAsync(openDb))!;
     await pumpApp(tester, db);
-    expect(find.text('MyDiet AI'), findsOneWidget);
+    expect(find.text(appName), findsOneWidget);
     expect(find.text('Über dich'), findsOneWidget);
     expect(find.text('Dein Ziel'), findsOneWidget);
     await closeDb(tester, db);
