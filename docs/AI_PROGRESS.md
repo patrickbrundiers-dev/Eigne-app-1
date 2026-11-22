@@ -16,6 +16,12 @@ Tests: `test/home_widget_test.dart` (5). Android-Build im CI; Aussehen auf dem G
 
 Nächster Schritt: App-Sperre (PIN/Fingerabdruck, ohne Verschlüsselung – Patricks Entscheidung 2026-11-22).
 
+## 2026-11-22 – Gewohnheiten erkennen (Aufgabe 5.1)
+
+`core/habits.dart` (`findHabits`), `data/habits_data.dart` (Vorschläge aus 28 Tagen, Ablehnen per Setting
+`habitsDismissed`, Speichern über `saveTemplateFromMeal`). Karte „Wiederkehrend: …“ oben in der Auswahl beim
+Eintragen. Kein Schema. Tests: `test/habits_test.dart` (6), Suite grün. Nächster Schritt: 5.2.
+
 ## 2026-11-22 – Health Connect: Mahlzeiten schreiben (Aufgabe 6.1, Teil 2)
 
 Phase-2-Thread. `core/health_export.dart` (Mahlzeit je Tag und Slot, Art aus Name/Uhrzeit), `HealthSource.writeDay`
