@@ -13,7 +13,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
 | 4.1 Wochenplan beachtet Profil (Unverträglichkeiten, Abneigungen, Vorlieben) | Phase-2-Thread | nein | #33 |
-| W9 Rezept-Import aus Webseite (3.5), nutzt `parseLine()` aus 3.1 | Phase-2-Thread | nein | – |
+| W9 Rezept-Import aus Webseite (3.5), nutzt `parseLine()` aus 3.1 | Phase-2-Thread | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 

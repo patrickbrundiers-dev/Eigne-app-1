@@ -72,6 +72,13 @@ Fett: (Kalorienziel − Protein × 4 − KH × 4) ÷ 9. Die Energie bleibt gleic
 - Ins Tagebuch wird eine Menge in Gramm eingetragen; 1 Portion = Gewicht ÷ Portionen. So ergeben
   „1 Portion“ und „Gramm einer Portion“ genau dieselben Werte (getestet).
 - Einkaufsliste: Menge × gewünschte Portionen ÷ Rezeptportionen; gleiche Zutat mit gleicher Einheit wird addiert.
+- Import (`core/recipe_import.dart`): von einer Webseite werden aus den schema.org-Daten nur Name, Portionen
+  (erste Zahl aus `recipeYield`), Zutatenzeilen, Zubereitung, Zeit (ISO-Dauer, sonst Vorbereitung + Kochen)
+  und Stichworte übernommen; Nährwertangaben der Seite werden ignoriert. Jede Zutatenzeile wird ohne
+  Zubereitungshinweis („, fein gewürfelt“, Klammern) wie bei „Als Text eintragen“ gelesen und der eigenen
+  Datenbank zugeordnet (EL 15 ml, TL 5 ml, Stück über die Portionsgröße, jeweils als Annahme markiert).
+  „Salz“, „Pfeffer“, „etwas …“ und Zwischenüberschriften zählen ohne Nährwerte. Gespeichert werden nur
+  angehakte, zugeordnete Zutaten; die Werte rechnet die App wie oben aus.
 
 ## Supplemente
 

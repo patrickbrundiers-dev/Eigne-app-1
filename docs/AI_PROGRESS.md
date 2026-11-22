@@ -29,7 +29,7 @@ Offen / bekannt:
 
 Nächster Schritt: 1.1 „Alle Daten löschen“.
 
-## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung, 4.1 Wochenplan + Profil
+## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung, 4.1 Wochenplan + Profil, W9 Rezept-Import
 
 Thread „MyDiet AI Phase 2 entwickeln“, Branch `claude/project-thread-k8k628`.
 
@@ -53,12 +53,17 @@ Tests: `flutter analyze` ohne Befund, neue Unit-Tests `test/meal_time_test.dart`
   `excludedBy`, `preferenceScore`, `preferFirst`, `PlanFill`), `generatePlanFor` liefert jetzt `PlanFill`
   (geplant + ausgelassen mit Grund, Parameter `useProfile`). Tests `test/meal_plan_filter_test.dart` und
   ein Datenbanktest in `plan_fasting_test.dart`.
+- W9 Rezept-Import: `core/recipe_import.dart` (JSON-LD finden auch in `@graph`/Listen/mehreren Typen,
+  `parseYield`, `parseIsoMinutes`, `cleanText`, `ingredientCore`, `isNegligibleIngredient`),
+  `data/recipe_import_client.dart` (`RecipePageClient` mit Größen- und Zeitlimit, `recipePageClientFactory`
+  für Tests, `recipeFromPastedText`, `matchIngredients` auf Basis von `matchMealText`),
+  `features/recipes/recipe_import_page.dart`, Link-Knopf in der Rezeptliste. Tests `test/recipe_import_test.dart`
+  (7) und Widget-Test „Rezept von Webseite übernehmen“.
 
 Offen: Tabellen mit wählbaren Spalten (Aufgabe 2.5). Online-Update wartet auf die Android-Signatur-Secrets
 (Code in Commit 1265bf6, Anleitung docs/UPDATES.md im Branch-Verlauf).
 
-Nächster Schritt dieses Threads: W9 Rezept-Import (3.5), sobald der Text-Parser 3.1 auf main ist; bis dahin
-Phase-4-Vorbereitung (Sync-Konzept) oder 4.1.
+Nächster Schritt dieses Threads: W10 Freundlicher Umgang, danach Phase-4-Vorbereitung (Sync-Konzept, W12).
 
 ## 2026-11-22 – Bestandsaufnahme, Wettbewerb, Gewichts-Dashboard
 

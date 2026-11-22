@@ -8,7 +8,7 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
 | Thema | Umsetzung |
 |---|---|
 | Speicherort | SQLite-Datei im privaten App-Speicher (Android: App-Sandbox, nur die App hat Zugriff; Windows: Benutzerprofil) |
-| Netzwerk | Einzige Verbindung: Open Food Facts beim Scannen eines unbekannten Barcodes (nur der Barcode, generischer User-Agent). Keine Analyse- oder Werbe-SDKs. |
+| Netzwerk | Nur auf Anforderung: Open Food Facts beim Scannen eines unbekannten Barcodes (nur der Barcode) und beim Rezept-Import die eingegebene Webadresse (eine Abfrage, ohne Cookies und Nutzerdaten); jeweils generischer User-Agent. Keine Analyse- oder Werbe-SDKs. |
 | Export | Nur auf ausdrücklichen Wunsch, Speicherort wählt der Benutzer. Export-Dateien sind per `.gitignore` ausgeschlossen. Hinweis: Export ist unverschlüsselt. |
 | Import | Formatprüfung, eine Transaktion, bei Fehlern keine Änderung |
 | Eingaben | Wertebereiche für Gewicht, Mengen, Nährwerte; Plausibilitätsprüfung von Nährwerten; SQL nur über Platzhalter |
