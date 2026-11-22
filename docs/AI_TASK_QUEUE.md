@@ -12,7 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 3.3 Tippfehlertolerante Suche | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
+| 2.1 + 2.2 Eintragen-Knopf, Gewichtstempo | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -26,8 +26,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 2.1 | Dashboard „Heute“ entschlacken: eine Hauptzahl (übrig), Makro-Ringe, ein „+“ mit Eintragen/Scannen/Schnell/Vorlage | H | M | M | W5-Kachel | Widget-Test: Eintrag in ≤ 3 Taps |
-| 2.2 | Gewichts-Fortschritt auch als Dashboard-Kachel (kompakt) | M | S | N | dieser PR, W5 (Enum-Ende) | Widget-Test |
+| 2.1 | ✅ Dashboard „Heute“ entschlacken: eine Hauptzahl (übrig), Makro-Ringe, ein „+“ mit Eintragen/Scannen/Schnell/Vorlage | H | M | M | W5-Kachel | Widget-Test: Eintrag in ≤ 3 Taps |
+| 2.2 | ✅ Gewichts-Fortschritt auch als Dashboard-Kachel (kompakt) | M | S | N | dieser PR, W5 (Enum-Ende) | Widget-Test |
 | 2.3 | Barrierefreiheit: Semantics-Labels für Ringe/Diagramme, Schriftgröße 200 % ohne Überlauf | M | M | N | – | Widget-Test mit `textScaler` 2.0 |
 | 2.4 | ✅ Tastenkürzel unter Windows (Eintragen, Bereiche, Tag/Woche vor/zurück, F1) – W8, siehe AI_PROGRESS | M | S | N | – | Widget-Test mit Tastenereignissen |
 | 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8 | N | M | N | – | Widget-Test |

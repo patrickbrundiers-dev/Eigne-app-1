@@ -7,6 +7,10 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Dashboard: Knopf „Eintragen“ unten rechts. Mahlzeit ist nach Uhrzeit vorausgewählt, dann Suchen, Barcode,
+  Als Text, Nur Kalorien oder Gewicht – jeder Eintrag in höchstens drei Taps. Die Gewichtskachel zeigt das
+  Tempo der letzten 30 Tage mit Aussagekraft
+
 - Suche verzeiht Tippfehler: „Haferflokcen“, „Banae“ oder „Huhnerei“ finden trotzdem das Richtige. Was du oft
   isst, steht bei gleich guten Treffern vorne. Auch „Als Text eintragen“ bietet bei Tippfehlern ähnliche
   Lebensmittel an, markiert sie aber als unsicher

@@ -518,6 +518,30 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Dashboard: Eintragen in drei Taps (Mahlzeit wählen, Nur Kalorien)', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    expect(find.textContaining('30 Tage:'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FloatingActionButton, 'Eintragen'));
+    await pumpApp(tester, db);
+    expect(find.text('Eintragen für'), findsOneWidget);
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Abendessen'));
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Nur Kalorien'));
+    await pumpApp(tester, db);
+    expect(find.text('Schnelleintrag'), findsOneWidget);
+    expect(find.text('Abendessen hinzufügen'), findsOneWidget);
+    await tester.enterText(find.widgetWithText(TextField, 'Kalorien'), '250');
+    await tester.tap(find.widgetWithText(FilledButton, 'Eintragen'));
+    await pumpApp(tester, db);
+    final slots = (await tester.runAsync(() => db.watchMealSlots().first))!;
+    final dinner = slots.firstWhere((s) => s.name == 'Abendessen');
+    final entries = (await tester.runAsync(() => db.diaryForDay(todayDayKey())))!;
+    expect(entries.where((e) => e.mealSlotId == dinner.id && e.kcal100 > 0), isNotEmpty);
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Als Text eintragen: Mahlzeit erkennen, Unsicheres bestätigen, eintragen', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db);

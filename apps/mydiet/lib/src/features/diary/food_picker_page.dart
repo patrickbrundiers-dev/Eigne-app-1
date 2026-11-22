@@ -14,11 +14,21 @@ import 'quick_entry_sheet.dart';
 import 'text_entry_page.dart';
 
 /// Search, pick a food, enter the amount, log it.
+/// What the picker does right after opening (shortcuts from the dashboard's "Eintragen").
+enum PickerStart { search, scan, text, quick }
+
 class FoodPickerPage extends StatefulWidget {
-  const FoodPickerPage({super.key, required this.day, required this.mealSlotId, required this.slots});
+  const FoodPickerPage({
+    super.key,
+    required this.day,
+    required this.mealSlotId,
+    required this.slots,
+    this.start = PickerStart.search,
+  });
   final String day;
   final String mealSlotId;
   final List<MealSlot> slots;
+  final PickerStart start;
 
   @override
   State<FoodPickerPage> createState() => _FoodPickerPageState();
@@ -34,6 +44,31 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   List<Recipe> _recipeResults = [];
   List<Recipe> _favRecipes = [];
   int _added = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.start != PickerStart.search) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        switch (widget.start) {
+          case PickerStart.scan:
+            _scan();
+          case PickerStart.text:
+            _textEntry();
+          case PickerStart.quick:
+            _quick();
+          case PickerStart.search:
+            break;
+        }
+      });
+    }
+  }
+
+  Future<void> _scan() async {
+    final f = await scanFood(context);
+    if (f != null && mounted) await _pick(f);
+  }
 
   @override
   void didChangeDependencies() {
@@ -222,19 +257,12 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
                 child: SearchBar(
                   controller: _q,
-                  autoFocus: true,
+                  autoFocus: widget.start == PickerStart.search,
                   hintText: 'Lebensmittel oder Rezept suchen',
                   leading: const Icon(Icons.search),
                   trailing: [
                     IconButton(tooltip: 'Als Text eintragen', icon: const Icon(Icons.notes), onPressed: _textEntry),
-                    IconButton(
-                      tooltip: 'Barcode scannen',
-                      icon: const Icon(Icons.qr_code_scanner),
-                      onPressed: () async {
-                        final f = await scanFood(context);
-                        if (f != null && mounted) await _pick(f);
-                      },
-                    ),
+                    IconButton(tooltip: 'Barcode scannen', icon: const Icon(Icons.qr_code_scanner), onPressed: _scan),
                     if (searching)
                       IconButton(
                         icon: const Icon(Icons.close),
