@@ -2,6 +2,12 @@
 
 ## Nächste Version (in Arbeit)
 
+- Rezept übernehmen (Essen → Rezepte, Link-Knopf): Webadresse eingeben, die App liest Name, Portionen, Zutaten
+  und Zubereitung aus den Rezeptdaten der Seite und ordnet jede Zutat deinen Lebensmitteln zu; unsichere
+  Zuordnungen und Mengenannahmen sind markiert und lassen sich ändern, fehlende Lebensmittel direkt anlegen.
+  Optional das Gewicht nach dem Kochen für Werte je 100 g. Ohne Webadresse geht auch eine eingefügte
+  Zutatenliste (offline). Nährwerte kommen immer aus deinen Lebensmitteln, nie von der Seite
+
 - Wochenplan „Mit Rezepten füllen“ beachtet das Profil: Rezepte mit Unverträglichkeiten (z. B. Laktose steht
   auch für Milch, Joghurt, Käse; Gluten für Weizen, Hafer, Nudeln …) oder abgelehnten Lebensmitteln bleiben
   weg, mit Grund in der Meldung; Rezepte mit bevorzugten Lebensmitteln kommen öfter vor

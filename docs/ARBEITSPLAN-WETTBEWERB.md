@@ -125,7 +125,7 @@ geplant, wird **vorgezogen**, weil es kein KI-Modell braucht, sondern reine Rech
 - Wochenplan per Tastatur und Ziehen, Tabellen mit Spalten nach Wahl, Auswertungen breiter darstellen,
   Tastenkürzel für Eintragen und Suche.
 
-**W9 · Rezepte schnell übernehmen (M)** – Einordnung: Phase 2 Rezepte
+**W9 · Rezepte schnell übernehmen (M)** – Einordnung: Phase 2 Rezepte – ✅
 - Rezept aus Webseite übernehmen (schema.org-Recipe-Daten), Zutaten der Datenbank zuordnen,
   unsichere Zuordnungen markieren; gekochtes Gesamtgewicht eingeben → Nährwerte je 100 g / Portion.
 

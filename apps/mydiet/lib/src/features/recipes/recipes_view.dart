@@ -6,6 +6,7 @@ import '../../data/database.dart';
 import '../../ui/format.dart';
 import 'recipe_detail_page.dart';
 import 'recipe_form_page.dart';
+import 'recipe_import_page.dart';
 
 /// List of recipes with search and favourites filter.
 class RecipesView extends StatefulWidget {
@@ -25,21 +26,36 @@ class _RecipesViewState extends State<RecipesView> {
     super.dispose();
   }
 
+  Future<void> _open(BuildContext context, Widget page) async {
+    final id = await Navigator.push<String>(context, MaterialPageRoute(builder: (_) => page));
+    if (id != null && context.mounted) {
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => RecipeDetailPage(recipeId: id)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final db = context.db;
     final t = Theme.of(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'recipe-new',
-        onPressed: () async {
-          final id = await Navigator.push<String>(context, MaterialPageRoute(builder: (_) => const RecipeFormPage()));
-          if (id != null && context.mounted) {
-            await Navigator.push(context, MaterialPageRoute(builder: (_) => RecipeDetailPage(recipeId: id)));
-          }
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Rezept'),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'recipe-import',
+            tooltip: 'Rezept von Webseite oder Text übernehmen',
+            onPressed: () => _open(context, const RecipeImportPage()),
+            child: const Icon(Icons.link),
+          ),
+          const SizedBox(height: 12),
+          FloatingActionButton.extended(
+            heroTag: 'recipe-new',
+            onPressed: () => _open(context, const RecipeFormPage()),
+            icon: const Icon(Icons.add),
+            label: const Text('Rezept'),
+          ),
+        ],
       ),
       body: Column(
         children: [

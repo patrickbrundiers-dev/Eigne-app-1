@@ -18,6 +18,7 @@ import 'package:mydiet_ai/src/features/settings/reminders_page.dart';
 import 'package:mydiet_ai/src/features/micros/micros_view.dart';
 import 'package:mydiet_ai/src/features/diary/food_picker_page.dart';
 import 'package:mydiet_ai/src/data/off_client.dart';
+import 'package:mydiet_ai/src/data/recipe_import_client.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -161,6 +162,57 @@ void main() {
     await pumpApp(tester, db);
     expect(find.textContaining('120 g Haferflocken'), findsOneWidget);
     expect(find.text('für Overnight Oats'), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Rezept von Webseite übernehmen: Zutaten zuordnen, speichern', (tester) async {
+    const html = '''<script type="application/ld+json">{"@type":"Recipe","name":"Bananen-Porridge",
+      "recipeYield":"2 Portionen","recipeIngredient":["160 g Haferflocken","Salz","2 Bananen"],
+      "recipeInstructions":"Alles kochen."}</script>''';
+    Uri? asked;
+    recipePageClientFactory = () => RecipePageClient(
+      client: MockClient((req) async {
+        asked = req.url;
+        return http.Response(html, 200);
+      }),
+    );
+    addTearDown(() => recipePageClientFactory = RecipePageClient.new);
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    Future<void> settle() async {
+      for (var i = 0; i < 6; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+    }
+
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Essen'));
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Rezepte'));
+    await tester.pumpAndSettle();
+    await pumpApp(tester, db);
+    await tester.tap(find.byTooltip('Rezept von Webseite oder Text übernehmen'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).first, 'https://example.org/porridge');
+    await tester.pump();
+    await tester.tap(find.text('Laden'));
+    await settle();
+    expect(asked.toString(), 'https://example.org/porridge');
+    expect(find.text('Bananen-Porridge'), findsOneWidget);
+    expect(find.textContaining('ohne Nährwerte'), findsOneWidget); // Salz
+    expect(find.textContaining('Haferflocken'), findsWidgets);
+    final save = find.textContaining('Rezept mit');
+    await tester.ensureVisible(save);
+    await tester.tap(save);
+    await settle();
+    final recipes = (await tester.runAsync(() => db.watchRecipes().first))!;
+    final r = recipes.firstWhere((r) => r.name == 'Bananen-Porridge');
+    expect(r.servings, 2);
+    final items = (await tester.runAsync(() => db.recipeItemsOf(r.id)))!;
+    expect(items.map((i) => i.foodName), contains(startsWith('Haferflocken')));
+    expect(items.firstWhere((i) => i.foodName.startsWith('Haferflocken')).amount, 160);
+    expect(r.instructions, contains('Quelle: https://example.org/porridge'));
+    expect(find.text('Pro Portion'), findsOneWidget); // detail page opened
     await closeDb(tester, db);
   });
 
