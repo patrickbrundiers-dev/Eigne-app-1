@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../core/meal_text.dart';
 import 'database.dart';
+import 'food_search.dart';
 
 /// One recognised line: the parsed text, the best food and alternatives from the user's
 /// own database, and the amount in the food's unit. Nothing is stored here.
@@ -62,6 +63,12 @@ Future<List<TextMatch>> matchMealText(AppDatabase db, String text) async {
         break;
       }
     }
+    var fuzzy = false;
+    if (found.isEmpty) {
+      // Typo tolerance: similar names are offered, but never preselected.
+      found = await fuzzyFoods(db, line.query, limit: 6);
+      fuzzy = found.isNotEmpty;
+    }
     if (found.isEmpty) {
       out.add(
         TextMatch(
@@ -80,7 +87,9 @@ Future<List<TextMatch>> matchMealText(AppDatabase db, String text) async {
         line: line,
         candidates: found,
         food: best,
-        quality: matchQuality(foodName: best.name, term: terms[termIndex], termIndex: termIndex),
+        quality: fuzzy
+            ? MatchQuality.uncertain
+            : matchQuality(foodName: best.name, term: terms[termIndex], termIndex: termIndex),
         amount: await resolveFor(db, line, best),
       ),
     );

@@ -196,6 +196,22 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Gewicht: 7-Tage-Mittel am Sonntag gegen das 7-Tage-Mittel eine Woche davor.
 - Höchstens drei Vorschläge; ohne Auffälligkeiten „So weitermachen“ mit Verweis auf das adaptive Ziel.
 
+## Tippfehlertolerante Suche (`core/fuzzy_search.dart`, `data/food_search.dart`)
+
+1. Suchtext und Namen werden normalisiert (Kleinschrift, ä→ae, ö→oe, ü→ue, ß→ss, Satzzeichen weg).
+2. Zuerst die exakte Suche: jedes Suchwort muss im Namen vorkommen.
+3. Findet sie weniger als 5 Lebensmittel, werden alle Lebensmittel per Editierdistanz verglichen
+   (Levenshtein mit Vertauschung zweier Nachbarbuchstaben = 1 Fehler). Erlaubt: 0 Fehler bis 3 Buchstaben,
+   1 Fehler bis 6, sonst 2. Jedes Suchwort muss zu einem Wort des Namens passen.
+4. Passung je Wort: exakt 1,0 · Wortanfang 0,9 · im Wort (ab 4 Buchstaben) 0,75 · ganzes Wort mit n Fehlern
+   0,8 − 0,15·n · Wortanfang mit n Fehlern 0,7 − 0,15·n. Name = Mittel über die Suchwörter, +0,05 wenn das
+   erste Suchwort zum ersten Namenswort passt. Unscharfe Treffer brauchen mindestens 0,5.
+5. Sortierung: Passung; liegen zwei Treffer weniger als 0,05 auseinander, entscheidet, wie oft das
+   Lebensmittel in den letzten 180 Tagen eingetragen wurde, dann Favorit, dann kürzerer Name.
+
+Aussagekraft: reine Sortierhilfe, keine Nährwertberechnung. In „Als Text eintragen“ sind unscharfe Treffer immer
+„unsicher“ und werden nicht vorausgewählt.
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

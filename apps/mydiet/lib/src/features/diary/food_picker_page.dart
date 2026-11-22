@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../data/database.dart';
+import '../../data/food_search.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../../core/recipes.dart';
@@ -64,7 +65,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
 
   Future<void> _search(String q) async {
     final db = context.db;
-    final r = q.trim().isEmpty ? <Food>[] : await db.searchFoods(q);
+    final r = q.trim().isEmpty ? <Food>[] : await smartSearchFoods(db, q);
     final rr = q.trim().isEmpty ? <Recipe>[] : await db.searchRecipes(q, limit: 5);
     if (mounted && q == _q.text) {
       setState(() {
