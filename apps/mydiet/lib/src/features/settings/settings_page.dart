@@ -11,6 +11,7 @@ import '../../core/dates.dart';
 import '../../data/csv_export.dart';
 import '../../data/display_prefs.dart';
 import 'backup_card.dart';
+import 'delete_all.dart';
 import '../../ui/widgets.dart';
 import 'reminders_page.dart';
 
@@ -95,7 +96,7 @@ class SettingsPage extends StatelessWidget {
                   children: [
                     Text(
                       'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
-                      'Ins Internet gehen nur ein gescannter Barcode (an Open Food Facts) '
+                      'Ins Internet geht nur ein gescannter Barcode an Open Food Facts '
                       '(ohne persönliche Daten). Die Synchronisierung zwischen Handy und PC '
                       'folgt in Phase 4. Bis dahin sichert die App täglich automatisch (siehe Sicherungen).',
                       style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
@@ -128,6 +129,13 @@ class SettingsPage extends StatelessWidget {
                           label: const Text('Gewicht als CSV'),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton.icon(
+                      style: TextButton.styleFrom(foregroundColor: t.colorScheme.error),
+                      onPressed: () => confirmAndDeleteAll(context),
+                      icon: const Icon(Icons.delete_forever_outlined),
+                      label: const Text('Alle Daten löschen'),
                     ),
                   ],
                 ),

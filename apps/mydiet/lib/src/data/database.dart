@@ -190,20 +190,7 @@ class AppDatabase extends _$AppDatabase {
     ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
-      if (details.wasCreated) {
-        await batch((b) {
-          for (var i = 0; i < _defaultSlots.length; i++) {
-            b.insert(
-              mealSlots,
-              MealSlotsCompanion.insert(
-                name: _defaultSlots[i].$1,
-                minuteOfDay: Value(_defaultSlots[i].$2),
-                sortOrder: i,
-              ),
-            );
-          }
-        });
-      }
+      if (details.wasCreated) await _insertDefaultSlots();
       await seedReferenceFoods();
       // Migration tests open the database at older versions, which lack the table.
       if (details.versionNow >= 6) await seedReferenceMicros();
@@ -1854,6 +1841,36 @@ class AppDatabase extends _$AppDatabase {
         }
         counts[t.actualTableName] = rows.length;
       }
+    });
+    return counts;
+  }
+
+  Future<void> _insertDefaultSlots() => batch((b) {
+    for (var i = 0; i < _defaultSlots.length; i++) {
+      b.insert(
+        mealSlots,
+        MealSlotsCompanion.insert(name: _defaultSlots[i].$1, minuteOfDay: Value(_defaultSlots[i].$2), sortOrder: i),
+      );
+    }
+  });
+
+  /// Erases every row of every table for good (no tombstones, right to erasure) and
+  /// returns the database to the state of a fresh install: default meals and the
+  /// shipped reference foods. One transaction: on an error nothing is deleted.
+  /// Returns the number of deleted rows per table.
+  Future<Map<String, int>> deleteAllData() async {
+    final counts = <String, int>{};
+    await transaction(() async {
+      for (final t in allTables.toList().reversed) {
+        counts[t.actualTableName] = await customUpdate(
+          'DELETE FROM ${t.actualTableName}',
+          updates: {t},
+          updateKind: UpdateKind.delete,
+        );
+      }
+      await _insertDefaultSlots();
+      await seedReferenceFoods();
+      await seedReferenceMicros();
     });
     return counts;
   }
