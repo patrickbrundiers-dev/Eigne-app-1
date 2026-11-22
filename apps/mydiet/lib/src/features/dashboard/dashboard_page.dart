@@ -18,6 +18,7 @@ import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../fasting/fasting_card.dart';
 import '../home_shell.dart';
+import '../micros/micros_view.dart';
 import '../supplements/supplements_view.dart';
 import '../weight/weight_chart.dart';
 import '../weight/weight_entry_sheet.dart';
@@ -235,6 +236,7 @@ class _DashboardBody extends StatelessWidget {
     DashTile.hints => _HintsTile(d),
     DashTile.supplements => const _SupplementsTile(),
     DashTile.fasting => const FastingCard(),
+    DashTile.micros => const MicrosTile(),
   };
 }
 

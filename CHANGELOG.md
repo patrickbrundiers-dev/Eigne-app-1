@@ -2,6 +2,12 @@
 
 ## Nächste Version (in Arbeit)
 
+- Vitamine und Mineralstoffe: Tagessumme aus Essen und Supplementen zusammen (Vitamin D, B12, Folat, C,
+  Calcium, Magnesium, Eisen, Zink, Jod, Kalium, Omega-3) mit Ziel nach D-A-CH, Ampel und EFSA-Höchstmengen;
+  Richtwerte für 100 Basis-Lebensmittel, eigene Werte im Lebensmittel-Formular, Werte aus Open Food Facts;
+  beim Anlegen eines Supplements Hinweis, wenn andere Produkte denselben Stoff enthalten; neue
+  Dashboard-Kachel; Datenbank Schema 6
+
 - Erinnerungen (Einstellungen → Erinnerungen): an Mahlzeiten (zur Uhrzeit oder 10–60 Minuten vorher), ans
   Trinken (Zeitraum und Abstand wählbar), an Supplement-Einnahmen (aus den eingetragenen Uhrzeiten, gleiche
   Uhrzeit wird zusammengefasst) und ans Wiegen (Uhrzeit, Wochentage); alles lokal auf dem Gerät, Änderungen an

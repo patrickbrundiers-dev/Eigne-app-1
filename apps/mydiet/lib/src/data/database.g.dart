@@ -13815,6 +13815,464 @@ class MealTemplateItemsCompanion extends UpdateCompanion<MealTemplateItem> {
   }
 }
 
+class $FoodMicronutrientsTable extends FoodMicronutrients
+    with TableInfo<$FoodMicronutrientsTable, FoodMicronutrient> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FoodMicronutrientsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: newId,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _foodIdMeta = const VerificationMeta('foodId');
+  @override
+  late final GeneratedColumn<String> foodId = GeneratedColumn<String>(
+    'food_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nutrientIdMeta = const VerificationMeta(
+    'nutrientId',
+  );
+  @override
+  late final GeneratedColumn<String> nutrientId = GeneratedColumn<String>(
+    'nutrient_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    foodId,
+    nutrientId,
+    amount,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'food_micronutrients';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FoodMicronutrient> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('food_id')) {
+      context.handle(
+        _foodIdMeta,
+        foodId.isAcceptableOrUnknown(data['food_id']!, _foodIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_foodIdMeta);
+    }
+    if (data.containsKey('nutrient_id')) {
+      context.handle(
+        _nutrientIdMeta,
+        nutrientId.isAcceptableOrUnknown(data['nutrient_id']!, _nutrientIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nutrientIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FoodMicronutrient map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FoodMicronutrient(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      foodId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}food_id'],
+      )!,
+      nutrientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nutrient_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $FoodMicronutrientsTable createAlias(String alias) {
+    return $FoodMicronutrientsTable(attachedDatabase, alias);
+  }
+}
+
+class FoodMicronutrient extends DataClass
+    implements Insertable<FoodMicronutrient> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  final String foodId;
+  final String nutrientId;
+  final double amount;
+  const FoodMicronutrient({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required this.foodId,
+    required this.nutrientId,
+    required this.amount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    map['food_id'] = Variable<String>(foodId);
+    map['nutrient_id'] = Variable<String>(nutrientId);
+    map['amount'] = Variable<double>(amount);
+    return map;
+  }
+
+  FoodMicronutrientsCompanion toCompanion(bool nullToAbsent) {
+    return FoodMicronutrientsCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      foodId: Value(foodId),
+      nutrientId: Value(nutrientId),
+      amount: Value(amount),
+    );
+  }
+
+  factory FoodMicronutrient.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FoodMicronutrient(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      foodId: serializer.fromJson<String>(json['foodId']),
+      nutrientId: serializer.fromJson<String>(json['nutrientId']),
+      amount: serializer.fromJson<double>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'foodId': serializer.toJson<String>(foodId),
+      'nutrientId': serializer.toJson<String>(nutrientId),
+      'amount': serializer.toJson<double>(amount),
+    };
+  }
+
+  FoodMicronutrient copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    String? foodId,
+    String? nutrientId,
+    double? amount,
+  }) => FoodMicronutrient(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    foodId: foodId ?? this.foodId,
+    nutrientId: nutrientId ?? this.nutrientId,
+    amount: amount ?? this.amount,
+  );
+  FoodMicronutrient copyWithCompanion(FoodMicronutrientsCompanion data) {
+    return FoodMicronutrient(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      foodId: data.foodId.present ? data.foodId.value : this.foodId,
+      nutrientId: data.nutrientId.present
+          ? data.nutrientId.value
+          : this.nutrientId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FoodMicronutrient(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('foodId: $foodId, ')
+          ..write('nutrientId: $nutrientId, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    foodId,
+    nutrientId,
+    amount,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FoodMicronutrient &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.foodId == this.foodId &&
+          other.nutrientId == this.nutrientId &&
+          other.amount == this.amount);
+}
+
+class FoodMicronutrientsCompanion extends UpdateCompanion<FoodMicronutrient> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<String> foodId;
+  final Value<String> nutrientId;
+  final Value<double> amount;
+  final Value<int> rowid;
+  const FoodMicronutrientsCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.foodId = const Value.absent(),
+    this.nutrientId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FoodMicronutrientsCompanion.insert({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required String foodId,
+    required String nutrientId,
+    required double amount,
+    this.rowid = const Value.absent(),
+  }) : foodId = Value(foodId),
+       nutrientId = Value(nutrientId),
+       amount = Value(amount);
+  static Insertable<FoodMicronutrient> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<String>? foodId,
+    Expression<String>? nutrientId,
+    Expression<double>? amount,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (foodId != null) 'food_id': foodId,
+      if (nutrientId != null) 'nutrient_id': nutrientId,
+      if (amount != null) 'amount': amount,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FoodMicronutrientsCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<String>? foodId,
+    Value<String>? nutrientId,
+    Value<double>? amount,
+    Value<int>? rowid,
+  }) {
+    return FoodMicronutrientsCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      foodId: foodId ?? this.foodId,
+      nutrientId: nutrientId ?? this.nutrientId,
+      amount: amount ?? this.amount,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (foodId.present) {
+      map['food_id'] = Variable<String>(foodId.value);
+    }
+    if (nutrientId.present) {
+      map['nutrient_id'] = Variable<String>(nutrientId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FoodMicronutrientsCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('foodId: $foodId, ')
+          ..write('nutrientId: $nutrientId, ')
+          ..write('amount: $amount, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -13845,6 +14303,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MealTemplatesTable mealTemplates = $MealTemplatesTable(this);
   late final $MealTemplateItemsTable mealTemplateItems =
       $MealTemplateItemsTable(this);
+  late final $FoodMicronutrientsTable foodMicronutrients =
+      $FoodMicronutrientsTable(this);
   late final Index foodsKey = Index(
     'foods_key',
     'CREATE UNIQUE INDEX foods_key ON foods (food_key)',
@@ -13909,6 +14369,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'meal_template_items_tpl',
     'CREATE INDEX meal_template_items_tpl ON meal_template_items (template_id)',
   );
+  late final Index foodMicronutrientsFood = Index(
+    'food_micronutrients_food',
+    'CREATE INDEX food_micronutrients_food ON food_micronutrients (food_id)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -13932,6 +14396,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     fastingSessions,
     mealTemplates,
     mealTemplateItems,
+    foodMicronutrients,
     foodsKey,
     foodsBarcode,
     diaryDay,
@@ -13948,6 +14413,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     mealPlanDay,
     mealTemplatesKey,
     mealTemplateItemsTpl,
+    foodMicronutrientsFood,
   ];
   @override
   DriftDatabaseOptions get options =>
@@ -20643,6 +21109,270 @@ typedef $$MealTemplateItemsTableProcessedTableManager =
       MealTemplateItem,
       PrefetchHooks Function()
     >;
+typedef $$FoodMicronutrientsTableCreateCompanionBuilder =
+    FoodMicronutrientsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      required String foodId,
+      required String nutrientId,
+      required double amount,
+      Value<int> rowid,
+    });
+typedef $$FoodMicronutrientsTableUpdateCompanionBuilder =
+    FoodMicronutrientsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<String> foodId,
+      Value<String> nutrientId,
+      Value<double> amount,
+      Value<int> rowid,
+    });
+
+class $$FoodMicronutrientsTableFilterComposer
+    extends Composer<_$AppDatabase, $FoodMicronutrientsTable> {
+  $$FoodMicronutrientsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get foodId => $composableBuilder(
+    column: $table.foodId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nutrientId => $composableBuilder(
+    column: $table.nutrientId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FoodMicronutrientsTableOrderingComposer
+    extends Composer<_$AppDatabase, $FoodMicronutrientsTable> {
+  $$FoodMicronutrientsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get foodId => $composableBuilder(
+    column: $table.foodId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nutrientId => $composableBuilder(
+    column: $table.nutrientId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FoodMicronutrientsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FoodMicronutrientsTable> {
+  $$FoodMicronutrientsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get foodId =>
+      $composableBuilder(column: $table.foodId, builder: (column) => column);
+
+  GeneratedColumn<String> get nutrientId => $composableBuilder(
+    column: $table.nutrientId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+}
+
+class $$FoodMicronutrientsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $FoodMicronutrientsTable,
+          FoodMicronutrient,
+          $$FoodMicronutrientsTableFilterComposer,
+          $$FoodMicronutrientsTableOrderingComposer,
+          $$FoodMicronutrientsTableAnnotationComposer,
+          $$FoodMicronutrientsTableCreateCompanionBuilder,
+          $$FoodMicronutrientsTableUpdateCompanionBuilder,
+          (
+            FoodMicronutrient,
+            BaseReferences<
+              _$AppDatabase,
+              $FoodMicronutrientsTable,
+              FoodMicronutrient
+            >,
+          ),
+          FoodMicronutrient,
+          PrefetchHooks Function()
+        > {
+  $$FoodMicronutrientsTableTableManager(
+    _$AppDatabase db,
+    $FoodMicronutrientsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FoodMicronutrientsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FoodMicronutrientsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FoodMicronutrientsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<String> foodId = const Value.absent(),
+                Value<String> nutrientId = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FoodMicronutrientsCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                foodId: foodId,
+                nutrientId: nutrientId,
+                amount: amount,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required String foodId,
+                required String nutrientId,
+                required double amount,
+                Value<int> rowid = const Value.absent(),
+              }) => FoodMicronutrientsCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                foodId: foodId,
+                nutrientId: nutrientId,
+                amount: amount,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$FoodMicronutrientsTable, FoodMicronutrient>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $FoodMicronutrientsTable,
+                    FoodMicronutrient
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FoodMicronutrientsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $FoodMicronutrientsTable,
+      FoodMicronutrient,
+      $$FoodMicronutrientsTableFilterComposer,
+      $$FoodMicronutrientsTableOrderingComposer,
+      $$FoodMicronutrientsTableAnnotationComposer,
+      $$FoodMicronutrientsTableCreateCompanionBuilder,
+      $$FoodMicronutrientsTableUpdateCompanionBuilder,
+      (
+        FoodMicronutrient,
+        BaseReferences<
+          _$AppDatabase,
+          $FoodMicronutrientsTable,
+          FoodMicronutrient
+        >,
+      ),
+      FoodMicronutrient,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -20683,4 +21413,6 @@ class $AppDatabaseManager {
       $$MealTemplatesTableTableManager(_db, _db.mealTemplates);
   $$MealTemplateItemsTableTableManager get mealTemplateItems =>
       $$MealTemplateItemsTableTableManager(_db, _db.mealTemplateItems);
+  $$FoodMicronutrientsTableTableManager get foodMicronutrients =>
+      $$FoodMicronutrientsTableTableManager(_db, _db.foodMicronutrients);
 }

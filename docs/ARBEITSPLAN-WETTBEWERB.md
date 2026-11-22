@@ -104,7 +104,7 @@ geplant, wird **vorgezogen**, weil es kein KI-Modell braucht, sondern reine Rech
 
 ### P1 – Bereiche, in denen MyDiet AI klar führt
 
-**W5 · Mikronährstoffe und Supplemente als Einheit (L)** – Einordnung: Phase 2 Supplemente + Erweiterung
+**W5 · Mikronährstoffe und Supplemente als Einheit (L)** – Einordnung: Phase 2 Supplemente + Erweiterung – ✅ umgesetzt
 - Ziele nach D-A-CH-Referenzwerten (Alter, Geschlecht), tolerierbare Höchstmengen nach EFSA.
 - Tagessumme **aus Lebensmitteln + allen Präparaten** je Nährstoff (z. B. Vitamin D aus Multi, D3/K2 und
   Lebensmitteln) mit Ampel: unter Ziel / im Ziel / über Höchstmenge. Keine eigenen Dosierungsempfehlungen.

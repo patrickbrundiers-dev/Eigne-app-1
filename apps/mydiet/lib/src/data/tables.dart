@@ -311,3 +311,13 @@ class Settings extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+/// Vitamins and minerals of a food per 100 g/ml (schema 6). `nutrientId` is a catalogue id
+/// from core/supplements.dart, `amount` is in the catalogue unit (µg, mg or g).
+/// Optional: missing rows mean "unknown", not zero.
+@TableIndex(name: 'food_micronutrients_food', columns: {#foodId})
+class FoodMicronutrients extends Table with SyncColumns {
+  TextColumn get foodId => text()();
+  TextColumn get nutrientId => text()();
+  RealColumn get amount => real()();
+}
