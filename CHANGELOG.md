@@ -9,6 +9,7 @@
   wird ein Aktivitätseintrag, dazu ein Eintrag „Alltag“ pro Tag ohne Doppelzählung; erneutes Übernehmen
   aktualisiert statt zu verdoppeln, eigene Gewichtseinträge haben Vorrang. Auf Wunsch automatisch beim Öffnen.
   Die App braucht jetzt mindestens Android 8
+
 - Health Connect: Mahlzeiten schreiben (eigener Schalter). Kalorien und Nährwerte je Mahlzeit der letzten 7 Tage
   gehen nach Health Connect; Änderungen im Tagebuch werden beim nächsten Abgleich übernommen, nichts doppelt
 
