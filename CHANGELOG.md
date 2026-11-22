@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+- Intern: Datenbankzugriffe nach Bereichen in eigene Dateien aufgeteilt (keine Änderung an Daten oder Verhalten)
+
 ## 0.4.0 – Health Connect, Wochenbericht, schnelleres Eintragen (2026-11-22)
 
 - Health Connect (Android, Einstellungen → Health Connect): Schritte, aktive Kalorien, Trainings und Gewicht
@@ -9,6 +11,7 @@
   wird ein Aktivitätseintrag, dazu ein Eintrag „Alltag“ pro Tag ohne Doppelzählung; erneutes Übernehmen
   aktualisiert statt zu verdoppeln, eigene Gewichtseinträge haben Vorrang. Auf Wunsch automatisch beim Öffnen.
   Die App braucht jetzt mindestens Android 8
+
 - Health Connect: Mahlzeiten schreiben (eigener Schalter). Kalorien und Nährwerte je Mahlzeit der letzten 7 Tage
   gehen nach Health Connect; Änderungen im Tagebuch werden beim nächsten Abgleich übernommen, nichts doppelt
 

@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../app.dart';
 import '../../core/dates.dart';
 import '../../data/csv_export.dart';
+import '../../data/database.dart';
 import '../../data/display_prefs.dart';
 import 'backup_card.dart';
 import 'delete_all.dart';
