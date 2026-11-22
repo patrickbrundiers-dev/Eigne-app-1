@@ -16,6 +16,12 @@
 - Wochenplan „Mit Rezepten füllen“ beachtet das Profil: Rezepte mit Unverträglichkeiten (z. B. Laktose steht
   auch für Milch, Joghurt, Käse; Gluten für Weizen, Hafer, Nudeln …) oder abgelehnten Lebensmitteln bleiben
   weg, mit Grund in der Meldung; Rezepte mit bevorzugten Lebensmitteln kommen öfter vor
+- Einstellungen → Daten → „Alle Daten löschen“: löscht alles endgültig vom Gerät (auch gelöschte Einträge,
+  eigene Lebensmittel, Erinnerungen), wahlweise auch die automatischen Sicherungen; Bestätigung durch Eingabe
+  von „LÖSCHEN“. Danach startet die App wie neu installiert
+- Einstellungen → Fehlerprotokoll: technische Fehler werden lokal gespeichert (die letzten 50), ohne Zahlen,
+  Texte in Anführungszeichen und Dateipfade, damit keine Gesundheitsdaten darin landen; kopieren und leeren
+  möglich, nichts wird gesendet
 
 ## 0.3.0 – Barcode, Erinnerungen, Text-Eingabe, Vitamine und Mineralstoffe (2026-11-22)
 
