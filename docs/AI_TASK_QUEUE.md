@@ -12,7 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 3.2 Portionen lernen | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
+| 5.1 Gewohnheiten erkennen | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -57,7 +57,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 5.1 | Gewohnheiten erkennen: wiederkehrende Mahlzeiten → Vorlage vorschlagen | H | M | N | – | Unit-Tests mit synthetischem Tagebuch |
+| 5.1 | ✅ Gewohnheiten erkennen: wiederkehrende Mahlzeiten → Vorlage vorschlagen | H | M | N | – | Unit-Tests mit synthetischem Tagebuch |
 | 5.2 | Stagnations-Analyse: Plateau + Bilanz + Lücken + Wochenendmuster → erklärte Ursachen | H | M | N | dieser PR | Unit-Tests |
 | 5.3 | Optionale Cloud-KI für Text/Foto (Anbieter wählbar, Schlüssel im sicheren Speicher, Datenvorschau vor dem Senden) | H | L | H (Kosten, Datenschutz → **Freigabe nötig**) | 3.1 | Tests mit Mock |
 | 5.4 | ✅ Wochenbericht mit Begründung (nutzt Wochen-Check, Fortschritt, Mikros) | M | M | N | W5 | Unit-Tests |
