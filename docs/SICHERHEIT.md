@@ -11,6 +11,8 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
 | Netzwerk | Einzige Verbindung: Open Food Facts beim Scannen eines unbekannten Barcodes (nur der Barcode, generischer User-Agent). Keine Analyse- oder Werbe-SDKs. |
 | Export | Nur auf ausdrücklichen Wunsch, Speicherort wählt der Benutzer. Export-Dateien sind per `.gitignore` ausgeschlossen. Hinweis: Export ist unverschlüsselt. |
 | Import | Formatprüfung, eine Transaktion, bei Fehlern keine Änderung |
+| Löschen (Art. 17 DSGVO) | Einstellungen → „Alle Daten löschen“: alle Tabellen endgültig (keine Tombstones), wahlweise auch alle automatischen Sicherungen; Erinnerungen abgemeldet; doppelte Bestätigung |
+| Fehlerprotokoll | nur lokal, letzte 50 Fehler; Zahlen, Zitate, Pfade und E-Mails werden vor dem Speichern entfernt, nur Code-Stellen der App; wird nicht gesendet |
 | Eingaben | Wertebereiche für Gewicht, Mengen, Nährwerte; Plausibilitätsprüfung von Nährwerten; SQL nur über Platzhalter |
 | Medizinische Aussagen | Hinweise sind regelbasiert und ausdrücklich keine Beratung; Sicherheitsgrenzen beim Kalorienziel (max. 1 % Gewichtsverlust/Woche, min. 1500/1200 kcal) |
 
