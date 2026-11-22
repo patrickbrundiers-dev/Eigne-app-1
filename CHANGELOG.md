@@ -20,6 +20,9 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Gewicht → Fortschritt: Steht das Gewicht drei Wochen still, nennt die App, was deine Daten dazu zeigen
+  (Lücken im Tagebuch, über dem Ziel, Wochenende, Bilanz passt nicht zur Waage, wenige Messungen), jeweils mit
+  den Zahlen dahinter. Keine Diagnose, kein niedrigeres Ziel ohne Wochen-Check
 - Gewohnheiten: Isst du dieselbe Kombination mindestens dreimal in vier Wochen zur selben Mahlzeit, schlägt die
   App beim Eintragen vor, sie als Vorlage zu speichern (ablehnen möglich, dann nicht wieder)
 

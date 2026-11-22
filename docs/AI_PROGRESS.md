@@ -4,6 +4,12 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Stillstand erklären (Aufgabe 5.2)
+
+`core/stall.dart` (`analyzeStall`), Abschnitt „Stillstand: woran es liegen kann“ in der Fortschritt-Karte
+(Gewicht), Tagessummen dort jetzt 21 statt 7 Tage geladen. Bei „Zahlen ausblenden“ nicht angezeigt.
+Tests: `test/stall_test.dart` (7), Suite grün. Nächster Schritt: 2.3 Barrierefreiheit.
+
 ## 2026-11-22 – Gewohnheiten erkennen (Aufgabe 5.1)
 
 `core/habits.dart` (`findHabits`), `data/habits_data.dart` (Vorschläge aus 28 Tagen, Ablehnen per Setting
