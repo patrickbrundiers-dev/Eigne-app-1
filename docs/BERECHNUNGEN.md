@@ -60,6 +60,21 @@ Die Werte liegen am unteren Rand der DGE-Spannen, weil Formeln den Bedarf bei h�
   „1 Portion“ und „Gramm einer Portion“ genau dieselben Werte (getestet).
 - Einkaufsliste: Menge × gewünschte Portionen ÷ Rezeptportionen; gleiche Zutat mit gleicher Einheit wird addiert.
 
+## Supplemente
+
+Die App empfiehlt keine Dosierungen. Sie addiert, was eingetragen ist, und vergleicht mit Referenzwerten:
+
+- Summe je Inhaltsstoff über alle aktiven Produkte: Menge pro Portion × Portionen; Einheiten µg/mg/g werden
+  umgerechnet, Vitamin D in IE ÷ 40 = µg. „Geplant“ = Portionen pro Tag, „heute“ = abgehakte Einnahmen.
+- NRV (Referenzmenge, VO (EU) 1169/2011 Anhang XIII) als Prozentangabe pro Inhaltsstoff.
+- UL (tolerierbare Höchstmenge für Erwachsene, EFSA): Hinweis ab 80 %, Warnung über 100 %.
+  Werte: Vitamin A 3.000 µg, D 100 µg, E 300 mg, B6 12 mg, Folsäure 1.000 µg*, Niacin (Nicotinamid) 900 mg*,
+  Calcium 2.500 mg, Magnesium 250 mg*, Zink 25 mg, Kupfer 5 mg, Selen 255 µg, Jod 600 µg, Molybdän 600 µg;
+  Eisen 40 mg (EFSA-Sicherheitswert 2024); Omega-3 (EPA+DHA) 5 g und Koffein 400 mg (EFSA-Einschätzungen).
+  \* gilt nur für Nahrungsergänzung/zugesetzte Formen.
+- Lebensmittel sind nicht enthalten, weil die Lebensmitteldatenbank keine Mikronährstoffe führt; die App
+  weist darauf hin.
+
 ## Aktivität
 
 - Tagesbudget = Kalorienziel + Aktivitätskalorien × Anrechnung (0/25/50/100 %, Standard 0 %).

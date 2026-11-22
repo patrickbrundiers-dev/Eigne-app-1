@@ -190,6 +190,51 @@ class ShoppingItems extends Table with SyncColumns {
   BoolColumn get checked => boolean().withDefault(const Constant(false))();
 }
 
+/// Supplements (schema 3). One row per product; ingredients per serving in
+/// [SupplementIngredients].
+@TableIndex(name: 'supplements_key', columns: {#nameKey}, unique: true)
+class Supplements extends Table with SyncColumns {
+  TextColumn get name => text().withLength(min: 1, max: 120)();
+  TextColumn get brand => text().nullable()();
+
+  /// Normalised name|brand. Unique among live rows (deleted rows get a suffix).
+  TextColumn get nameKey => text()();
+  TextColumn get form => text().nullable()(); // Kapsel, Tablette, Pulver, Tropfen ...
+  TextColumn get servingLabel => text().withDefault(const Constant('Portion'))();
+
+  /// Manufacturer's recommendation as printed on the pack (free text, not a recommendation of the app).
+  TextColumn get manufacturerDose => text().nullable()();
+  RealColumn get servingsPerDay => real().withDefault(const Constant(1))();
+
+  /// Planned intake times as JSON list of minutes after midnight.
+  TextColumn get timesJson => text().withDefault(const Constant('[]'))();
+  BoolColumn get active => boolean().withDefault(const Constant(true))();
+  RealColumn get stockServings => real().nullable()();
+  TextColumn get note => text().nullable()();
+}
+
+@TableIndex(name: 'supplement_ingredients_sup', columns: {#supplementId})
+class SupplementIngredients extends Table with SyncColumns {
+  TextColumn get supplementId => text()();
+
+  /// Catalogue id (core/supplements.dart) or `custom:NAME`.
+  TextColumn get nutrientId => text()();
+  TextColumn get name => text().nullable()();
+  RealColumn get amount => real()();
+  TextColumn get unit => text()();
+  IntColumn get sortOrder => integer()();
+}
+
+/// Taken supplements. One row per product, day and planned time (-1 = no fixed time).
+@TableIndex(name: 'supplement_intake_slot', columns: {#supplementId, #dayKey, #plannedMinute}, unique: true)
+@TableIndex(name: 'supplement_intake_day', columns: {#dayKey})
+class SupplementIntakes extends Table with SyncColumns {
+  TextColumn get supplementId => text()();
+  TextColumn get dayKey => text()();
+  IntColumn get plannedMinute => integer()();
+  RealColumn get servings => real()();
+}
+
 /// App settings (theme, colours, dashboard layout, ...).
 class Settings extends Table {
   TextColumn get key => text()();

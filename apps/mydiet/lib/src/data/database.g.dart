@@ -8621,6 +8621,1992 @@ class ShoppingItemsCompanion extends UpdateCompanion<ShoppingItem> {
   }
 }
 
+class $SupplementsTable extends Supplements
+    with TableInfo<$SupplementsTable, Supplement> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SupplementsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: newId,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 1,
+      maxTextLength: 120,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _brandMeta = const VerificationMeta('brand');
+  @override
+  late final GeneratedColumn<String> brand = GeneratedColumn<String>(
+    'brand',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameKeyMeta = const VerificationMeta(
+    'nameKey',
+  );
+  @override
+  late final GeneratedColumn<String> nameKey = GeneratedColumn<String>(
+    'name_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _formMeta = const VerificationMeta('form');
+  @override
+  late final GeneratedColumn<String> form = GeneratedColumn<String>(
+    'form',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _servingLabelMeta = const VerificationMeta(
+    'servingLabel',
+  );
+  @override
+  late final GeneratedColumn<String> servingLabel = GeneratedColumn<String>(
+    'serving_label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Portion'),
+  );
+  static const VerificationMeta _manufacturerDoseMeta = const VerificationMeta(
+    'manufacturerDose',
+  );
+  @override
+  late final GeneratedColumn<String> manufacturerDose = GeneratedColumn<String>(
+    'manufacturer_dose',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _servingsPerDayMeta = const VerificationMeta(
+    'servingsPerDay',
+  );
+  @override
+  late final GeneratedColumn<double> servingsPerDay = GeneratedColumn<double>(
+    'servings_per_day',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _timesJsonMeta = const VerificationMeta(
+    'timesJson',
+  );
+  @override
+  late final GeneratedColumn<String> timesJson = GeneratedColumn<String>(
+    'times_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+    'active',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("active" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _stockServingsMeta = const VerificationMeta(
+    'stockServings',
+  );
+  @override
+  late final GeneratedColumn<double> stockServings = GeneratedColumn<double>(
+    'stock_servings',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    name,
+    brand,
+    nameKey,
+    form,
+    servingLabel,
+    manufacturerDose,
+    servingsPerDay,
+    timesJson,
+    active,
+    stockServings,
+    note,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'supplements';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Supplement> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('brand')) {
+      context.handle(
+        _brandMeta,
+        brand.isAcceptableOrUnknown(data['brand']!, _brandMeta),
+      );
+    }
+    if (data.containsKey('name_key')) {
+      context.handle(
+        _nameKeyMeta,
+        nameKey.isAcceptableOrUnknown(data['name_key']!, _nameKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameKeyMeta);
+    }
+    if (data.containsKey('form')) {
+      context.handle(
+        _formMeta,
+        form.isAcceptableOrUnknown(data['form']!, _formMeta),
+      );
+    }
+    if (data.containsKey('serving_label')) {
+      context.handle(
+        _servingLabelMeta,
+        servingLabel.isAcceptableOrUnknown(
+          data['serving_label']!,
+          _servingLabelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('manufacturer_dose')) {
+      context.handle(
+        _manufacturerDoseMeta,
+        manufacturerDose.isAcceptableOrUnknown(
+          data['manufacturer_dose']!,
+          _manufacturerDoseMeta,
+        ),
+      );
+    }
+    if (data.containsKey('servings_per_day')) {
+      context.handle(
+        _servingsPerDayMeta,
+        servingsPerDay.isAcceptableOrUnknown(
+          data['servings_per_day']!,
+          _servingsPerDayMeta,
+        ),
+      );
+    }
+    if (data.containsKey('times_json')) {
+      context.handle(
+        _timesJsonMeta,
+        timesJson.isAcceptableOrUnknown(data['times_json']!, _timesJsonMeta),
+      );
+    }
+    if (data.containsKey('active')) {
+      context.handle(
+        _activeMeta,
+        active.isAcceptableOrUnknown(data['active']!, _activeMeta),
+      );
+    }
+    if (data.containsKey('stock_servings')) {
+      context.handle(
+        _stockServingsMeta,
+        stockServings.isAcceptableOrUnknown(
+          data['stock_servings']!,
+          _stockServingsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Supplement map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Supplement(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      brand: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}brand'],
+      ),
+      nameKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_key'],
+      )!,
+      form: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}form'],
+      ),
+      servingLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}serving_label'],
+      )!,
+      manufacturerDose: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}manufacturer_dose'],
+      ),
+      servingsPerDay: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}servings_per_day'],
+      )!,
+      timesJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}times_json'],
+      )!,
+      active: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}active'],
+      )!,
+      stockServings: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}stock_servings'],
+      ),
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+    );
+  }
+
+  @override
+  $SupplementsTable createAlias(String alias) {
+    return $SupplementsTable(attachedDatabase, alias);
+  }
+}
+
+class Supplement extends DataClass implements Insertable<Supplement> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  final String name;
+  final String? brand;
+
+  /// Normalised name|brand. Unique among live rows (deleted rows get a suffix).
+  final String nameKey;
+  final String? form;
+  final String servingLabel;
+
+  /// Manufacturer's recommendation as printed on the pack (free text, not a recommendation of the app).
+  final String? manufacturerDose;
+  final double servingsPerDay;
+
+  /// Planned intake times as JSON list of minutes after midnight.
+  final String timesJson;
+  final bool active;
+  final double? stockServings;
+  final String? note;
+  const Supplement({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required this.name,
+    this.brand,
+    required this.nameKey,
+    this.form,
+    required this.servingLabel,
+    this.manufacturerDose,
+    required this.servingsPerDay,
+    required this.timesJson,
+    required this.active,
+    this.stockServings,
+    this.note,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || brand != null) {
+      map['brand'] = Variable<String>(brand);
+    }
+    map['name_key'] = Variable<String>(nameKey);
+    if (!nullToAbsent || form != null) {
+      map['form'] = Variable<String>(form);
+    }
+    map['serving_label'] = Variable<String>(servingLabel);
+    if (!nullToAbsent || manufacturerDose != null) {
+      map['manufacturer_dose'] = Variable<String>(manufacturerDose);
+    }
+    map['servings_per_day'] = Variable<double>(servingsPerDay);
+    map['times_json'] = Variable<String>(timesJson);
+    map['active'] = Variable<bool>(active);
+    if (!nullToAbsent || stockServings != null) {
+      map['stock_servings'] = Variable<double>(stockServings);
+    }
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    return map;
+  }
+
+  SupplementsCompanion toCompanion(bool nullToAbsent) {
+    return SupplementsCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      name: Value(name),
+      brand: brand == null && nullToAbsent
+          ? const Value.absent()
+          : Value(brand),
+      nameKey: Value(nameKey),
+      form: form == null && nullToAbsent ? const Value.absent() : Value(form),
+      servingLabel: Value(servingLabel),
+      manufacturerDose: manufacturerDose == null && nullToAbsent
+          ? const Value.absent()
+          : Value(manufacturerDose),
+      servingsPerDay: Value(servingsPerDay),
+      timesJson: Value(timesJson),
+      active: Value(active),
+      stockServings: stockServings == null && nullToAbsent
+          ? const Value.absent()
+          : Value(stockServings),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+    );
+  }
+
+  factory Supplement.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Supplement(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      name: serializer.fromJson<String>(json['name']),
+      brand: serializer.fromJson<String?>(json['brand']),
+      nameKey: serializer.fromJson<String>(json['nameKey']),
+      form: serializer.fromJson<String?>(json['form']),
+      servingLabel: serializer.fromJson<String>(json['servingLabel']),
+      manufacturerDose: serializer.fromJson<String?>(json['manufacturerDose']),
+      servingsPerDay: serializer.fromJson<double>(json['servingsPerDay']),
+      timesJson: serializer.fromJson<String>(json['timesJson']),
+      active: serializer.fromJson<bool>(json['active']),
+      stockServings: serializer.fromJson<double?>(json['stockServings']),
+      note: serializer.fromJson<String?>(json['note']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'name': serializer.toJson<String>(name),
+      'brand': serializer.toJson<String?>(brand),
+      'nameKey': serializer.toJson<String>(nameKey),
+      'form': serializer.toJson<String?>(form),
+      'servingLabel': serializer.toJson<String>(servingLabel),
+      'manufacturerDose': serializer.toJson<String?>(manufacturerDose),
+      'servingsPerDay': serializer.toJson<double>(servingsPerDay),
+      'timesJson': serializer.toJson<String>(timesJson),
+      'active': serializer.toJson<bool>(active),
+      'stockServings': serializer.toJson<double?>(stockServings),
+      'note': serializer.toJson<String?>(note),
+    };
+  }
+
+  Supplement copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    String? name,
+    Value<String?> brand = const Value.absent(),
+    String? nameKey,
+    Value<String?> form = const Value.absent(),
+    String? servingLabel,
+    Value<String?> manufacturerDose = const Value.absent(),
+    double? servingsPerDay,
+    String? timesJson,
+    bool? active,
+    Value<double?> stockServings = const Value.absent(),
+    Value<String?> note = const Value.absent(),
+  }) => Supplement(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    name: name ?? this.name,
+    brand: brand.present ? brand.value : this.brand,
+    nameKey: nameKey ?? this.nameKey,
+    form: form.present ? form.value : this.form,
+    servingLabel: servingLabel ?? this.servingLabel,
+    manufacturerDose: manufacturerDose.present
+        ? manufacturerDose.value
+        : this.manufacturerDose,
+    servingsPerDay: servingsPerDay ?? this.servingsPerDay,
+    timesJson: timesJson ?? this.timesJson,
+    active: active ?? this.active,
+    stockServings: stockServings.present
+        ? stockServings.value
+        : this.stockServings,
+    note: note.present ? note.value : this.note,
+  );
+  Supplement copyWithCompanion(SupplementsCompanion data) {
+    return Supplement(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      name: data.name.present ? data.name.value : this.name,
+      brand: data.brand.present ? data.brand.value : this.brand,
+      nameKey: data.nameKey.present ? data.nameKey.value : this.nameKey,
+      form: data.form.present ? data.form.value : this.form,
+      servingLabel: data.servingLabel.present
+          ? data.servingLabel.value
+          : this.servingLabel,
+      manufacturerDose: data.manufacturerDose.present
+          ? data.manufacturerDose.value
+          : this.manufacturerDose,
+      servingsPerDay: data.servingsPerDay.present
+          ? data.servingsPerDay.value
+          : this.servingsPerDay,
+      timesJson: data.timesJson.present ? data.timesJson.value : this.timesJson,
+      active: data.active.present ? data.active.value : this.active,
+      stockServings: data.stockServings.present
+          ? data.stockServings.value
+          : this.stockServings,
+      note: data.note.present ? data.note.value : this.note,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Supplement(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('name: $name, ')
+          ..write('brand: $brand, ')
+          ..write('nameKey: $nameKey, ')
+          ..write('form: $form, ')
+          ..write('servingLabel: $servingLabel, ')
+          ..write('manufacturerDose: $manufacturerDose, ')
+          ..write('servingsPerDay: $servingsPerDay, ')
+          ..write('timesJson: $timesJson, ')
+          ..write('active: $active, ')
+          ..write('stockServings: $stockServings, ')
+          ..write('note: $note')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    name,
+    brand,
+    nameKey,
+    form,
+    servingLabel,
+    manufacturerDose,
+    servingsPerDay,
+    timesJson,
+    active,
+    stockServings,
+    note,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Supplement &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.name == this.name &&
+          other.brand == this.brand &&
+          other.nameKey == this.nameKey &&
+          other.form == this.form &&
+          other.servingLabel == this.servingLabel &&
+          other.manufacturerDose == this.manufacturerDose &&
+          other.servingsPerDay == this.servingsPerDay &&
+          other.timesJson == this.timesJson &&
+          other.active == this.active &&
+          other.stockServings == this.stockServings &&
+          other.note == this.note);
+}
+
+class SupplementsCompanion extends UpdateCompanion<Supplement> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<String> name;
+  final Value<String?> brand;
+  final Value<String> nameKey;
+  final Value<String?> form;
+  final Value<String> servingLabel;
+  final Value<String?> manufacturerDose;
+  final Value<double> servingsPerDay;
+  final Value<String> timesJson;
+  final Value<bool> active;
+  final Value<double?> stockServings;
+  final Value<String?> note;
+  final Value<int> rowid;
+  const SupplementsCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.name = const Value.absent(),
+    this.brand = const Value.absent(),
+    this.nameKey = const Value.absent(),
+    this.form = const Value.absent(),
+    this.servingLabel = const Value.absent(),
+    this.manufacturerDose = const Value.absent(),
+    this.servingsPerDay = const Value.absent(),
+    this.timesJson = const Value.absent(),
+    this.active = const Value.absent(),
+    this.stockServings = const Value.absent(),
+    this.note = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SupplementsCompanion.insert({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required String name,
+    this.brand = const Value.absent(),
+    required String nameKey,
+    this.form = const Value.absent(),
+    this.servingLabel = const Value.absent(),
+    this.manufacturerDose = const Value.absent(),
+    this.servingsPerDay = const Value.absent(),
+    this.timesJson = const Value.absent(),
+    this.active = const Value.absent(),
+    this.stockServings = const Value.absent(),
+    this.note = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : name = Value(name),
+       nameKey = Value(nameKey);
+  static Insertable<Supplement> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<String>? name,
+    Expression<String>? brand,
+    Expression<String>? nameKey,
+    Expression<String>? form,
+    Expression<String>? servingLabel,
+    Expression<String>? manufacturerDose,
+    Expression<double>? servingsPerDay,
+    Expression<String>? timesJson,
+    Expression<bool>? active,
+    Expression<double>? stockServings,
+    Expression<String>? note,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (name != null) 'name': name,
+      if (brand != null) 'brand': brand,
+      if (nameKey != null) 'name_key': nameKey,
+      if (form != null) 'form': form,
+      if (servingLabel != null) 'serving_label': servingLabel,
+      if (manufacturerDose != null) 'manufacturer_dose': manufacturerDose,
+      if (servingsPerDay != null) 'servings_per_day': servingsPerDay,
+      if (timesJson != null) 'times_json': timesJson,
+      if (active != null) 'active': active,
+      if (stockServings != null) 'stock_servings': stockServings,
+      if (note != null) 'note': note,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SupplementsCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<String>? name,
+    Value<String?>? brand,
+    Value<String>? nameKey,
+    Value<String?>? form,
+    Value<String>? servingLabel,
+    Value<String?>? manufacturerDose,
+    Value<double>? servingsPerDay,
+    Value<String>? timesJson,
+    Value<bool>? active,
+    Value<double?>? stockServings,
+    Value<String?>? note,
+    Value<int>? rowid,
+  }) {
+    return SupplementsCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      name: name ?? this.name,
+      brand: brand ?? this.brand,
+      nameKey: nameKey ?? this.nameKey,
+      form: form ?? this.form,
+      servingLabel: servingLabel ?? this.servingLabel,
+      manufacturerDose: manufacturerDose ?? this.manufacturerDose,
+      servingsPerDay: servingsPerDay ?? this.servingsPerDay,
+      timesJson: timesJson ?? this.timesJson,
+      active: active ?? this.active,
+      stockServings: stockServings ?? this.stockServings,
+      note: note ?? this.note,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (brand.present) {
+      map['brand'] = Variable<String>(brand.value);
+    }
+    if (nameKey.present) {
+      map['name_key'] = Variable<String>(nameKey.value);
+    }
+    if (form.present) {
+      map['form'] = Variable<String>(form.value);
+    }
+    if (servingLabel.present) {
+      map['serving_label'] = Variable<String>(servingLabel.value);
+    }
+    if (manufacturerDose.present) {
+      map['manufacturer_dose'] = Variable<String>(manufacturerDose.value);
+    }
+    if (servingsPerDay.present) {
+      map['servings_per_day'] = Variable<double>(servingsPerDay.value);
+    }
+    if (timesJson.present) {
+      map['times_json'] = Variable<String>(timesJson.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (stockServings.present) {
+      map['stock_servings'] = Variable<double>(stockServings.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementsCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('name: $name, ')
+          ..write('brand: $brand, ')
+          ..write('nameKey: $nameKey, ')
+          ..write('form: $form, ')
+          ..write('servingLabel: $servingLabel, ')
+          ..write('manufacturerDose: $manufacturerDose, ')
+          ..write('servingsPerDay: $servingsPerDay, ')
+          ..write('timesJson: $timesJson, ')
+          ..write('active: $active, ')
+          ..write('stockServings: $stockServings, ')
+          ..write('note: $note, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SupplementIngredientsTable extends SupplementIngredients
+    with TableInfo<$SupplementIngredientsTable, SupplementIngredient> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SupplementIngredientsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: newId,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _supplementIdMeta = const VerificationMeta(
+    'supplementId',
+  );
+  @override
+  late final GeneratedColumn<String> supplementId = GeneratedColumn<String>(
+    'supplement_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nutrientIdMeta = const VerificationMeta(
+    'nutrientId',
+  );
+  @override
+  late final GeneratedColumn<String> nutrientId = GeneratedColumn<String>(
+    'nutrient_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _unitMeta = const VerificationMeta('unit');
+  @override
+  late final GeneratedColumn<String> unit = GeneratedColumn<String>(
+    'unit',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    supplementId,
+    nutrientId,
+    name,
+    amount,
+    unit,
+    sortOrder,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'supplement_ingredients';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SupplementIngredient> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('supplement_id')) {
+      context.handle(
+        _supplementIdMeta,
+        supplementId.isAcceptableOrUnknown(
+          data['supplement_id']!,
+          _supplementIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_supplementIdMeta);
+    }
+    if (data.containsKey('nutrient_id')) {
+      context.handle(
+        _nutrientIdMeta,
+        nutrientId.isAcceptableOrUnknown(data['nutrient_id']!, _nutrientIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nutrientIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('unit')) {
+      context.handle(
+        _unitMeta,
+        unit.isAcceptableOrUnknown(data['unit']!, _unitMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_unitMeta);
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sortOrderMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SupplementIngredient map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SupplementIngredient(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      supplementId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}supplement_id'],
+      )!,
+      nutrientId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nutrient_id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}amount'],
+      )!,
+      unit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit'],
+      )!,
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
+    );
+  }
+
+  @override
+  $SupplementIngredientsTable createAlias(String alias) {
+    return $SupplementIngredientsTable(attachedDatabase, alias);
+  }
+}
+
+class SupplementIngredient extends DataClass
+    implements Insertable<SupplementIngredient> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  final String supplementId;
+
+  /// Catalogue id (core/supplements.dart) or `custom:NAME`.
+  final String nutrientId;
+  final String? name;
+  final double amount;
+  final String unit;
+  final int sortOrder;
+  const SupplementIngredient({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required this.supplementId,
+    required this.nutrientId,
+    this.name,
+    required this.amount,
+    required this.unit,
+    required this.sortOrder,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    map['supplement_id'] = Variable<String>(supplementId);
+    map['nutrient_id'] = Variable<String>(nutrientId);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    map['amount'] = Variable<double>(amount);
+    map['unit'] = Variable<String>(unit);
+    map['sort_order'] = Variable<int>(sortOrder);
+    return map;
+  }
+
+  SupplementIngredientsCompanion toCompanion(bool nullToAbsent) {
+    return SupplementIngredientsCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      supplementId: Value(supplementId),
+      nutrientId: Value(nutrientId),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      amount: Value(amount),
+      unit: Value(unit),
+      sortOrder: Value(sortOrder),
+    );
+  }
+
+  factory SupplementIngredient.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SupplementIngredient(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      supplementId: serializer.fromJson<String>(json['supplementId']),
+      nutrientId: serializer.fromJson<String>(json['nutrientId']),
+      name: serializer.fromJson<String?>(json['name']),
+      amount: serializer.fromJson<double>(json['amount']),
+      unit: serializer.fromJson<String>(json['unit']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'supplementId': serializer.toJson<String>(supplementId),
+      'nutrientId': serializer.toJson<String>(nutrientId),
+      'name': serializer.toJson<String?>(name),
+      'amount': serializer.toJson<double>(amount),
+      'unit': serializer.toJson<String>(unit),
+      'sortOrder': serializer.toJson<int>(sortOrder),
+    };
+  }
+
+  SupplementIngredient copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    String? supplementId,
+    String? nutrientId,
+    Value<String?> name = const Value.absent(),
+    double? amount,
+    String? unit,
+    int? sortOrder,
+  }) => SupplementIngredient(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    supplementId: supplementId ?? this.supplementId,
+    nutrientId: nutrientId ?? this.nutrientId,
+    name: name.present ? name.value : this.name,
+    amount: amount ?? this.amount,
+    unit: unit ?? this.unit,
+    sortOrder: sortOrder ?? this.sortOrder,
+  );
+  SupplementIngredient copyWithCompanion(SupplementIngredientsCompanion data) {
+    return SupplementIngredient(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      supplementId: data.supplementId.present
+          ? data.supplementId.value
+          : this.supplementId,
+      nutrientId: data.nutrientId.present
+          ? data.nutrientId.value
+          : this.nutrientId,
+      name: data.name.present ? data.name.value : this.name,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      unit: data.unit.present ? data.unit.value : this.unit,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementIngredient(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('supplementId: $supplementId, ')
+          ..write('nutrientId: $nutrientId, ')
+          ..write('name: $name, ')
+          ..write('amount: $amount, ')
+          ..write('unit: $unit, ')
+          ..write('sortOrder: $sortOrder')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    supplementId,
+    nutrientId,
+    name,
+    amount,
+    unit,
+    sortOrder,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SupplementIngredient &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.supplementId == this.supplementId &&
+          other.nutrientId == this.nutrientId &&
+          other.name == this.name &&
+          other.amount == this.amount &&
+          other.unit == this.unit &&
+          other.sortOrder == this.sortOrder);
+}
+
+class SupplementIngredientsCompanion
+    extends UpdateCompanion<SupplementIngredient> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<String> supplementId;
+  final Value<String> nutrientId;
+  final Value<String?> name;
+  final Value<double> amount;
+  final Value<String> unit;
+  final Value<int> sortOrder;
+  final Value<int> rowid;
+  const SupplementIngredientsCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.supplementId = const Value.absent(),
+    this.nutrientId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.unit = const Value.absent(),
+    this.sortOrder = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SupplementIngredientsCompanion.insert({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required String supplementId,
+    required String nutrientId,
+    this.name = const Value.absent(),
+    required double amount,
+    required String unit,
+    required int sortOrder,
+    this.rowid = const Value.absent(),
+  }) : supplementId = Value(supplementId),
+       nutrientId = Value(nutrientId),
+       amount = Value(amount),
+       unit = Value(unit),
+       sortOrder = Value(sortOrder);
+  static Insertable<SupplementIngredient> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<String>? supplementId,
+    Expression<String>? nutrientId,
+    Expression<String>? name,
+    Expression<double>? amount,
+    Expression<String>? unit,
+    Expression<int>? sortOrder,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (supplementId != null) 'supplement_id': supplementId,
+      if (nutrientId != null) 'nutrient_id': nutrientId,
+      if (name != null) 'name': name,
+      if (amount != null) 'amount': amount,
+      if (unit != null) 'unit': unit,
+      if (sortOrder != null) 'sort_order': sortOrder,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SupplementIngredientsCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<String>? supplementId,
+    Value<String>? nutrientId,
+    Value<String?>? name,
+    Value<double>? amount,
+    Value<String>? unit,
+    Value<int>? sortOrder,
+    Value<int>? rowid,
+  }) {
+    return SupplementIngredientsCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      supplementId: supplementId ?? this.supplementId,
+      nutrientId: nutrientId ?? this.nutrientId,
+      name: name ?? this.name,
+      amount: amount ?? this.amount,
+      unit: unit ?? this.unit,
+      sortOrder: sortOrder ?? this.sortOrder,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (supplementId.present) {
+      map['supplement_id'] = Variable<String>(supplementId.value);
+    }
+    if (nutrientId.present) {
+      map['nutrient_id'] = Variable<String>(nutrientId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
+    }
+    if (unit.present) {
+      map['unit'] = Variable<String>(unit.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementIngredientsCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('supplementId: $supplementId, ')
+          ..write('nutrientId: $nutrientId, ')
+          ..write('name: $name, ')
+          ..write('amount: $amount, ')
+          ..write('unit: $unit, ')
+          ..write('sortOrder: $sortOrder, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SupplementIntakesTable extends SupplementIntakes
+    with TableInfo<$SupplementIntakesTable, SupplementIntake> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SupplementIntakesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    clientDefault: newId,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: DateTime.now,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _supplementIdMeta = const VerificationMeta(
+    'supplementId',
+  );
+  @override
+  late final GeneratedColumn<String> supplementId = GeneratedColumn<String>(
+    'supplement_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dayKeyMeta = const VerificationMeta('dayKey');
+  @override
+  late final GeneratedColumn<String> dayKey = GeneratedColumn<String>(
+    'day_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _plannedMinuteMeta = const VerificationMeta(
+    'plannedMinute',
+  );
+  @override
+  late final GeneratedColumn<int> plannedMinute = GeneratedColumn<int>(
+    'planned_minute',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _servingsMeta = const VerificationMeta(
+    'servings',
+  );
+  @override
+  late final GeneratedColumn<double> servings = GeneratedColumn<double>(
+    'servings',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    supplementId,
+    dayKey,
+    plannedMinute,
+    servings,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'supplement_intakes';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SupplementIntake> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('supplement_id')) {
+      context.handle(
+        _supplementIdMeta,
+        supplementId.isAcceptableOrUnknown(
+          data['supplement_id']!,
+          _supplementIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_supplementIdMeta);
+    }
+    if (data.containsKey('day_key')) {
+      context.handle(
+        _dayKeyMeta,
+        dayKey.isAcceptableOrUnknown(data['day_key']!, _dayKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dayKeyMeta);
+    }
+    if (data.containsKey('planned_minute')) {
+      context.handle(
+        _plannedMinuteMeta,
+        plannedMinute.isAcceptableOrUnknown(
+          data['planned_minute']!,
+          _plannedMinuteMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_plannedMinuteMeta);
+    }
+    if (data.containsKey('servings')) {
+      context.handle(
+        _servingsMeta,
+        servings.isAcceptableOrUnknown(data['servings']!, _servingsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_servingsMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SupplementIntake map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SupplementIntake(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      supplementId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}supplement_id'],
+      )!,
+      dayKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}day_key'],
+      )!,
+      plannedMinute: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}planned_minute'],
+      )!,
+      servings: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}servings'],
+      )!,
+    );
+  }
+
+  @override
+  $SupplementIntakesTable createAlias(String alias) {
+    return $SupplementIntakesTable(attachedDatabase, alias);
+  }
+}
+
+class SupplementIntake extends DataClass
+    implements Insertable<SupplementIntake> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  final String supplementId;
+  final String dayKey;
+  final int plannedMinute;
+  final double servings;
+  const SupplementIntake({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required this.supplementId,
+    required this.dayKey,
+    required this.plannedMinute,
+    required this.servings,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    map['supplement_id'] = Variable<String>(supplementId);
+    map['day_key'] = Variable<String>(dayKey);
+    map['planned_minute'] = Variable<int>(plannedMinute);
+    map['servings'] = Variable<double>(servings);
+    return map;
+  }
+
+  SupplementIntakesCompanion toCompanion(bool nullToAbsent) {
+    return SupplementIntakesCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      supplementId: Value(supplementId),
+      dayKey: Value(dayKey),
+      plannedMinute: Value(plannedMinute),
+      servings: Value(servings),
+    );
+  }
+
+  factory SupplementIntake.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SupplementIntake(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      supplementId: serializer.fromJson<String>(json['supplementId']),
+      dayKey: serializer.fromJson<String>(json['dayKey']),
+      plannedMinute: serializer.fromJson<int>(json['plannedMinute']),
+      servings: serializer.fromJson<double>(json['servings']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'supplementId': serializer.toJson<String>(supplementId),
+      'dayKey': serializer.toJson<String>(dayKey),
+      'plannedMinute': serializer.toJson<int>(plannedMinute),
+      'servings': serializer.toJson<double>(servings),
+    };
+  }
+
+  SupplementIntake copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    String? supplementId,
+    String? dayKey,
+    int? plannedMinute,
+    double? servings,
+  }) => SupplementIntake(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    supplementId: supplementId ?? this.supplementId,
+    dayKey: dayKey ?? this.dayKey,
+    plannedMinute: plannedMinute ?? this.plannedMinute,
+    servings: servings ?? this.servings,
+  );
+  SupplementIntake copyWithCompanion(SupplementIntakesCompanion data) {
+    return SupplementIntake(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      supplementId: data.supplementId.present
+          ? data.supplementId.value
+          : this.supplementId,
+      dayKey: data.dayKey.present ? data.dayKey.value : this.dayKey,
+      plannedMinute: data.plannedMinute.present
+          ? data.plannedMinute.value
+          : this.plannedMinute,
+      servings: data.servings.present ? data.servings.value : this.servings,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementIntake(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('supplementId: $supplementId, ')
+          ..write('dayKey: $dayKey, ')
+          ..write('plannedMinute: $plannedMinute, ')
+          ..write('servings: $servings')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    supplementId,
+    dayKey,
+    plannedMinute,
+    servings,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SupplementIntake &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.supplementId == this.supplementId &&
+          other.dayKey == this.dayKey &&
+          other.plannedMinute == this.plannedMinute &&
+          other.servings == this.servings);
+}
+
+class SupplementIntakesCompanion extends UpdateCompanion<SupplementIntake> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<String> supplementId;
+  final Value<String> dayKey;
+  final Value<int> plannedMinute;
+  final Value<double> servings;
+  final Value<int> rowid;
+  const SupplementIntakesCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.supplementId = const Value.absent(),
+    this.dayKey = const Value.absent(),
+    this.plannedMinute = const Value.absent(),
+    this.servings = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SupplementIntakesCompanion.insert({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    required String supplementId,
+    required String dayKey,
+    required int plannedMinute,
+    required double servings,
+    this.rowid = const Value.absent(),
+  }) : supplementId = Value(supplementId),
+       dayKey = Value(dayKey),
+       plannedMinute = Value(plannedMinute),
+       servings = Value(servings);
+  static Insertable<SupplementIntake> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<String>? supplementId,
+    Expression<String>? dayKey,
+    Expression<int>? plannedMinute,
+    Expression<double>? servings,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (supplementId != null) 'supplement_id': supplementId,
+      if (dayKey != null) 'day_key': dayKey,
+      if (plannedMinute != null) 'planned_minute': plannedMinute,
+      if (servings != null) 'servings': servings,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SupplementIntakesCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<String>? supplementId,
+    Value<String>? dayKey,
+    Value<int>? plannedMinute,
+    Value<double>? servings,
+    Value<int>? rowid,
+  }) {
+    return SupplementIntakesCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      supplementId: supplementId ?? this.supplementId,
+      dayKey: dayKey ?? this.dayKey,
+      plannedMinute: plannedMinute ?? this.plannedMinute,
+      servings: servings ?? this.servings,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (supplementId.present) {
+      map['supplement_id'] = Variable<String>(supplementId.value);
+    }
+    if (dayKey.present) {
+      map['day_key'] = Variable<String>(dayKey.value);
+    }
+    if (plannedMinute.present) {
+      map['planned_minute'] = Variable<int>(plannedMinute.value);
+    }
+    if (servings.present) {
+      map['servings'] = Variable<double>(servings.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementIntakesCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('supplementId: $supplementId, ')
+          ..write('dayKey: $dayKey, ')
+          ..write('plannedMinute: $plannedMinute, ')
+          ..write('servings: $servings, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -8637,6 +10623,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RecipesTable recipes = $RecipesTable(this);
   late final $RecipeItemsTable recipeItems = $RecipeItemsTable(this);
   late final $ShoppingItemsTable shoppingItems = $ShoppingItemsTable(this);
+  late final $SupplementsTable supplements = $SupplementsTable(this);
+  late final $SupplementIngredientsTable supplementIngredients =
+      $SupplementIngredientsTable(this);
+  late final $SupplementIntakesTable supplementIntakes =
+      $SupplementIntakesTable(this);
   late final Index foodsKey = Index(
     'foods_key',
     'CREATE UNIQUE INDEX foods_key ON foods (food_key)',
@@ -8673,6 +10664,22 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'recipe_items_recipe',
     'CREATE INDEX recipe_items_recipe ON recipe_items (recipe_id)',
   );
+  late final Index supplementsKey = Index(
+    'supplements_key',
+    'CREATE UNIQUE INDEX supplements_key ON supplements (name_key)',
+  );
+  late final Index supplementIngredientsSup = Index(
+    'supplement_ingredients_sup',
+    'CREATE INDEX supplement_ingredients_sup ON supplement_ingredients (supplement_id)',
+  );
+  late final Index supplementIntakeSlot = Index(
+    'supplement_intake_slot',
+    'CREATE UNIQUE INDEX supplement_intake_slot ON supplement_intakes (supplement_id, day_key, planned_minute)',
+  );
+  late final Index supplementIntakeDay = Index(
+    'supplement_intake_day',
+    'CREATE INDEX supplement_intake_day ON supplement_intakes (day_key)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8689,6 +10696,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recipes,
     recipeItems,
     shoppingItems,
+    supplements,
+    supplementIngredients,
+    supplementIntakes,
     foodsKey,
     foodsBarcode,
     diaryDay,
@@ -8698,6 +10708,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     activityExt,
     recipesKey,
     recipeItemsRecipe,
+    supplementsKey,
+    supplementIngredientsSup,
+    supplementIntakeSlot,
+    supplementIntakeDay,
   ];
   @override
   DriftDatabaseOptions get options =>
@@ -12814,6 +14828,1026 @@ typedef $$ShoppingItemsTableProcessedTableManager =
       ShoppingItem,
       PrefetchHooks Function()
     >;
+typedef $$SupplementsTableCreateCompanionBuilder =
+    SupplementsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      required String name,
+      Value<String?> brand,
+      required String nameKey,
+      Value<String?> form,
+      Value<String> servingLabel,
+      Value<String?> manufacturerDose,
+      Value<double> servingsPerDay,
+      Value<String> timesJson,
+      Value<bool> active,
+      Value<double?> stockServings,
+      Value<String?> note,
+      Value<int> rowid,
+    });
+typedef $$SupplementsTableUpdateCompanionBuilder =
+    SupplementsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<String> name,
+      Value<String?> brand,
+      Value<String> nameKey,
+      Value<String?> form,
+      Value<String> servingLabel,
+      Value<String?> manufacturerDose,
+      Value<double> servingsPerDay,
+      Value<String> timesJson,
+      Value<bool> active,
+      Value<double?> stockServings,
+      Value<String?> note,
+      Value<int> rowid,
+    });
+
+class $$SupplementsTableFilterComposer
+    extends Composer<_$AppDatabase, $SupplementsTable> {
+  $$SupplementsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get brand => $composableBuilder(
+    column: $table.brand,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameKey => $composableBuilder(
+    column: $table.nameKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get form => $composableBuilder(
+    column: $table.form,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get servingLabel => $composableBuilder(
+    column: $table.servingLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get manufacturerDose => $composableBuilder(
+    column: $table.manufacturerDose,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get servingsPerDay => $composableBuilder(
+    column: $table.servingsPerDay,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timesJson => $composableBuilder(
+    column: $table.timesJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get stockServings => $composableBuilder(
+    column: $table.stockServings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SupplementsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SupplementsTable> {
+  $$SupplementsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get brand => $composableBuilder(
+    column: $table.brand,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameKey => $composableBuilder(
+    column: $table.nameKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get form => $composableBuilder(
+    column: $table.form,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get servingLabel => $composableBuilder(
+    column: $table.servingLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get manufacturerDose => $composableBuilder(
+    column: $table.manufacturerDose,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get servingsPerDay => $composableBuilder(
+    column: $table.servingsPerDay,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get timesJson => $composableBuilder(
+    column: $table.timesJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get active => $composableBuilder(
+    column: $table.active,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get stockServings => $composableBuilder(
+    column: $table.stockServings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SupplementsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SupplementsTable> {
+  $$SupplementsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get brand =>
+      $composableBuilder(column: $table.brand, builder: (column) => column);
+
+  GeneratedColumn<String> get nameKey =>
+      $composableBuilder(column: $table.nameKey, builder: (column) => column);
+
+  GeneratedColumn<String> get form =>
+      $composableBuilder(column: $table.form, builder: (column) => column);
+
+  GeneratedColumn<String> get servingLabel => $composableBuilder(
+    column: $table.servingLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get manufacturerDose => $composableBuilder(
+    column: $table.manufacturerDose,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get servingsPerDay => $composableBuilder(
+    column: $table.servingsPerDay,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get timesJson =>
+      $composableBuilder(column: $table.timesJson, builder: (column) => column);
+
+  GeneratedColumn<bool> get active =>
+      $composableBuilder(column: $table.active, builder: (column) => column);
+
+  GeneratedColumn<double> get stockServings => $composableBuilder(
+    column: $table.stockServings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+}
+
+class $$SupplementsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SupplementsTable,
+          Supplement,
+          $$SupplementsTableFilterComposer,
+          $$SupplementsTableOrderingComposer,
+          $$SupplementsTableAnnotationComposer,
+          $$SupplementsTableCreateCompanionBuilder,
+          $$SupplementsTableUpdateCompanionBuilder,
+          (
+            Supplement,
+            BaseReferences<_$AppDatabase, $SupplementsTable, Supplement>,
+          ),
+          Supplement,
+          PrefetchHooks Function()
+        > {
+  $$SupplementsTableTableManager(_$AppDatabase db, $SupplementsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SupplementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SupplementsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SupplementsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> brand = const Value.absent(),
+                Value<String> nameKey = const Value.absent(),
+                Value<String?> form = const Value.absent(),
+                Value<String> servingLabel = const Value.absent(),
+                Value<String?> manufacturerDose = const Value.absent(),
+                Value<double> servingsPerDay = const Value.absent(),
+                Value<String> timesJson = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<double?> stockServings = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SupplementsCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                name: name,
+                brand: brand,
+                nameKey: nameKey,
+                form: form,
+                servingLabel: servingLabel,
+                manufacturerDose: manufacturerDose,
+                servingsPerDay: servingsPerDay,
+                timesJson: timesJson,
+                active: active,
+                stockServings: stockServings,
+                note: note,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required String name,
+                Value<String?> brand = const Value.absent(),
+                required String nameKey,
+                Value<String?> form = const Value.absent(),
+                Value<String> servingLabel = const Value.absent(),
+                Value<String?> manufacturerDose = const Value.absent(),
+                Value<double> servingsPerDay = const Value.absent(),
+                Value<String> timesJson = const Value.absent(),
+                Value<bool> active = const Value.absent(),
+                Value<double?> stockServings = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SupplementsCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                name: name,
+                brand: brand,
+                nameKey: nameKey,
+                form: form,
+                servingLabel: servingLabel,
+                manufacturerDose: manufacturerDose,
+                servingsPerDay: servingsPerDay,
+                timesJson: timesJson,
+                active: active,
+                stockServings: stockServings,
+                note: note,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SupplementsTable, Supplement>(table),
+                  BaseReferences<_$AppDatabase, $SupplementsTable, Supplement>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SupplementsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SupplementsTable,
+      Supplement,
+      $$SupplementsTableFilterComposer,
+      $$SupplementsTableOrderingComposer,
+      $$SupplementsTableAnnotationComposer,
+      $$SupplementsTableCreateCompanionBuilder,
+      $$SupplementsTableUpdateCompanionBuilder,
+      (
+        Supplement,
+        BaseReferences<_$AppDatabase, $SupplementsTable, Supplement>,
+      ),
+      Supplement,
+      PrefetchHooks Function()
+    >;
+typedef $$SupplementIngredientsTableCreateCompanionBuilder =
+    SupplementIngredientsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      required String supplementId,
+      required String nutrientId,
+      Value<String?> name,
+      required double amount,
+      required String unit,
+      required int sortOrder,
+      Value<int> rowid,
+    });
+typedef $$SupplementIngredientsTableUpdateCompanionBuilder =
+    SupplementIngredientsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<String> supplementId,
+      Value<String> nutrientId,
+      Value<String?> name,
+      Value<double> amount,
+      Value<String> unit,
+      Value<int> sortOrder,
+      Value<int> rowid,
+    });
+
+class $$SupplementIngredientsTableFilterComposer
+    extends Composer<_$AppDatabase, $SupplementIngredientsTable> {
+  $$SupplementIngredientsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get supplementId => $composableBuilder(
+    column: $table.supplementId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nutrientId => $composableBuilder(
+    column: $table.nutrientId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get unit => $composableBuilder(
+    column: $table.unit,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SupplementIngredientsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SupplementIngredientsTable> {
+  $$SupplementIngredientsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get supplementId => $composableBuilder(
+    column: $table.supplementId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nutrientId => $composableBuilder(
+    column: $table.nutrientId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get unit => $composableBuilder(
+    column: $table.unit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SupplementIngredientsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SupplementIngredientsTable> {
+  $$SupplementIngredientsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get supplementId => $composableBuilder(
+    column: $table.supplementId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nutrientId => $composableBuilder(
+    column: $table.nutrientId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get unit =>
+      $composableBuilder(column: $table.unit, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
+}
+
+class $$SupplementIngredientsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SupplementIngredientsTable,
+          SupplementIngredient,
+          $$SupplementIngredientsTableFilterComposer,
+          $$SupplementIngredientsTableOrderingComposer,
+          $$SupplementIngredientsTableAnnotationComposer,
+          $$SupplementIngredientsTableCreateCompanionBuilder,
+          $$SupplementIngredientsTableUpdateCompanionBuilder,
+          (
+            SupplementIngredient,
+            BaseReferences<
+              _$AppDatabase,
+              $SupplementIngredientsTable,
+              SupplementIngredient
+            >,
+          ),
+          SupplementIngredient,
+          PrefetchHooks Function()
+        > {
+  $$SupplementIngredientsTableTableManager(
+    _$AppDatabase db,
+    $SupplementIngredientsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SupplementIngredientsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$SupplementIngredientsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$SupplementIngredientsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<String> supplementId = const Value.absent(),
+                Value<String> nutrientId = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<double> amount = const Value.absent(),
+                Value<String> unit = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SupplementIngredientsCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                supplementId: supplementId,
+                nutrientId: nutrientId,
+                name: name,
+                amount: amount,
+                unit: unit,
+                sortOrder: sortOrder,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required String supplementId,
+                required String nutrientId,
+                Value<String?> name = const Value.absent(),
+                required double amount,
+                required String unit,
+                required int sortOrder,
+                Value<int> rowid = const Value.absent(),
+              }) => SupplementIngredientsCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                supplementId: supplementId,
+                nutrientId: nutrientId,
+                name: name,
+                amount: amount,
+                unit: unit,
+                sortOrder: sortOrder,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $SupplementIngredientsTable,
+                    SupplementIngredient
+                  >(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SupplementIngredientsTable,
+                    SupplementIngredient
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SupplementIngredientsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SupplementIngredientsTable,
+      SupplementIngredient,
+      $$SupplementIngredientsTableFilterComposer,
+      $$SupplementIngredientsTableOrderingComposer,
+      $$SupplementIngredientsTableAnnotationComposer,
+      $$SupplementIngredientsTableCreateCompanionBuilder,
+      $$SupplementIngredientsTableUpdateCompanionBuilder,
+      (
+        SupplementIngredient,
+        BaseReferences<
+          _$AppDatabase,
+          $SupplementIngredientsTable,
+          SupplementIngredient
+        >,
+      ),
+      SupplementIngredient,
+      PrefetchHooks Function()
+    >;
+typedef $$SupplementIntakesTableCreateCompanionBuilder =
+    SupplementIntakesCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      required String supplementId,
+      required String dayKey,
+      required int plannedMinute,
+      required double servings,
+      Value<int> rowid,
+    });
+typedef $$SupplementIntakesTableUpdateCompanionBuilder =
+    SupplementIntakesCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<String> supplementId,
+      Value<String> dayKey,
+      Value<int> plannedMinute,
+      Value<double> servings,
+      Value<int> rowid,
+    });
+
+class $$SupplementIntakesTableFilterComposer
+    extends Composer<_$AppDatabase, $SupplementIntakesTable> {
+  $$SupplementIntakesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get supplementId => $composableBuilder(
+    column: $table.supplementId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dayKey => $composableBuilder(
+    column: $table.dayKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get plannedMinute => $composableBuilder(
+    column: $table.plannedMinute,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get servings => $composableBuilder(
+    column: $table.servings,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SupplementIntakesTableOrderingComposer
+    extends Composer<_$AppDatabase, $SupplementIntakesTable> {
+  $$SupplementIntakesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get supplementId => $composableBuilder(
+    column: $table.supplementId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dayKey => $composableBuilder(
+    column: $table.dayKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get plannedMinute => $composableBuilder(
+    column: $table.plannedMinute,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get servings => $composableBuilder(
+    column: $table.servings,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SupplementIntakesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SupplementIntakesTable> {
+  $$SupplementIntakesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get supplementId => $composableBuilder(
+    column: $table.supplementId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get dayKey =>
+      $composableBuilder(column: $table.dayKey, builder: (column) => column);
+
+  GeneratedColumn<int> get plannedMinute => $composableBuilder(
+    column: $table.plannedMinute,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get servings =>
+      $composableBuilder(column: $table.servings, builder: (column) => column);
+}
+
+class $$SupplementIntakesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SupplementIntakesTable,
+          SupplementIntake,
+          $$SupplementIntakesTableFilterComposer,
+          $$SupplementIntakesTableOrderingComposer,
+          $$SupplementIntakesTableAnnotationComposer,
+          $$SupplementIntakesTableCreateCompanionBuilder,
+          $$SupplementIntakesTableUpdateCompanionBuilder,
+          (
+            SupplementIntake,
+            BaseReferences<
+              _$AppDatabase,
+              $SupplementIntakesTable,
+              SupplementIntake
+            >,
+          ),
+          SupplementIntake,
+          PrefetchHooks Function()
+        > {
+  $$SupplementIntakesTableTableManager(
+    _$AppDatabase db,
+    $SupplementIntakesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SupplementIntakesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SupplementIntakesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SupplementIntakesTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<String> supplementId = const Value.absent(),
+                Value<String> dayKey = const Value.absent(),
+                Value<int> plannedMinute = const Value.absent(),
+                Value<double> servings = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SupplementIntakesCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                supplementId: supplementId,
+                dayKey: dayKey,
+                plannedMinute: plannedMinute,
+                servings: servings,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                required String supplementId,
+                required String dayKey,
+                required int plannedMinute,
+                required double servings,
+                Value<int> rowid = const Value.absent(),
+              }) => SupplementIntakesCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                supplementId: supplementId,
+                dayKey: dayKey,
+                plannedMinute: plannedMinute,
+                servings: servings,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SupplementIntakesTable, SupplementIntake>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SupplementIntakesTable,
+                    SupplementIntake
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SupplementIntakesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SupplementIntakesTable,
+      SupplementIntake,
+      $$SupplementIntakesTableFilterComposer,
+      $$SupplementIntakesTableOrderingComposer,
+      $$SupplementIntakesTableAnnotationComposer,
+      $$SupplementIntakesTableCreateCompanionBuilder,
+      $$SupplementIntakesTableUpdateCompanionBuilder,
+      (
+        SupplementIntake,
+        BaseReferences<
+          _$AppDatabase,
+          $SupplementIntakesTable,
+          SupplementIntake
+        >,
+      ),
+      SupplementIntake,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12840,4 +15874,10 @@ class $AppDatabaseManager {
       $$RecipeItemsTableTableManager(_db, _db.recipeItems);
   $$ShoppingItemsTableTableManager get shoppingItems =>
       $$ShoppingItemsTableTableManager(_db, _db.shoppingItems);
+  $$SupplementsTableTableManager get supplements =>
+      $$SupplementsTableTableManager(_db, _db.supplements);
+  $$SupplementIngredientsTableTableManager get supplementIngredients =>
+      $$SupplementIngredientsTableTableManager(_db, _db.supplementIngredients);
+  $$SupplementIntakesTableTableManager get supplementIntakes =>
+      $$SupplementIntakesTableTableManager(_db, _db.supplementIntakes);
 }

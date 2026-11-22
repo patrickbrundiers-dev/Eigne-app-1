@@ -15,6 +15,7 @@ import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../home_shell.dart';
+import '../supplements/supplements_view.dart';
 import '../weight/weight_chart.dart';
 import '../weight/weight_entry_sheet.dart';
 import 'activity_sheet.dart';
@@ -201,6 +202,7 @@ class _DashboardBody extends StatelessWidget {
     DashTile.activity => _ActivityTile(d),
     DashTile.meals => _MealsTile(d),
     DashTile.hints => _HintsTile(d),
+    DashTile.supplements => const _SupplementsTile(),
   };
 }
 
@@ -607,6 +609,33 @@ class _ActivityTile extends StatelessWidget {
             style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SupplementsTile extends StatelessWidget {
+  const _SupplementsTile();
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      title: 'Supplemente heute',
+      icon: Icons.medication_outlined,
+      child: StreamBuilder<SupplementDay>(
+        stream: SupplementDay.watch(context.db, todayDayKey()),
+        builder: (context, snap) {
+          final d = snap.data;
+          if (d == null) return const SizedBox(height: 40);
+          if (d.products.isEmpty) return const Text('Noch keine Supplemente angelegt (Essen → Supplemente).');
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SupplementTotals(day: d, onlyWarnings: true),
+              SupplementChecklist(day: d, dense: true),
+            ],
+          );
+        },
       ),
     );
   }
