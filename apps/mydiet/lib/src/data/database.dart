@@ -574,6 +574,18 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  /// Like [dailyTotals], as a stream that updates when diary entries change.
+  Stream<Map<String, Nutrients>> watchDailyTotals(String fromDay, String toDay) =>
+      (select(diaryEntries)..where((e) => e.dayKey.isBetweenValues(fromDay, toDay) & e.deletedAt.isNull())).watch().map(
+        (rows) {
+          final out = <String, Nutrients>{};
+          for (final e in rows) {
+            out[e.dayKey] = (out[e.dayKey] ?? Nutrients.zero) + e.nutrients;
+          }
+          return out;
+        },
+      );
+
   /// Daily totals for a range of days (inclusive), keyed by day.
   Future<Map<String, Nutrients>> dailyTotals(String fromDay, String toDay) async {
     final rows = await (select(
