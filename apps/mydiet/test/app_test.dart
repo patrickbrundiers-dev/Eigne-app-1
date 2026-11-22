@@ -95,6 +95,24 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Zahlen ausblenden und Wochenbudget', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      await db.setSetting('hideNumbers', 'true');
+      await db.setSetting('budgetMode', 'week');
+    });
+    await pumpApp(tester, db);
+    expect(find.text('Gut im Rahmen'), findsOneWidget);
+    expect(find.text('189 kcal'), findsNothing);
+    expect(find.text('Wochenbudget aktiv. Zahlen sind ausgeblendet.'), findsOneWidget);
+
+    await tester.runAsync(() => db.setSetting('hideNumbers', 'false'));
+    await pumpApp(tester, db);
+    expect(find.text('Heute aus Wochenbudget'), findsOneWidget);
+    expect(find.text('189 kcal'), findsWidgets);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Essen: Rezepte und Einkaufsliste', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await tester.runAsync(() async {

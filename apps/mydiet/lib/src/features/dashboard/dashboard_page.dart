@@ -9,8 +9,10 @@ import '../../core/dashboard_layout.dart';
 import '../../core/day_budget.dart';
 import '../../core/energy.dart';
 import '../../core/nutrition.dart';
+import '../../core/week_budget.dart';
 import '../../core/weight_trend.dart';
 import '../../data/database.dart';
+import '../../data/display_prefs.dart';
 import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
@@ -31,11 +33,23 @@ class DashData {
     required this.activities,
     required this.slots,
     required this.layout,
+    this.weekMode = false,
+    this.hideNumbers = false,
+    this.weekTotals = const {},
+    DateTime? today,
   }) : targets = targetsFor(profile, weights),
        analysis = analyzeWeight(weightPoints(weights), targetKg: profile.targetWeightKg),
        consumed = Nutrients.sum(diary.map((e) => e.nutrients)) {
+    week = weekMode
+        ? weekBudget(
+            today: today ?? DateTime.now(),
+            dailyTargetKcal: targets.targetKcal,
+            consumedByDay: {for (final e in weekTotals.entries) parseDayKey(e.key): e.value.kcal},
+            floorKcal: profile.sex == 'female' ? 1200 : 1500,
+          )
+        : null;
     budget = dayBudget(
-      targetKcal: targets.targetKcal,
+      targetKcal: week?.todayTargetKcal ?? targets.targetKcal,
       consumed: consumed,
       activities: [
         for (final a in activities) ActivityItem(kcal: a.kcal, source: a.source, externalId: a.externalId, id: a.id),
@@ -51,6 +65,12 @@ class DashData {
   final List<ActivityEntry> activities;
   final List<MealSlot> slots;
   final List<TileConfig> layout;
+  final bool weekMode;
+  final bool hideNumbers;
+
+  /// Diary totals from Monday until yesterday (week mode only).
+  final Map<String, Nutrients> weekTotals;
+  late final WeekBudget? week;
   final EnergyResult targets;
   final WeightAnalysis analysis;
   final Nutrients consumed;
@@ -66,6 +86,9 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final db = context.db;
     final day = todayDayKey();
+    final now = DateTime.now();
+    final monday = mondayOf(now);
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
     final stream =
         combineLatest([
               db.watchProfile(),
@@ -75,6 +98,9 @@ class DashboardPage extends StatelessWidget {
               db.watchActivities(day),
               db.watchMealSlots(),
               db.watchSetting('dashboardLayout'),
+              db.watchSetting(budgetModeKey),
+              db.watchSetting(hideNumbersKey),
+              db.watchDailyTotals(dayKey(monday), dayKey(yesterday)),
             ])
             .where((v) => v[0] != null)
             .map(
@@ -86,6 +112,10 @@ class DashboardPage extends StatelessWidget {
                 activities: v[4] as List<ActivityEntry>,
                 slots: v[5] as List<MealSlot>,
                 layout: parseLayout(v[6] as String?),
+                weekMode: v[7] == 'week',
+                hideNumbers: v[8] == 'true',
+                weekTotals: v[9] as Map<String, Nutrients>,
+                today: now,
               ),
             );
 
@@ -229,34 +259,52 @@ class _CaloriesTile extends StatelessWidget {
             size: ringSize,
             color: t.colorScheme.primary,
             stroke: 13,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  n0(remaining.abs()),
-                  style: t.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: remaining < 0 ? t.colorScheme.error : null,
+            child: d.hideNumbers
+                ? Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(gentleStatus(b.progress), textAlign: TextAlign.center, style: t.textTheme.bodyMedium),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        n0(remaining.abs()),
+                        style: t.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: remaining < 0 ? t.colorScheme.error : null,
+                        ),
+                      ),
+                      Text(remaining < 0 ? 'kcal zu viel' : 'kcal übrig', style: t.textTheme.bodySmall),
+                    ],
                   ),
-                ),
-                Text(remaining < 0 ? 'kcal zu viel' : 'kcal übrig', style: t.textTheme.bodySmall),
-              ],
-            ),
           );
-          final stats = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              StatValue(label: 'Gegessen', value: kcal(b.consumed.kcal)),
-              const SizedBox(height: 10),
-              StatValue(
-                label: 'Tagesbudget',
-                value: kcal(b.budgetKcal),
-                sub: b.activityCreditKcal > 0
-                    ? 'inkl. ${kcal(b.activityCreditKcal)} Aktivität'
-                    : (d.targets.isCalorieOverridden ? 'eigenes Ziel' : 'berechnet'),
-              ),
-            ],
-          );
+          final w = d.week;
+          final stats = d.hideNumbers
+              ? Text(
+                  w == null
+                      ? 'Zahlen sind ausgeblendet. Du kannst sie in den Einstellungen wieder einblenden.'
+                      : 'Wochenbudget aktiv. Zahlen sind ausgeblendet.',
+                  style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    StatValue(label: 'Gegessen', value: kcal(b.consumed.kcal)),
+                    const SizedBox(height: 10),
+                    StatValue(
+                      label: w == null ? 'Tagesbudget' : 'Heute aus Wochenbudget',
+                      value: kcal(b.budgetKcal),
+                      sub: [
+                        if (w != null && w.shiftKcal != 0)
+                          '${w.shiftKcal > 0 ? '+' : '−'}${kcal(w.shiftKcal.abs())} ausgleichend',
+                        if (w != null) 'noch ${w.daysLeft} Tag(e) in der Woche',
+                        if (b.activityCreditKcal > 0) 'inkl. ${kcal(b.activityCreditKcal)} Aktivität',
+                        if (w == null && b.activityCreditKcal <= 0)
+                          d.targets.isCalorieOverridden ? 'eigenes Ziel' : 'berechnet',
+                      ].join(' · '),
+                    ),
+                  ],
+                );
           return Row(
             children: [
               ring,

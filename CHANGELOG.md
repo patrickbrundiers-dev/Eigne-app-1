@@ -24,6 +24,16 @@
 - Wochen-Check auf der Gewichtsseite: echter Verbrauch aus Aufnahme und Gewichtsverlauf der letzten 28 Tage,
   unvollständige Tage werden ausgelassen, Vorschlag für das Kalorienziel mit Rechenweg (höchstens 300 kcal
   Änderung auf einmal, nie unter dem Mindestwert), gilt erst nach Bestätigung
+- Schnell-Erfassung: „Oft zum Frühstück/Abendessen …“ schlägt je Mahlzeit die Lebensmittel vor, die dort in den
+  letzten 60 Tagen am häufigsten eingetragen wurden; Schnelleintrag nur mit Kalorien (Makros optional), als
+  Schätzung gekennzeichnet; Mahlzeit auf ein beliebiges Datum kopieren
+- Wochenbudget (Einstellungen): 7 × Tagesziel pro Woche; mehr oder weniger an einem Tag wird auf die restlichen
+  Tage verteilt (höchstens +20 %, nie unter dem Mindestwert, Tage ohne Einträge zählen als Tagesziel)
+- Zahlen ausblenden (Einstellungen): Dashboard und Tagebuch zeigen nur Fortschritt und freundliche Hinweise
+  statt Kalorien und Gramm
+- Sicherungen: täglich automatisch eine lokale Sicherung (die letzten 14 bleiben), „Jetzt sichern“ und
+  Wiederherstellen in den Einstellungen; vor jeder Wiederherstellung wird der aktuelle Stand gesichert
+- CSV-Export für Tagebuch und Gewicht (Semikolon, Dezimalkomma, öffnet direkt in Excel)
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

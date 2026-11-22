@@ -6,6 +6,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../core/dates.dart';
+import '../../data/csv_export.dart';
+import '../../data/display_prefs.dart';
+import 'backup_card.dart';
 import '../../ui/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -80,7 +83,7 @@ class SettingsPage extends StatelessWidget {
                     Text(
                       'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
                       'Es wird nichts ins Internet übertragen. Die Synchronisierung zwischen Handy und PC '
-                      'folgt in Phase 4. Bis dahin: regelmäßig exportieren.',
+                      'folgt in Phase 4. Bis dahin sichert die App täglich automatisch (siehe Sicherungen).',
                       style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
                     ),
                     const SizedBox(height: 12),
@@ -95,7 +98,58 @@ class SettingsPage extends StatelessWidget {
                       icon: const Icon(Icons.upload_outlined),
                       label: const Text('Export importieren (ersetzt alle Daten)'),
                     ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () => _exportCsv(context, diary: true),
+                          icon: const Icon(Icons.table_view_outlined),
+                          label: const Text('Tagebuch als CSV'),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: () => _exportCsv(context, diary: false),
+                          icon: const Icon(Icons.table_view_outlined),
+                          label: const Text('Gewicht als CSV'),
+                        ),
+                      ],
+                    ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              const BackupCard(),
+              const SizedBox(height: 12),
+              SectionCard(
+                title: 'Ziel und Anzeige',
+                icon: Icons.tune,
+                child: StreamBuilder<List<Object?>>(
+                  stream: combineLatest([db.watchSetting(budgetModeKey), db.watchSetting(hideNumbersKey)]),
+                  builder: (context, snap) => Column(
+                    children: [
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Wochenbudget statt Tagesziel'),
+                        subtitle: const Text(
+                          'Mehr oder weniger an einem Tag wird auf die restlichen Tage der Woche verteilt '
+                          '(höchstens +20 %, nie unter dem Mindestwert).',
+                        ),
+                        value: snap.data?[0] == 'week',
+                        onChanged: (v) => db.setSetting(budgetModeKey, v ? 'week' : 'day'),
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Zahlen ausblenden'),
+                        subtitle: const Text(
+                          'Dashboard und Tagebuch zeigen nur den Fortschritt, keine Kalorien und Gramm. '
+                          'Die App rechnet im Hintergrund unverändert weiter.',
+                        ),
+                        value: snap.data?[1] == 'true',
+                        onChanged: (v) => db.setSetting(hideNumbersKey, v ? 'true' : 'false'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -125,6 +179,28 @@ class SettingsPage extends StatelessWidget {
         dialogTitle: 'Export speichern',
       );
       if (context.mounted && uri != null) showMessage(context, 'Export gespeichert');
+    } catch (e) {
+      if (context.mounted) showMessage(context, 'Export fehlgeschlagen: ${errorText(e)}');
+    }
+  }
+
+  Future<void> _exportCsv(BuildContext context, {required bool diary}) async {
+    final db = context.db;
+    try {
+      final String csv;
+      if (diary) {
+        final slots = await db.watchMealSlots().first;
+        csv = diaryCsv(await db.allDiary(), {for (final s in slots) s.id: s.name});
+      } else {
+        csv = weightCsv(await db.allWeights());
+      }
+      final uri = await FilePicker.saveFile(
+        fileName: 'mydiet-${diary ? 'tagebuch' : 'gewicht'}-${dayKey(DateTime.now())}.csv',
+        bytes: Uint8List.fromList(utf8.encode(csv)),
+        mimeType: 'text/csv',
+        dialogTitle: 'CSV speichern',
+      );
+      if (context.mounted && uri != null) showMessage(context, 'CSV gespeichert');
     } catch (e) {
       if (context.mounted) showMessage(context, 'Export fehlgeschlagen: ${errorText(e)}');
     }
