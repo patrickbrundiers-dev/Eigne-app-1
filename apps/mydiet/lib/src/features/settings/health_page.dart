@@ -55,9 +55,32 @@ class _HealthPageState extends State<HealthPage> {
         }
         return;
       }
-      await db.setSetting(healthSettingsKey, HealthSettings(enabled: true, lastImport: s.lastImport).toJson());
+      await db.setSetting(healthSettingsKey, s.copyWith(enabled: true).toJson());
       _permitted = true;
       await _import(days: 30);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _setWrite(HealthSettings s, bool on) async {
+    final db = context.db;
+    if (!on) {
+      await db.setSetting(healthSettingsKey, s.copyWith(writeNutrition: false).toJson());
+      return;
+    }
+    setState(() => _busy = true);
+    try {
+      final ok = await _source.hasWritePermission() || await _source.requestWritePermission();
+      if (!ok) {
+        if (mounted) setState(() => _result = 'Ohne Freigabe kann Sattly keine Mahlzeiten schreiben.');
+        return;
+      }
+      await db.setSetting(healthSettingsKey, s.copyWith(writeNutrition: true).toJson());
+      final n = await exportNutrition(db, _source);
+      if (mounted) setState(() => _result = '$n Mahlzeiten der letzten 7 Tage nach Health Connect geschrieben.');
+    } catch (e) {
+      if (mounted) setState(() => _result = 'Schreiben nach Health Connect hat nicht geklappt ($e).');
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -75,7 +98,8 @@ class _HealthPageState extends State<HealthPage> {
         setState(
           () => _result =
               '${r.activities} Aktivitätseinträge${r.weights > 0 ? ' und ${r.weights} Gewichtswerte' : ''} '
-              'aus den letzten $days Tagen übernommen.',
+              'aus den letzten $days Tagen übernommen.'
+              '${r.mealsWritten != null ? ' ${r.mealsWritten} Mahlzeiten geschrieben.' : ''}',
         );
       }
     } catch (e) {
@@ -154,10 +178,17 @@ class _HealthPageState extends State<HealthPage> {
                             title: const Text('Beim Öffnen automatisch übernehmen'),
                             subtitle: const Text('höchstens alle 3 Stunden, die letzten 7 Tage'),
                             value: s.enabled,
-                            onChanged: (v) => db.setSetting(
-                              healthSettingsKey,
-                              HealthSettings(enabled: v, lastImport: s.lastImport).toJson(),
+                            onChanged: (v) => db.setSetting(healthSettingsKey, s.copyWith(enabled: v).toJson()),
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Mahlzeiten nach Health Connect schreiben'),
+                            subtitle: const Text(
+                              'Kalorien und Nährwerte je Mahlzeit der letzten 7 Tage, für Apps, die Ernährung aus '
+                              'Health Connect lesen',
                             ),
+                            value: s.writeNutrition,
+                            onChanged: _busy ? null : (v) => _setWrite(s, v),
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
@@ -184,7 +215,8 @@ class _HealthPageState extends State<HealthPage> {
                     '„Alltag“ mit Schritten und den aktiven Kalorien, die nicht schon in einem Training stecken. '
                     'Erneutes Übernehmen aktualisiert diese Einträge statt sie doppelt anzulegen; selbst gelöschte '
                     'kommen nicht wieder. Ein Gewicht aus Health Connect wird nur für Tage ohne eigenen Eintrag '
-                    'übernommen. Wie viel der Aktivität dein Tagesbudget erhöht, stellst du im Profil ein.',
+                    'übernommen. Wie viel der Aktivität dein Tagesbudget erhöht, stellst du im Profil ein. '
+                    'Geschriebene Mahlzeiten ersetzt Sattly bei jedem Abgleich, Einträge anderer Apps bleiben unberührt.',
                     style: t.textTheme.bodySmall,
                   ),
                 ],

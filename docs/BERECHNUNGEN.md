@@ -209,6 +209,13 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
   Einträge kommen nicht wieder. Wie stark Aktivität das Tagesbudget erhöht, regelt weiterhin das Profil.
 - Automatisch beim Öffnen nur wenn eingeschaltet, höchstens alle 3 Stunden, die letzten 7 Tage (beim ersten
   Verbinden 30 Tage).
+- Schreiben (`core/health_export.dart`, eigener Schalter und eigene Freigabe): je Tag und Mahlzeit eine
+  Ernährungs-Aufzeichnung mit der Summe der Einträge (kcal, Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte
+  Fettsäuren, Ballaststoffe, Natrium = Salz ÷ 2,5). Mahlzeiten unter 1 kcal entfallen. Zeit = eingestellte Uhrzeit
+  der Mahlzeit, sonst typisch (Frühstück 8:00, Mittag 12:30, Abend 18:30, Snack 15:30), Dauer 30 Minuten. Die Art
+  (Frühstück/Mittag/Abend/Snack) folgt dem Namen, sonst der Uhrzeit. Bei jedem Abgleich werden die letzten 7 Tage
+  neu geschrieben: zuerst wird gelöscht, was Sattly für den Tag geschrieben hat (Health Connect erlaubt nur das
+  Löschen eigener Daten), dann neu geschrieben. So kommen Änderungen und Löschungen an, nichts doppelt.
 
 ## Tippfehlertolerante Suche (`core/fuzzy_search.dart`, `data/food_search.dart`)
 

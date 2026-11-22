@@ -66,7 +66,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 6.1 | 🟡 Health Connect: Lesen (Schritte, Training, Gewicht) erledigt; Ernährung schreiben offen | H | L | M | – | Unit-Tests Zuordnung, manuell auf Gerät |
+| 6.1 | ✅ Health Connect: Schritte, Training, Gewicht lesen; Mahlzeiten schreiben | H | L | M | – | Unit-Tests Zuordnung, manuell auf Gerät |
 | 6.2 | Garmin Connect lesen und schreiben (Phase-2-Thread) | H | L | H (API-Zugang) | 6.1 | Mock-Tests |
 | 6.3 | Sync über PostgreSQL EU + gemeinsamer Katalog (Phase-2-Thread) | H | L | H (**Freigabe** für Anbieter/Konto) | – | Konflikt-Tests |
 | 6.4 | Homescreen-Widget Android (W13) | M | M | N | – | manuell |

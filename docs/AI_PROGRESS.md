@@ -4,6 +4,18 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Health Connect: Mahlzeiten schreiben (Aufgabe 6.1, Teil 2)
+
+Phase-2-Thread. `core/health_export.dart` (Mahlzeit je Tag und Slot, Art aus Name/Uhrzeit), `HealthSource.writeDay`
+(eigene Aufzeichnungen des Tages löschen, dann `writeMeal` mit `clientRecordId`), `exportNutrition` in
+`data/health_sync.dart` (läuft mit jedem Abgleich, wenn eingeschaltet und freigegeben), Schalter auf der Health-Seite,
+Berechtigung WRITE_NUTRITION. Kein Schema, keine Änderung an database.dart.
+
+Tests: `health_import_test.dart` +3, Widget-Test „Health Connect“ erweitert. Auf Gerät noch ungeprüft.
+
+Offen: Garmin Connect liest Ernährung nicht aus Health Connect; direktes Schreiben zu Garmin braucht die Garmin-API
+(6.2, Entwicklerzugang durch Patrick). Nächster Schritt: Phase 5 App-Sperre.
+
 ## 2026-11-22 – Health Connect lesen (Aufgabe 6.1, Teil 1)
 
 Phase-2-Thread, Branch `claude/project-thread-k8k628`.

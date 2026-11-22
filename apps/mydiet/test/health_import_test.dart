@@ -1,7 +1,9 @@
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mydiet_ai/src/core/health_export.dart';
 import 'package:mydiet_ai/src/core/health_import.dart';
+import 'package:mydiet_ai/src/core/nutrition.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/health_source.dart';
 import 'package:mydiet_ai/src/data/health_sync.dart';
@@ -23,6 +25,15 @@ class FakeHealth implements HealthSource {
     reads++;
     return data;
   }
+
+  bool canWrite = true;
+  final written = <String, List<HealthMeal>>{};
+  @override
+  Future<bool> hasWritePermission() async => canWrite;
+  @override
+  Future<bool> requestWritePermission() async => canWrite;
+  @override
+  Future<void> writeDay(String day, List<HealthMeal> meals) async => written[day] = meals;
 }
 
 void main() {
@@ -81,6 +92,42 @@ void main() {
     });
   });
 
+  group('Mahlzeiten schreiben', () {
+    test('Art der Mahlzeit aus Name, sonst Uhrzeit', () {
+      expect(mealKindFor('Frühstück', null), MealKind.breakfast);
+      expect(mealKindFor('Mittagessen', 13 * 60), MealKind.lunch);
+      expect(mealKindFor('Abendbrot', null), MealKind.dinner);
+      expect(mealKindFor('Snacks', 8 * 60), MealKind.snack);
+      expect(mealKindFor('Mahlzeit 1', 7 * 60), MealKind.breakfast);
+      expect(mealKindFor('Mahlzeit 4', 19 * 60), MealKind.dinner);
+      expect(mealKindFor('Mahlzeit 5', null), MealKind.snack);
+    });
+
+    test('Eine Aufzeichnung je Mahlzeit, leere weg, Uhrzeit aus Einstellung oder typisch', () {
+      final meals = planNutritionExport(
+        day: '2026-11-22',
+        slots: [
+          (id: 'a', name: 'Frühstück', minuteOfDay: 7 * 60 + 15),
+          (id: 'b', name: 'Mittagessen', minuteOfDay: null),
+          (id: 'c', name: 'Abendessen', minuteOfDay: null),
+        ],
+        totalsBySlot: {
+          'a': const Nutrients(kcal: 420, protein: 25),
+          'b': const Nutrients(kcal: 0.4),
+          'c': const Nutrients(kcal: 700),
+          'gone': const Nutrients(kcal: 90),
+        },
+      );
+      expect(meals.map((m) => m.clientId), ['sattly:2026-11-22:a', 'sattly:2026-11-22:c', 'sattly:2026-11-22:gone']);
+      expect(meals[0].start, DateTime(2026, 11, 22, 7, 15));
+      expect(meals[0].end, DateTime(2026, 11, 22, 7, 45));
+      expect(meals[0].nutrients.protein, 25);
+      expect(meals[1].start, DateTime(2026, 11, 22, 18, 30));
+      expect(meals[1].kind, MealKind.dinner);
+      expect(meals[2].kind, MealKind.snack);
+    });
+  });
+
   group('Übernehmen in die Datenbank', () {
     late AppDatabase db;
     setUp(() => db = AppDatabase(NativeDatabase.memory()));
@@ -129,6 +176,31 @@ void main() {
 
       final s = HealthSettings.parse(await db.getSetting(healthSettingsKey));
       expect(s.lastImport, now);
+    });
+
+    test('Mahlzeiten der letzten Tage schreiben, nur mit Schalter und Freigabe', () async {
+      final now = DateTime(2026, 11, 22, 20);
+      final slot = (await db.watchMealSlots().first).first;
+      final skyr = (await db.searchFoods('Skyr')).first;
+      await db.logFood(day: '2026-11-22', mealSlotId: slot.id, food: skyr, amount: 200);
+      await db.logFood(day: '2026-11-22', mealSlotId: slot.id, food: skyr, amount: 100);
+      final src = FakeHealth(const HealthRead());
+      await importHealth(db, src, days: 2, now: now);
+      expect(src.written, isEmpty, reason: 'Schreiben ist aus');
+
+      await db.setSetting(healthSettingsKey, const HealthSettings(enabled: true, writeNutrition: true).toJson());
+      final r = await importHealth(db, src, days: 2, now: now);
+      expect(r.mealsWritten, 1);
+      expect(src.written.keys.toSet(), {'2026-11-21', '2026-11-22'});
+      expect(src.written['2026-11-21'], isEmpty, reason: 'leerer Tag wird geleert, damit Gelöschtes verschwindet');
+      final m = src.written['2026-11-22']!.single;
+      expect(m.nutrients.kcal, closeTo(skyr.kcal * 3, 0.01));
+      expect(HealthSettings.parse(await db.getSetting(healthSettingsKey)).writeNutrition, isTrue);
+
+      src.canWrite = false;
+      src.written.clear();
+      expect((await importHealth(db, src, days: 2, now: now)).mealsWritten, isNull);
+      expect(src.written, isEmpty);
     });
 
     test('Automatisch nur wenn eingeschaltet und höchstens alle 3 Stunden', () async {

@@ -21,6 +21,7 @@ import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/data/recipe_import_client.dart';
 import 'package:mydiet_ai/src/data/weekly_report_data.dart';
 import 'package:mydiet_ai/src/features/report/weekly_report_page.dart';
+import 'package:mydiet_ai/src/core/health_export.dart';
 import 'package:mydiet_ai/src/core/health_import.dart';
 import 'package:mydiet_ai/src/data/health_source.dart';
 import 'package:mydiet_ai/src/features/settings/health_page.dart';
@@ -289,6 +290,14 @@ void main() {
     expect(find.text('Beim Öffnen automatisch übernehmen'), findsOneWidget);
     final acts = (await tester.runAsync(() => db.watchActivities(dayKey(now)).first))!;
     expect(acts.map((a) => a.label).toSet(), {'Laufen (Health Connect)', dailyActivityLabel});
+
+    final write = find.text('Mahlzeiten nach Health Connect schreiben');
+    await tester.ensureVisible(write);
+    await tester.pump();
+    await tester.tap(write);
+    await settle();
+    expect(src.written[dayKey(now)], hasLength(1), reason: 'Skyr aus dem Profil-Setup');
+    expect(find.textContaining('Mahlzeiten der letzten 7 Tage nach Health Connect geschrieben'), findsOneWidget);
     await closeDb(tester, db);
   });
 
@@ -657,4 +666,11 @@ class _FakeHealthSource implements HealthSource {
   Future<bool> requestPermissions() async => requested = true;
   @override
   Future<HealthRead> read(DateTime from, DateTime to) async => data;
+  final written = <String, List<HealthMeal>>{};
+  @override
+  Future<bool> hasWritePermission() async => false;
+  @override
+  Future<bool> requestWritePermission() async => true;
+  @override
+  Future<void> writeDay(String day, List<HealthMeal> meals) async => written[day] = meals;
 }

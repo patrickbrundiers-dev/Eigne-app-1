@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:health/health.dart';
 
 import '../core/dates.dart';
+import '../core/health_export.dart';
 import '../core/health_import.dart';
 
 enum HealthAvailability {
@@ -23,9 +24,16 @@ abstract class HealthSource {
   Future<bool> hasPermissions();
   Future<bool> requestPermissions();
   Future<HealthRead> read(DateTime from, DateTime to);
+
+  /// Writing meals needs its own permission, asked only when the user switches it on.
+  Future<bool> hasWritePermission();
+  Future<bool> requestWritePermission();
+
+  /// Replaces what this app wrote for [day] (yyyy-MM-dd) with [meals].
+  Future<void> writeDay(String day, List<HealthMeal> meals);
 }
 
-/// Types the app reads. Nothing is written in this version.
+/// Types the app reads.
 const healthReadTypes = [
   HealthDataType.STEPS,
   HealthDataType.ACTIVE_ENERGY_BURNED,
@@ -68,6 +76,57 @@ class HealthConnectSource implements HealthSource {
   Future<bool> requestPermissions() async {
     await _ready();
     return _health.requestAuthorization(healthReadTypes);
+  }
+
+  static const _write = [HealthDataType.NUTRITION];
+  static const _writeAccess = [HealthDataAccess.WRITE];
+
+  @override
+  Future<bool> hasWritePermission() async {
+    await _ready();
+    return await _health.hasPermissions(_write, permissions: _writeAccess) ?? false;
+  }
+
+  @override
+  Future<bool> requestWritePermission() async {
+    await _ready();
+    return _health.requestAuthorization(_write, permissions: _writeAccess);
+  }
+
+  @override
+  Future<void> writeDay(String day, List<HealthMeal> meals) async {
+    await _ready();
+    final d = DateTime.parse(day);
+    // Health Connect only lets an app delete its own records, so this never touches other apps' data.
+    await _health.delete(
+      type: HealthDataType.NUTRITION,
+      startTime: d,
+      endTime: DateTime(d.year, d.month, d.day + 1).subtract(const Duration(seconds: 1)),
+    );
+    for (final m in meals) {
+      final n = m.nutrients;
+      await _health.writeMeal(
+        mealType: switch (m.kind) {
+          MealKind.breakfast => MealType.BREAKFAST,
+          MealKind.lunch => MealType.LUNCH,
+          MealKind.dinner => MealType.DINNER,
+          MealKind.snack => MealType.SNACK,
+        },
+        startTime: m.start,
+        endTime: m.end,
+        clientRecordId: m.clientId,
+        name: m.name,
+        caloriesConsumed: n.kcal,
+        protein: n.protein,
+        carbohydrates: n.carbs,
+        sugar: n.sugar,
+        fatTotal: n.fat,
+        fatSaturated: n.saturatedFat,
+        fiber: n.fiber,
+        sodium: n.salt / 2.5, // salt → sodium (g)
+        recordingMethod: RecordingMethod.manual,
+      );
+    }
   }
 
   @override
