@@ -15,6 +15,9 @@
 - Tagessumme je Inhaltsstoff über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit % der Referenzmenge
   und der tolerierbaren Höchstmenge (EFSA): Hinweis ab 80 %, Warnung darüber; keine Dosierungsempfehlungen
 - Datenbank Schema 3
+- Wochen-Check auf der Gewichtsseite: echter Verbrauch aus Aufnahme und Gewichtsverlauf der letzten 28 Tage,
+  unvollständige Tage werden ausgelassen, Vorschlag für das Kalorienziel mit Rechenweg (höchstens 300 kcal
+  Änderung auf einmal, nie unter dem Mindestwert), gilt erst nach Bestätigung
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 
