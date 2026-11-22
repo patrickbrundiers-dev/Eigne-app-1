@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+## 0.3.0 – Barcode, Erinnerungen, Text-Eingabe, Vitamine und Mineralstoffe (2026-11-22)
+
 - PC als Planungs-Arbeitsplatz: der Wochenplan zeigt im breiten Fenster die Tage nebeneinander; Einträge lassen
   sich mit der Maus (am Handy lange drücken) auf einen anderen Tag ziehen, mit Strg kopieren, oder über das Menü
   „Auf anderen Tag verschieben/kopieren“, jeweils mit Rückgängig. Tastenkürzel: Strg+E Eintragen für die
