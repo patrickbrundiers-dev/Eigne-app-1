@@ -31,6 +31,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 
 - ✅ Rezeptverwaltung: Zutaten, Portionen, Nährwerte pro Portion, Endgewicht nach dem Kochen, ins Tagebuch
   (Portionen oder Gramm), Einkaufsliste mit Zusammenfassen gleicher Zutaten
+- ✅ Rezept übernehmen (W9): von Webseiten mit schema.org-Rezeptdaten oder aus eingefügter Zutatenliste,
+  Zutaten den eigenen Lebensmitteln zugeordnet, Unsicheres markiert, Gewicht nach dem Kochen optional
 - ✅ Ernährungsplanung: Wochenplan für alle Mahlzeiten, automatisch mit eigenen Rezepten füllen (Filter über
   Rezept-Stichworte wie vegetarisch, günstig, schnell, Meal Prep, Familie), Portionen passend zum Kalorienziel,
   Einträge ändern/entfernen mit Rückgängig, Woche kopieren, Tag oder Woche ins Tagebuch (ohne Doppelzählung),
