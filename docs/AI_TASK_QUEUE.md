@@ -80,7 +80,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 |---|---|---|---|---|---|---|
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
 | 7.2 | Datenbank-Verschlüsselung (SQLCipher) + App-Sperre | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
-| 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots | M | S | N | – | – |
+| 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/, Angaben zum Anbieter fehlen | M | S | N | – | – |
 | 7.4 | Integrationstests auf Android-Emulator in CI | M | M | N | – | CI |
 
 ## Nächster konkreter Schritt
