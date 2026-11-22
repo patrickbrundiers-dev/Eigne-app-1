@@ -4,6 +4,13 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign: Analyse und drei Designvorlagen (Phase 1+2, wartet auf Freigabe)
+
+Thread „Sattly-Design mit drei Vorlagen erneuern“. `docs/design/REDESIGN.md` (Analyse, Vergleich, Empfehlung
+Design 1 „Premium Wellness“) und `docs/design/vorschau.html` (interaktive Vorschau, nur Beispieldaten,
+getrennt vom App-Code). Screenshots in den Projektdateien `sattly/redesign/`. **Kein produktiver Code
+geändert.** Phase 4 (Designsystem als ThemeExtension, dann Bereiche einzeln) erst nach Patricks Freigabe.
+
 ## 2026-11-22 – Mehr Lebensmittel und Open Food Facts beim Tippen (3.6, 3.7)
 
 Thread „Lebensmittel-Datenbank vergrößern mit Live-Suche“, Branch `claude/project-thread-nlurk1`. Kein Schema-Eingriff.
