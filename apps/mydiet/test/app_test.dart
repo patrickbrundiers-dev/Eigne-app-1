@@ -43,11 +43,16 @@ void main() {
     lockStoreFactory = MemoryLockStore.new; // no app lock unless a test sets one
     biometricsFactory = _NoBiometrics.new;
     // Real font, so layout overflows in tests match the app.
-    final loader = FontLoader('Inter');
-    for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
-      loader.addFont(rootBundle.load('assets/fonts/Inter-$w.ttf'));
+    final body = FontLoader('Barlow');
+    for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold']) {
+      body.addFont(rootBundle.load('assets/fonts/Barlow-$w.ttf'));
     }
-    await loader.load();
+    await body.load();
+    final numbers = FontLoader('BarlowCondensed');
+    for (final w in ['Medium', 'SemiBold', 'Bold']) {
+      numbers.addFont(rootBundle.load('assets/fonts/BarlowCondensed-$w.ttf'));
+    }
+    await numbers.load();
   });
 
   Future<AppDatabase> openDb({bool withProfile = false}) async {

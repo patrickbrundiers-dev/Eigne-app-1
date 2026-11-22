@@ -77,7 +77,7 @@ Geplantes Sync-Verfahren (Phase 4):
 ### Weitere Bausteine
 
 - Diagramme: `fl_chart`. Datei-Export/-Import: `file_picker`. Datumsformate: `intl` (de_DE).
-- Schrift: Inter (OFL-Lizenz, im App-Paket enthalten, damit Android und Windows gleich aussehen).
+- Schrift: Barlow für Text und Barlow Condensed für Kennzahlen (OFL-Lizenz, im App-Paket enthalten, damit Android und Windows gleich aussehen). Bis 0.6 war es Inter.
 - KI (Phase 3): Anbieter offen. Anforderungen: EU-Verarbeitung oder lokales Modell, keine Speicherung der
   Daten beim Anbieter, strukturierte Ausgabe (JSON) mit Konfidenz. Jede KI-Schätzung wird in der App als
   Schätzwert gekennzeichnet und erst nach Bestätigung gespeichert.

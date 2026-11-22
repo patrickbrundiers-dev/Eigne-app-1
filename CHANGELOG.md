@@ -2,6 +2,10 @@
 
 ## Nächste Version (in Arbeit)
 
+- Neues Design „Fitness & Performance“, Schritt 1: neue Farben (hell mit Grün, dunkel mit Limette), neue Schrift
+  mit kräftigen Zahlen, einheitliche Karten, Knöpfe und Eingabefelder. Alle Funktionen bleiben wie gehabt;
+  die Farbschemata in den Einstellungen ändern weiterhin die Akzentfarbe
+
 - Lebensmittelsuche: Findet deine eigene Datenbank kaum etwas, sucht Sattly nach einer kurzen Tipp-Pause
   automatisch bei Open Food Facts und zeigt die Treffer direkt unter den eigenen an (auch bei der Zutatensuche
   für Rezepte). Gesendet wird nur der Suchbegriff; Treffer werden wie bisher erst nach dem Prüfen gespeichert.

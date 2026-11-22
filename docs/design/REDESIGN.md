@@ -104,6 +104,11 @@ Es trifft „motivieren ohne Druck“ am besten und macht Sattly über Logo-Farb
 unverwechselbar. Design 2 wirkt eher wie eine Trainings-App, Design 3 ist am einfachsten, aber am wenigsten
 eigenständig.
 
+## Entscheidung
+
+Patrick hat am 22.11.2026 per Entscheidungskarte **Design 2 „Fitness & Performance“** gewählt. Umsetzung
+schrittweise wie in Abschnitt 5, Stand in `docs/AI_PROGRESS.md`.
+
 ## 5. Vorschlag für Phase 4 (erst nach Freigabe)
 
 1. **Designsystem** `lib/src/ui/design/`: `SattlyTokens` als `ThemeExtension` (Farben inkl. Makro- und

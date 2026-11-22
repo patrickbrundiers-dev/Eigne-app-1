@@ -4,6 +4,17 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign Schritt 1: Designsystem Design 2 (D-22)
+
+Patrick hat Design 2 „Fitness & Performance“ gewählt. `lib/src/ui/design/tokens.dart` (`SattlyTokens` als
+ThemeExtension: Farben hell/dunkel, Makro- und Statusfarben, `SattlySpace`, `SattlyRadius`, `SattlyFonts`,
+`numberStyle`) und `theme.dart` (`sattlyTheme`, zwischengespeichert). `buildTheme` in `app.dart` delegiert,
+`MacroColors` und `StatValue` nutzen die Tokens. Schrift Barlow + Barlow Condensed statt Inter.
+Wichtig: Das Theme muss zwischengespeichert bleiben, sonst blendet MaterialApp bei jedem Neuaufbau über und
+alle Seiten abonnieren ihre Streams neu (zeigte sich als langsame Widget-Tests). Tests:
+`design_tokens_test.dart` (Kontraste WCAG AA, Tokens im Theme, Theme-Identität, Akzent), alle 344 Tests grün,
+Testlauf dadurch rund doppelt so schnell. Nächster Schritt: Navigation mit zentralem Plus.
+
 ## 2026-11-22 – Redesign: Analyse und drei Designvorlagen (Phase 1+2, wartet auf Freigabe)
 
 Thread „Sattly-Design mit drei Vorlagen erneuern“. `docs/design/REDESIGN.md` (Analyse, Vergleich, Empfehlung
