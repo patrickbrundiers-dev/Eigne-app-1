@@ -38,7 +38,9 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 - ✅ Supplement-Verwaltung: Produkte mit Inhaltsstoffen je Portion, Herstellerempfehlung, Einnahmezeiten,
   Vorrat, Abhaken pro Uhrzeit, Summen über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit Hinweis ab
   80 % und Warnung über der tolerierbaren Höchstmenge (EFSA UL); keine eigenen Dosierungsempfehlungen
-- ⬜ Barcode-Scanner (Kamera) + Open Food Facts
+- ✅ Barcode-Scanner (Kamera auf Android, Eingabe oder USB-Scanner unter Windows) + Open Food Facts:
+  erst lokal suchen (offline), sonst Open Food Facts fragen (nur der Barcode wird gesendet), Werte prüfen,
+  dann speichern; Quelle und Datenqualität (W2) sichtbar
 - ⬜ Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen)
 
 ## Phase 3 – KI

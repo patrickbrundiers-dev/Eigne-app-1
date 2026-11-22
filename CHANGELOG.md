@@ -24,6 +24,11 @@
 - Wochen-Check auf der Gewichtsseite: echter Verbrauch aus Aufnahme und Gewichtsverlauf der letzten 28 Tage,
   unvollständige Tage werden ausgelassen, Vorschlag für das Kalorienziel mit Rechenweg (höchstens 300 kcal
   Änderung auf einmal, nie unter dem Mindestwert), gilt erst nach Bestätigung
+- Barcode-Scanner: Kamera auf Android, Eingabefeld oder USB-Scanner unter Windows; bekannte Produkte kommen
+  offline aus der eigenen Datenbank, neue von Open Food Facts (nur der Barcode wird gesendet) und werden vor
+  dem Speichern zur Prüfung vorausgefüllt; Prüfziffer wird kontrolliert
+- Datenqualität sichtbar: Quelle (Basis, eigen, Open Food Facts, KI) und Stufe (Richtwert, vom Etikett,
+  vollständig, prüfen, Schätzung) als Symbol in Liste und Suche; Open-Food-Facts-Werte mit Energie-Check
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

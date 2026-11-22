@@ -44,7 +44,7 @@ Wettbewerber nach öffentlichem Kenntnisstand (Store-Seiten, Tests, Bewertungen)
 
 | Funktion | YAZIO | MFP | Cronometer | MacroFactor | **MyDiet AI** |
 |---|---|---|---|---|---|
-| Barcode-Scanner | ✅ | 💰 | ✅ | ✅ | 🔜 Phase 2 |
+| Barcode-Scanner | ✅ | 💰 | ✅ | ✅ | ✅ |
 | Makro-Ziele frei einstellbar | 💰 | 💰 | ✅ | ✅ | ✅ |
 | Mikronährstoffe mit Zielen | teilweise | wenige | ✅ | wenige | ➕ (P1) |
 | Supplemente **mit Summen über Nahrung + Präparate** | – | – | teilweise | – | 🔜 + ➕ |
@@ -76,7 +76,7 @@ Jedes Paket ist ein eigener PR mit Tests im Rechenkern (`core/`).
 - Ganzen Tag oder Mahlzeit kopieren auf beliebiges Datum (heute nur „vom Vortag“).
 - Akzeptanz: Wiederholtes Frühstück in ≤ 2 Taps; Messung per Widget-Test (Anzahl Taps).
 
-**W2 · Datenqualität sichtbar machen (M)** – Einordnung: Phase 2 (Barcode/Open Food Facts)
+**W2 · Datenqualität sichtbar machen (M)** – Einordnung: Phase 2 (Barcode/Open Food Facts) – ✅ umgesetzt (Quelle + Stufe Richtwert / vom Etikett / vollständig / prüfen / Schätzung, Atwater-Check)
 - Jedes Lebensmittel bekommt `quelle` (Basis, Open Food Facts, eigen, KI-Schätzung) und eine
   Qualitätsstufe (geprüft / vollständig / unvollständig / Schätzung), als Symbol in Liste und Tagebuch.
 - Energie-Plausibilitätscheck (Atwater: kcal ≈ 4·Protein + 4·KH + 9·Fett + 7·Alkohol, ±15 %) für

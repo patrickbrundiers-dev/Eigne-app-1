@@ -6,6 +6,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import '../core/dashboard_layout.dart';
 import '../core/dates.dart';
 import '../core/nutrition.dart';
+import '../core/food_quality.dart';
 import '../core/meal_plan.dart';
 import '../core/recipes.dart';
 import '../core/supplements.dart';
@@ -13,6 +14,7 @@ import 'database.steps.dart';
 import 'seed_foods.dart';
 import 'tables.dart';
 
+export '../core/food_quality.dart' show FoodSource, FoodQuality;
 export 'tables.dart' show newId;
 
 part 'database.g.dart';
@@ -298,7 +300,7 @@ class AppDatabase extends _$AppDatabase {
         q.where((f) => f.foodKey.like('%$word%'));
       }
     }
-    if (onlyUser) q.where((f) => f.source.equals('user'));
+    if (onlyUser) q.where((f) => f.source.equals('base').not());
     if (onlyFavorites) q.where((f) => f.isFavorite.equals(true));
     q.orderBy([(f) => OrderingTerm.desc(f.isFavorite), (f) => OrderingTerm.asc(f.name.collate(Collate.noCase))]);
     return q.watch();
@@ -349,8 +351,10 @@ class AppDatabase extends _$AppDatabase {
     required Nutrients per100,
     double? servingAmount,
     String? servingLabel,
+    String source = 'user',
   }) async {
     final trimmedName = name.trim();
+    if (!const {'user', 'off', 'ai'}.contains(source)) throw ArgumentError('Unbekannte Quelle $source.');
     if (trimmedName.isEmpty) throw InvalidFoodException(['Bitte einen Namen eingeben.']);
     if (unit != 'g' && unit != 'ml') throw InvalidFoodException(['Einheit muss g oder ml sein.']);
     final check = checkPer100(per100);
@@ -395,12 +399,12 @@ class AppDatabase extends _$AppDatabase {
         salt: Value(per100.salt),
         servingAmount: Value(servingAmount),
         servingLabel: Value(servingLabel?.trim().isEmpty ?? true ? null : servingLabel!.trim()),
+        source: Value(source),
         updatedAt: Value(now),
       );
       if (id == null) {
         final newFoodId = newId();
-        await into(foods)
-            .insert(companion.copyWith(id: Value(newFoodId), source: const Value('user'), createdAt: Value(now)));
+        await into(foods).insert(companion.copyWith(id: Value(newFoodId), createdAt: Value(now)));
         return newFoodId;
       }
       await (update(foods)..where((f) => f.id.equals(id))).write(companion);
@@ -1579,7 +1583,11 @@ extension FoodNutrients on Food {
     fiber: fiber,
     salt: salt,
   );
-  bool get isUserFood => source == 'user';
+
+  /// Foods the user may edit or delete (everything except the shipped base foods).
+  bool get isUserFood => source != 'base';
+  FoodSource get sourceKind => FoodSource.parse(source);
+  FoodQuality get quality => assessQuality(sourceKind, per100);
 }
 
 extension ProfileLists on Profile {

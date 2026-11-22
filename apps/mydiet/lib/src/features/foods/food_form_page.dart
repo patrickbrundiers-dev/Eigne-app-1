@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
+import '../../core/food_quality.dart';
 import '../../core/nutrition.dart';
 import '../../data/database.dart';
 import '../../ui/format.dart';
@@ -8,7 +9,11 @@ import '../../ui/widgets.dart';
 
 /// Create or edit a food. Returns the food id on save.
 class FoodFormPage extends StatefulWidget {
-  const FoodFormPage({super.key, this.food, this.initialName, this.copyOf});
+  const FoodFormPage({super.key, this.food, this.initialName, this.copyOf, this.prefill, this.initialBarcode});
+
+  /// Values from Open Food Facts to check and save.
+  final OffProduct? prefill;
+  final String? initialBarcode;
 
   /// Edit this user food.
   final Food? food;
@@ -24,23 +29,33 @@ class FoodFormPage extends StatefulWidget {
 class _FoodFormPageState extends State<FoodFormPage> {
   final _form = GlobalKey<FormState>();
   Food? get _src => widget.food ?? widget.copyOf;
+  OffProduct? get _off => widget.prefill;
+  Nutrients? get _p100 => _off?.per100 ?? _src?.per100;
   late final _name = TextEditingController(
-    text: widget.food?.name ?? (widget.copyOf != null ? '${widget.copyOf!.name} (eigen)' : widget.initialName ?? ''),
+    text:
+        widget.food?.name ??
+        _off?.name ??
+        (widget.copyOf != null ? '${widget.copyOf!.name} (eigen)' : widget.initialName ?? ''),
   );
-  late final _brand = TextEditingController(text: _src?.brand ?? '');
-  late final _barcode = TextEditingController(text: widget.food?.barcode ?? '');
-  late final _category = TextEditingController(text: _src?.category ?? '');
-  late final _kcal = TextEditingController(text: numField(_src?.kcal));
-  late final _protein = TextEditingController(text: numField(_src?.protein));
-  late final _carbs = TextEditingController(text: numField(_src?.carbs));
-  late final _sugar = TextEditingController(text: numField(_src?.sugar));
-  late final _fat = TextEditingController(text: numField(_src?.fat));
-  late final _sat = TextEditingController(text: numField(_src?.saturatedFat));
-  late final _fiber = TextEditingController(text: numField(_src?.fiber));
-  late final _salt = TextEditingController(text: numField(_src?.salt));
-  late final _serving = TextEditingController(text: numField(_src?.servingAmount));
-  late final _servingLabel = TextEditingController(text: _src?.servingLabel ?? '');
-  late String _unit = _src?.unit ?? 'g';
+  late final _brand = TextEditingController(text: _off?.brand ?? _src?.brand ?? '');
+  late final _barcode = TextEditingController(
+    text: widget.food?.barcode ?? _off?.barcode ?? widget.initialBarcode ?? '',
+  );
+  late final _category = TextEditingController(text: _off?.category ?? _src?.category ?? '');
+  late final _kcal = TextEditingController(text: _num(_p100?.kcal));
+  late final _protein = TextEditingController(text: _num(_p100?.protein));
+  late final _carbs = TextEditingController(text: _num(_p100?.carbs));
+  late final _sugar = TextEditingController(text: _num(_p100?.sugar));
+  late final _fat = TextEditingController(text: _num(_p100?.fat));
+  late final _sat = TextEditingController(text: _num(_p100?.saturatedFat));
+  late final _fiber = TextEditingController(text: _num(_p100?.fiber));
+  late final _salt = TextEditingController(text: _num(_p100?.salt));
+  late final _serving = TextEditingController(text: numField(_off?.servingAmount ?? _src?.servingAmount));
+  late final _servingLabel = TextEditingController(text: _off?.servingLabel ?? _src?.servingLabel ?? '');
+  late String _unit = _off?.unit ?? _src?.unit ?? 'g';
+
+  /// Imported values can have many decimals; two are enough.
+  static String _num(double? v) => v == null ? '' : numField(double.parse(v.toStringAsFixed(2)));
   String? _error;
   Food? _duplicate;
 
@@ -97,6 +112,7 @@ class _FoodFormPageState extends State<FoodFormPage> {
         per100: _n,
         servingAmount: parseNum(_serving.text),
         servingLabel: _servingLabel.text,
+        source: _off != null && _n == _off!.per100 ? 'off' : 'user',
       );
       if (mounted) Navigator.pop(context, id);
     } on DuplicateFoodException catch (e) {
@@ -145,6 +161,7 @@ class _FoodFormPageState extends State<FoodFormPage> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
               children: [
+                if (_off != null) _offBanner(context, _off!),
                 SectionCard(
                   title: 'Produkt',
                   child: Column(
@@ -171,7 +188,7 @@ class _FoodFormPageState extends State<FoodFormPage> {
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           labelText: 'Barcode (EAN, optional)',
-                          helperText: 'Scanner folgt in Phase 2',
+                          helperText: 'Lebensmittel lassen sich auch per Barcode-Scan anlegen',
                         ),
                         validator: (s) {
                           final v = (s ?? '').replaceAll(RegExp(r'\s'), '');
@@ -259,6 +276,30 @@ class _FoodFormPageState extends State<FoodFormPage> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _offBanner(BuildContext context, OffProduct off) {
+    final t = Theme.of(context);
+    final q = off.quality;
+    return Card(
+      color: q == FoodQuality.complete ? t.colorScheme.secondaryContainer : t.colorScheme.tertiaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Gefunden bei Open Food Facts · ${q.label}', style: const TextStyle(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Text(
+              'Die Werte stammen aus einer offenen Datenbank, die von Freiwilligen gepflegt wird. Bitte kurz mit '
+              'dem Etikett vergleichen und speichern. Wenn du Werte änderst, gilt das Lebensmittel als eigene Eingabe.'
+              '${off.missing.isEmpty ? '' : '\nFehlende Angaben (als 0 eingetragen): ${off.missing.join(', ')}.'}',
+              style: t.textTheme.bodySmall,
+            ),
+          ],
         ),
       ),
     );

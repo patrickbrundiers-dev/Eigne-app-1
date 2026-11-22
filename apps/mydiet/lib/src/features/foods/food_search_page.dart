@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../app.dart';
 import '../../data/database.dart';
 import '../../ui/format.dart';
+import 'barcode.dart';
 import 'food_form_page.dart';
 
 /// Searches the food database and returns the chosen food (used for recipe ingredients).
@@ -66,6 +67,16 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
                   autoFocus: true,
                   hintText: 'Lebensmittel suchen',
                   leading: const Icon(Icons.search),
+                  trailing: [
+                    IconButton(
+                      tooltip: 'Barcode scannen',
+                      icon: const Icon(Icons.qr_code_scanner),
+                      onPressed: () async {
+                        final f = await scanFood(context);
+                        if (f != null && context.mounted) Navigator.pop(context, f);
+                      },
+                    ),
+                  ],
                   elevation: const WidgetStatePropertyAll(0),
                   onChanged: (v) {
                     setState(() {});

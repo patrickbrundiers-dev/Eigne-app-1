@@ -4,6 +4,7 @@ import '../../app.dart';
 import '../../data/database.dart';
 import '../../ui/format.dart';
 import '../home_shell.dart';
+import 'barcode.dart';
 import 'food_form_page.dart';
 
 class FoodsPage extends StatefulWidget {
@@ -48,6 +49,16 @@ class _FoodsPageState extends State<FoodsPage> {
                 controller: _q,
                 hintText: 'Suchen',
                 leading: const Icon(Icons.search),
+                trailing: [
+                  IconButton(
+                    tooltip: 'Barcode scannen',
+                    icon: const Icon(Icons.qr_code_scanner),
+                    onPressed: () async {
+                      final f = await scanFood(context);
+                      if (f != null && context.mounted) await _open(context, f);
+                    },
+                  ),
+                ],
                 elevation: const WidgetStatePropertyAll(0),
                 onChanged: (_) => setState(() {}),
               ),
@@ -93,8 +104,9 @@ class _FoodsPageState extends State<FoodsPage> {
                         return Padding(
                           padding: const EdgeInsets.all(16),
                           child: Text(
-                            '${items.length} Lebensmittel. Basiswerte (Buch-Symbol) sind gerundete Richtwerte '
-                            'aus Nährwerttabellen; für genaue Werte eigene Produkte vom Etikett anlegen.',
+                            '${items.length} Lebensmittel. Symbole: Buch = Richtwert aus Nährwerttabellen, '
+                            'Person = eigene Eingabe vom Etikett, Barcode = Open Food Facts (Warnzeichen: bitte prüfen), '
+                            'Funken = Schätzung.',
                             style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
                           ),
                         );
@@ -108,10 +120,7 @@ class _FoodsPageState extends State<FoodsPage> {
                             '${kcal(f.kcal)} · P ${grams(f.protein)} · K ${grams(f.carbs)} · F ${grams(f.fat)} / 100 ${f.unit}',
                           ].join(' · '),
                         ),
-                        leading: Icon(
-                          f.isUserFood ? Icons.person_outline : Icons.menu_book_outlined,
-                          color: t.colorScheme.outline,
-                        ),
+                        leading: FoodSourceIcon(food: f),
                         trailing: IconButton(
                           tooltip: f.isFavorite ? 'Favorit entfernen' : 'Als Favorit markieren',
                           icon: Icon(
@@ -145,7 +154,7 @@ class _FoodsPageState extends State<FoodsPage> {
           children: [
             ListTile(
               title: Text(f.name, style: Theme.of(c).textTheme.titleLarge),
-              subtitle: Text(f.isUserFood ? 'Eigenes Lebensmittel' : 'Basisdatenbank (Richtwert)'),
+              subtitle: Text('${f.sourceKind.label} · ${f.quality.label}'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -222,6 +231,32 @@ class _NutrientTable extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+/// Icon for the source and quality of a food (ARBEITSPLAN W2).
+class FoodSourceIcon extends StatelessWidget {
+  const FoodSourceIcon({super.key, required this.food, this.size = 24});
+  final Food food;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final q = food.quality;
+    final (icon, color) = switch (food.sourceKind) {
+      FoodSource.base => (Icons.menu_book_outlined, t.colorScheme.outline),
+      FoodSource.user => (Icons.person_outline, t.colorScheme.outline),
+      FoodSource.off => (
+        q == FoodQuality.complete ? Icons.qr_code_2 : Icons.warning_amber_rounded,
+        q == FoodQuality.complete ? t.colorScheme.outline : t.colorScheme.tertiary,
+      ),
+      FoodSource.ai => (Icons.auto_awesome_outlined, t.colorScheme.tertiary),
+    };
+    return Tooltip(
+      message: '${food.sourceKind.label} · ${q.label}',
+      child: Icon(icon, color: color, size: size),
     );
   }
 }
