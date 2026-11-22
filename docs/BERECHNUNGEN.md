@@ -238,6 +238,15 @@ die neuere; ein Eintrag genügt. Nur ein Vorschlag im Mengendialog und im Text-E
 Aussagekraft: reine Sortierhilfe, keine Nährwertberechnung. In „Als Text eintragen“ sind unscharfe Treffer immer
 „unsicher“ und werden nicht vorausgewählt.
 
+## Homescreen-Widget (`core/widget_summary.dart`, Android)
+
+- Gleiche Rechnung wie das Dashboard: Budget = Tagesziel (im Wochenmodus das heutige Wochenbudget) plus
+  Aktivitätsanteil aus dem Profil; „Noch X kcal“ = Budget − Gegessenes, sonst „X kcal über dem Ziel“.
+- Zweite Zeile: gegessen / Budget und Protein gegessen / Ziel; Balken = Anteil des Budgets (0–100 %).
+- „Zahlen ausblenden“ gilt auch hier: dann nur der freundliche Status wie im Tagebuch.
+- Die App aktualisiert das Widget bei jeder Änderung, solange sie läuft. Ist der gespeicherte Tag nicht heute
+  (z. B. nach Mitternacht), zeigt das Widget „Heute noch nichts eingetragen“ statt alter Zahlen.
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

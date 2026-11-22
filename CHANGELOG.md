@@ -2,6 +2,9 @@
 
 ## Nächste Version (in Arbeit)
 
+- Homescreen-Widget (Android): zeigt, wie viele Kalorien heute noch offen sind, dazu gegessen / Budget, Protein
+  und einen Fortschrittsbalken; Tippen öffnet die App. Beachtet Wochenmodus und „Zahlen ausblenden“
+
 - Health Connect (Android, Einstellungen → Health Connect): Schritte, aktive Kalorien, Trainings und Gewicht
   aus Health Connect übernehmen, also auch von Garmin Connect, Samsung Health oder Google Fit. Jedes Training
   wird ein Aktivitätseintrag, dazu ein Eintrag „Alltag“ pro Tag ohne Doppelzählung; erneutes Übernehmen

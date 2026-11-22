@@ -4,6 +4,18 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Homescreen-Widget Android (Aufgabe 6.4, W13)
+
+Phase-2-Thread. `core/widget_summary.dart` (Texte, Tausenderpunkte, freundlicher Status – `gentleStatus` nutzt ihn
+jetzt mit), `data/home_widget_sync.dart` (gleiche Budget-Rechnung wie das Dashboard, sendet nur bei Änderung,
+neu nach Mitternacht; auf Windows nichts), Start in `home_shell.dart`. Android: `SattlyWidgetProvider.kt`,
+Layout, Widget-Info, Receiver im Manifest. Neue Abhängigkeit `home_widget` (D-16). dashboard_page.dart und
+database.dart unverändert.
+
+Tests: `test/home_widget_test.dart` (5). Android-Build im CI; Aussehen auf dem Gerät noch ungeprüft.
+
+Nächster Schritt: App-Sperre (PIN/Fingerabdruck, ohne Verschlüsselung – Patricks Entscheidung 2026-11-22).
+
 ## 2026-11-22 – Health Connect: Mahlzeiten schreiben (Aufgabe 6.1, Teil 2)
 
 Phase-2-Thread. `core/health_export.dart` (Mahlzeit je Tag und Slot, Art aus Name/Uhrzeit), `HealthSource.writeDay`
