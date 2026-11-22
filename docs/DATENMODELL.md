@@ -1,4 +1,4 @@
-# Datenmodell (Schema-Version 3)
+# Datenmodell (Schema-Version 4)
 
 Lokale SQLite-Datenbank über drift. Definition: `apps/mydiet/lib/src/data/tables.dart`.
 
@@ -64,6 +64,14 @@ oder `custom:Name`, Menge, Einheit (µg/mg/g).
 **supplement_intakes** (ab Schema 3) – eingenommene Portionen; **eindeutig** pro Produkt, Tag und geplanter
 Uhrzeit (−1 = ohne Uhrzeit). Zweimal Abhaken zählt einmal; Abhaken/Rücknehmen verändert den Vorrat.
 
+**meal_plan_entries** (ab Schema 4) – geplante Lebensmittel/Rezepte je Tag und Mahlzeit mit Kopie der Werte
+pro 100; `diary_entry_id` merkt, welcher Tagebucheintrag daraus entstand (verhindert doppeltes Übernehmen).
+
+**fasting_sessions** (ab Schema 4) – Fastenzeiten mit Beginn, Ende (offen = läuft) und Zieldauer. Es läuft
+nie mehr als eine gleichzeitig.
+
+`profiles.carb_cap_g` (ab Schema 4) – optionale Obergrenze für Kohlenhydrate.
+
 **settings** – Schlüssel/Wert: `themeMode`, `colorScheme`, `dashboardLayout` (JSON), `seedVersion`.
 
 ## Basis-Lebensmittel
@@ -80,7 +88,8 @@ Tombstones. Import ersetzt alle Daten in einer Transaktion; bei einem Fehler ble
 ## Migrationen
 
 `schemaVersion` in `database.dart`. Jede Änderung bekommt einen Migrationsschritt in
-`MigrationStrategy.onUpgrade`. Der Stand jeder Version liegt in `drift_schemas/` (erzeugt mit
+`MigrationStrategy.onUpgrade` (`stepByStep` aus `database.steps.dart`: jeder Schritt arbeitet mit dem
+Schema seiner Zielversion, eine alte Datenbank wird Version für Version aktualisiert). Der Stand jeder Version liegt in `drift_schemas/` (erzeugt mit
 `dart run drift_dev make-migrations`); `test/drift/` prüft jede Migration gegen eine neu angelegte
 Datenbank und dass vorhandene Daten erhalten bleiben.
 
@@ -89,3 +98,4 @@ Datenbank und dass vorhandene Daten erhalten bleiben.
 | 1 | Grundsystem (Phase 1) |
 | 2 | `recipes`, `recipe_items`, `shopping_items`, `diary_entries.recipe_id` |
 | 3 | `supplements`, `supplement_ingredients`, `supplement_intakes` |
+| 4 | `meal_plan_entries`, `fasting_sessions`, `profiles.carb_cap_g` |

@@ -1,19 +1,20 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../home_shell.dart';
+import '../plan/plan_view.dart';
 import '../recipes/recipes_view.dart';
 import '../recipes/shopping_view.dart';
 import '../supplements/supplements_view.dart';
 import 'foods_page.dart';
 
-/// "Essen" tab: foods, recipes, shopping list and supplements.
+/// "Essen" tab: foods, recipes, weekly plan, shopping list and supplements.
 class FoodHubPage extends StatelessWidget {
   const FoodHubPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Essen'),
@@ -23,6 +24,7 @@ class FoodHubPage extends StatelessWidget {
             tabs: [
               Tab(text: 'Lebensmittel'),
               Tab(text: 'Rezepte'),
+              Tab(text: 'Wochenplan'),
               Tab(text: 'Einkauf'),
               Tab(text: 'Supplemente'),
             ],
@@ -30,7 +32,9 @@ class FoodHubPage extends StatelessWidget {
         ),
         body: const PageBody(
           maxWidth: 900,
-          child: TabBarView(children: [FoodsPage(embedded: true), RecipesView(), ShoppingView(), SupplementsView()]),
+          child: TabBarView(
+            children: [FoodsPage(embedded: true), RecipesView(), PlanView(), ShoppingView(), SupplementsView()],
+          ),
         ),
       ),
     );

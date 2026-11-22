@@ -1,0 +1,490 @@
+import 'package:material_ui/material_ui.dart';
+
+import '../../app.dart';
+import '../../core/dates.dart';
+import '../../core/nutrition.dart';
+import '../../core/weight_trend.dart' show weekStart;
+import '../../data/database.dart';
+import '../../data/targets.dart';
+import '../../ui/format.dart';
+import '../../ui/widgets.dart';
+import '../diary/amount_sheet.dart';
+import '../foods/food_search_page.dart';
+
+/// Weekly meal plan: plan foods and recipes, fill automatically, copy, put into the
+/// diary or on the shopping list.
+class PlanView extends StatefulWidget {
+  const PlanView({super.key});
+
+  @override
+  State<PlanView> createState() => _PlanViewState();
+}
+
+class _PlanViewState extends State<PlanView> {
+  late DateTime _monday = weekStart(DateTime.now());
+
+  List<String> get _days => [
+    for (var i = 0; i < 7; i++) dayKey(DateTime(_monday.year, _monday.month, _monday.day + i)),
+  ];
+
+  void _shift(int weeks) => setState(() => _monday = DateTime(_monday.year, _monday.month, _monday.day + 7 * weeks));
+
+  @override
+  Widget build(BuildContext context) {
+    final db = context.db;
+    final t = Theme.of(context);
+    final days = _days;
+    return StreamBuilder<List<Object?>>(
+      stream: combineLatest([
+        db.watchPlan(days.first, days.last),
+        db.watchMealSlots(),
+        db.watchProfile(),
+        db.watchWeights(),
+      ]),
+      builder: (context, snap) {
+        final v = snap.data;
+        if (v == null) return const Center(child: CircularProgressIndicator());
+        final plan = v[0] as List<MealPlanEntry>;
+        final slots = v[1] as List<MealSlot>;
+        final profile = v[2] as Profile?;
+        final target = profile == null ? null : targetsFor(profile, v[3] as List<WeightEntry>).targetKcal;
+        final weekKcal = Nutrients.sum(plan.map((e) => e.nutrients)).kcal;
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
+          children: [
+            Row(
+              children: [
+                IconButton(tooltip: 'Vorige Woche', icon: const Icon(Icons.chevron_left), onPressed: () => _shift(-1)),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(
+                        '${dateTiny(_monday)} – ${dateTiny(parseDayKey(days.last))}',
+                        style: t.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        plan.isEmpty
+                            ? 'Noch nichts geplant'
+                            : '${plan.length} Einträge · Ø ${kcal(weekKcal / 7)} pro Tag',
+                        style: t.textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(tooltip: 'Nächste Woche', icon: const Icon(Icons.chevron_right), onPressed: () => _shift(1)),
+                PopupMenuButton<String>(
+                  tooltip: 'Woche',
+                  onSelected: (a) => _weekAction(context, a, days, plan, target),
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(value: 'auto', child: Text('Mit Rezepten füllen …')),
+                    if (plan.isNotEmpty) ...[
+                      const PopupMenuItem(value: 'diary', child: Text('Ganze Woche ins Tagebuch')),
+                      const PopupMenuItem(value: 'shopping', child: Text('Auf die Einkaufsliste')),
+                      const PopupMenuItem(value: 'copy', child: Text('In die nächste Woche kopieren')),
+                      const PopupMenuItem(value: 'clear', child: Text('Woche leeren')),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+            for (final day in days)
+              _DayCard(
+                day: day,
+                entries: plan.where((e) => e.dayKey == day).toList(),
+                slots: slots,
+                targetKcal: target,
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _weekAction(
+    BuildContext context,
+    String action,
+    List<String> days,
+    List<MealPlanEntry> plan,
+    int? target,
+  ) async {
+    final db = context.db;
+    try {
+      switch (action) {
+        case 'auto':
+          final opts = await showModalBottomSheet<_AutoOptions>(
+            context: context,
+            isScrollControlled: true,
+            showDragHandle: true,
+            builder: (_) => _AutoSheet(defaultKcal: target ?? 2000),
+          );
+          if (opts == null) return;
+          final n = await db.generatePlanFor(
+            days: days,
+            targetKcal: opts.kcal,
+            tags: opts.tags,
+            includeSnacks: opts.snacks,
+          );
+          if (context.mounted) {
+            showMessage(
+              context,
+              n == 0
+                  ? 'Keine passenden Rezepte oder alle Mahlzeiten schon geplant. Lege Rezepte unter „Rezepte“ an.'
+                  : '$n Mahlzeiten geplant. Bereits geplante Mahlzeiten blieben unverändert.',
+            );
+          }
+        case 'diary':
+          final n = await db.planToDiary([for (final e in plan) e.id]);
+          if (context.mounted) showMessage(context, '$n Einträge ins Tagebuch übernommen');
+        case 'shopping':
+          await db.planToShopping(days.first, days.last);
+          if (context.mounted) showMessage(context, 'Zutaten der Woche auf der Einkaufsliste');
+        case 'copy':
+          final next = [
+            for (final d in days) dayKey(DateTime(parseDayKey(d).year, parseDayKey(d).month, parseDayKey(d).day + 7)),
+          ];
+          final n = await db.copyPlanDays(days, next);
+          if (context.mounted) showMessage(context, '$n Einträge in die nächste Woche kopiert');
+        case 'clear':
+          final ids = [for (final e in plan) e.id];
+          await db.clearPlanDays(days.first, days.last);
+          if (context.mounted) {
+            showMessage(
+              context,
+              'Woche geleert',
+              action: SnackBarAction(
+                label: 'Rückgängig',
+                onPressed: () async {
+                  for (final id in ids) {
+                    await db.restorePlanEntry(id);
+                  }
+                },
+              ),
+            );
+          }
+      }
+    } catch (e) {
+      if (context.mounted) showMessage(context, errorText(e));
+    }
+  }
+}
+
+class _DayCard extends StatelessWidget {
+  const _DayCard({required this.day, required this.entries, required this.slots, required this.targetKcal});
+  final String day;
+  final List<MealPlanEntry> entries;
+  final List<MealSlot> slots;
+  final int? targetKcal;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final db = context.db;
+    final date = parseDayKey(day);
+    final isToday = day == todayDayKey();
+    final total = Nutrients.sum(entries.map((e) => e.nutrients));
+    final slotIds = slots.map((s) => s.id).toSet();
+    final groups = [
+      for (final s in slots) (name: s.name, items: entries.where((e) => e.mealSlotId == s.id).toList()),
+      (name: 'Weitere', items: entries.where((e) => !slotIds.contains(e.mealSlotId)).toList()),
+    ].where((g) => g.items.isNotEmpty);
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: SectionCard(
+        title: '${weekdayShort(date)}${isToday ? ' · heute' : ''}',
+        icon: isToday ? Icons.today : Icons.calendar_today_outlined,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (entries.isNotEmpty)
+              Text(
+                targetKcal == null ? kcal(total.kcal) : '${n0(total.kcal)} / ${kcal(targetKcal!)}',
+                style: t.textTheme.labelMedium?.copyWith(
+                  color: targetKcal != null && total.kcal > targetKcal! * 1.05 ? t.colorScheme.error : null,
+                ),
+              ),
+            IconButton(
+              visualDensity: VisualDensity.compact,
+              tooltip: 'Hinzufügen',
+              icon: const Icon(Icons.add),
+              onPressed: () => _add(context),
+            ),
+          ],
+        ),
+        child: entries.isEmpty
+            ? Text('Nichts geplant.', style: t.textTheme.bodySmall)
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final g in groups) ...[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(g.name, style: t.textTheme.labelLarge),
+                    ),
+                    for (final e in g.items)
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          e.diaryEntryId != null
+                              ? Icons.check_circle
+                              : (e.recipeId != null ? Icons.menu_book : Icons.egg_alt_outlined),
+                          size: 20,
+                          color: e.diaryEntryId != null ? t.colorScheme.primary : t.colorScheme.outline,
+                        ),
+                        title: Text(e.name),
+                        subtitle: Text(
+                          '${amountWithUnit(e.amount, e.unit)} · ${kcal(e.nutrients.kcal)} · P ${grams(e.nutrients.protein)}',
+                        ),
+                        trailing: PopupMenuButton<String>(
+                          onSelected: (a) => _entryAction(context, a, e),
+                          itemBuilder: (_) => const [
+                            PopupMenuItem(value: 'diary', child: Text('Ins Tagebuch')),
+                            PopupMenuItem(value: 'edit', child: Text('Menge oder Mahlzeit ändern')),
+                            PopupMenuItem(value: 'delete', child: Text('Entfernen')),
+                          ],
+                        ),
+                      ),
+                  ],
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: () async {
+                        final n = await db.planToDiary([for (final e in entries) e.id]);
+                        if (context.mounted) showMessage(context, '$n Einträge ins Tagebuch übernommen');
+                      },
+                      icon: const Icon(Icons.playlist_add_check),
+                      label: const Text('Tag ins Tagebuch'),
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Future<void> _entryAction(BuildContext context, String a, MealPlanEntry e) async {
+    final db = context.db;
+    try {
+      switch (a) {
+        case 'diary':
+          final n = await db.planToDiary([e.id]);
+          if (context.mounted) showMessage(context, n == 0 ? 'Steht schon im Tagebuch' : '${e.name} eingetragen');
+        case 'edit':
+          final res = await showAmountSheet(
+            context,
+            name: e.name,
+            unit: e.unit,
+            per100: e.per100,
+            initialAmount: e.amount,
+            slots: slots,
+            mealSlotId: e.mealSlotId,
+            confirmLabel: 'Speichern',
+          );
+          if (res != null) await db.updatePlanEntry(e.id, amount: res.amount, mealSlotId: res.mealSlotId);
+        case 'delete':
+          await db.deletePlanEntry(e.id);
+          if (context.mounted) {
+            showMessage(
+              context,
+              '${e.name} entfernt',
+              action: SnackBarAction(label: 'Rückgängig', onPressed: () => db.restorePlanEntry(e.id)),
+            );
+          }
+      }
+    } catch (err) {
+      if (context.mounted) showMessage(context, errorText(err));
+    }
+  }
+
+  Future<void> _add(BuildContext context) async {
+    final db = context.db;
+    if (slots.isEmpty) return;
+    final kind = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (c) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.menu_book),
+              title: const Text('Rezept'),
+              onTap: () => Navigator.pop(c, 'recipe'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.egg_alt_outlined),
+              title: const Text('Lebensmittel'),
+              onTap: () => Navigator.pop(c, 'food'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (kind == null || !context.mounted) return;
+    try {
+      if (kind == 'food') {
+        final f = await Navigator.push<Food>(
+          context,
+          MaterialPageRoute(builder: (_) => const FoodSearchPage(title: 'Lebensmittel planen')),
+        );
+        if (f == null || !context.mounted) return;
+        final res = await showAmountSheet(
+          context,
+          name: f.name,
+          brand: f.brand,
+          unit: f.unit,
+          per100: f.per100,
+          servingAmount: f.servingAmount,
+          servingLabel: f.servingLabel,
+          slots: slots,
+          mealSlotId: slots.first.id,
+          confirmLabel: 'Planen',
+        );
+        if (res == null) return;
+        await db.planFood(day: day, mealSlotId: res.mealSlotId, food: f, amount: res.amount);
+      } else {
+        final recipes = await db.watchRecipes().first;
+        if (!context.mounted) return;
+        if (recipes.isEmpty) {
+          showMessage(context, 'Noch keine Rezepte. Lege sie unter „Rezepte“ an.');
+          return;
+        }
+        final r = await showModalBottomSheet<Recipe>(
+          context: context,
+          showDragHandle: true,
+          isScrollControlled: true,
+          builder: (c) => DraggableScrollableSheet(
+            expand: false,
+            builder: (c, sc) => ListView(
+              controller: sc,
+              children: [
+                for (final r in recipes)
+                  ListTile(
+                    leading: Icon(r.isFavorite ? Icons.star : Icons.menu_book),
+                    title: Text(r.name),
+                    subtitle: r.tags.isEmpty ? null : Text(r.tags.join(', ')),
+                    onTap: () => Navigator.pop(c, r),
+                  ),
+              ],
+            ),
+          ),
+        );
+        if (r == null || !context.mounted) return;
+        final n = await db.recipeNutritionOf(r);
+        if (!context.mounted) return;
+        final res = await showAmountSheet(
+          context,
+          name: r.name,
+          unit: 'g',
+          per100: n.per100,
+          servingAmount: n.servingWeight,
+          servingLabel: 'Portion',
+          initialAmount: n.servingWeight,
+          slots: slots,
+          mealSlotId: slots.first.id,
+          confirmLabel: 'Planen',
+        );
+        if (res == null) return;
+        await db.planRecipe(day: day, mealSlotId: res.mealSlotId, recipe: r, grams: res.amount);
+      }
+    } catch (e) {
+      if (context.mounted) showMessage(context, errorText(e));
+    }
+  }
+}
+
+typedef _AutoOptions = ({double kcal, Set<String> tags, bool snacks});
+
+class _AutoSheet extends StatefulWidget {
+  const _AutoSheet({required this.defaultKcal});
+  final int defaultKcal;
+
+  @override
+  State<_AutoSheet> createState() => _AutoSheetState();
+}
+
+class _AutoSheetState extends State<_AutoSheet> {
+  late final _kcal = TextEditingController(text: '${widget.defaultKcal}');
+  final _tags = <String>{};
+  bool _snacks = false;
+  List<String> _allTags = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.db.watchRecipes().first.then((rs) {
+      final all = <String, String>{};
+      for (final r in rs) {
+        for (final t in r.tags) {
+          all.putIfAbsent(t.toLowerCase(), () => t);
+        }
+      }
+      if (mounted) setState(() => _allTags = all.values.toList()..sort());
+    });
+  }
+
+  @override
+  void dispose() {
+    _kcal.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final k = parseNum(_kcal.text);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 0, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text('Woche mit Rezepten füllen', style: t.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 6),
+          Text(
+            'Leere Mahlzeiten werden mit deinen Rezepten gefüllt; die Portionsgröße richtet sich nach dem '
+            'Kalorienziel. Bereits Geplantes bleibt unverändert, alles ist danach änderbar.',
+            style: t.textTheme.bodySmall,
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _kcal,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: 'Kalorien pro Tag', suffixText: 'kcal'),
+            onChanged: (_) => setState(() {}),
+          ),
+          if (_allTags.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text('Nur Rezepte mit', style: t.textTheme.labelLarge),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final tag in _allTags)
+                  FilterChip(
+                    label: Text(tag),
+                    selected: _tags.contains(tag),
+                    onSelected: (v) => setState(() => v ? _tags.add(tag) : _tags.remove(tag)),
+                  ),
+              ],
+            ),
+          ],
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Auch Snacks planen'),
+            value: _snacks,
+            onChanged: (v) => setState(() => _snacks = v),
+          ),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: k == null || k < 800 || k > 6000
+                ? null
+                : () => Navigator.pop<_AutoOptions>(context, (kcal: k, tags: _tags, snacks: _snacks)),
+            child: const Text('Füllen'),
+          ),
+        ],
+      ),
+    );
+  }
+}
