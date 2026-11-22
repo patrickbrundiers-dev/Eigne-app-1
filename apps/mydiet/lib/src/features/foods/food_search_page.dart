@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../data/database.dart';
+import '../../data/food_search.dart';
 import '../../ui/format.dart';
 import 'barcode.dart';
 import 'food_form_page.dart';
@@ -29,7 +30,7 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
   }
 
   Future<void> _search(String q) async {
-    final r = q.trim().isEmpty ? <Food>[] : await context.db.searchFoods(q);
+    final r = q.trim().isEmpty ? <Food>[] : await smartSearchFoods(context.db, q);
     if (mounted && q == _q.text) setState(() => _results = r);
   }
 

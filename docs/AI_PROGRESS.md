@@ -4,6 +4,24 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Tippfehlertolerante Suche (Aufgabe 3.3)
+
+Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es` (nach PR #35).
+
+Erledigt:
+- `core/fuzzy_search.dart`: Editierdistanz (mit Vertauschung), Passung je Wort und Name, `rankCandidates`
+  (Passung, dann eigene Nutzung, Favorit, Namenslänge). Rechenweg in BERECHNUNGEN.md.
+- `data/food_search.dart`: `smartSearchFoods` (exakte Suche, bei < 5 Treffern unscharf ergänzt),
+  `fuzzyFoods`, `foodUsage` (Einträge der letzten 180 Tage). `AppDatabase.searchFoods` unverändert.
+- Lebensmittelsuche, Auswahl beim Eintragen und „Als Text eintragen“ nutzen die neue Suche; im Text-Eintrag
+  sind unscharfe Treffer immer „unsicher“.
+- Kein Schema, keine neue Abhängigkeit.
+
+Tests: `test/fuzzy_search_test.dart` (13), gesamte Suite grün, Analyse und Format sauber.
+
+Offen: Bei sehr großem Katalog (Phase 4) wird der unscharfe Durchlauf über alle Lebensmittel teuer → dann
+FTS5/Trigramm-Index (3.6). Nächster Schritt: 2.1 + 2.2 Heute-Seite entschlacken mit Gewichts-Kachel.
+
 ## 2026-11-22 – Alle Daten löschen und Fehlerprotokoll (Aufgaben 1.1 + 1.2)
 
 Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es`.
