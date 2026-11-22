@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
+import '../../core/protein_split.dart';
 import '../../core/dates.dart';
 import '../../core/nutrition.dart';
 import '../../core/week_budget.dart';
@@ -104,6 +105,8 @@ class _DiaryPageState extends State<DiaryPage> {
               : null;
           final slotIds = slots.map((s) => s.id).toSet();
           final orphans = entries.where((e) => !slotIds.contains(e.mealSlotId)).toList();
+          final shares = proteinPerMeal(targets.proteinG.toDouble(), [for (final s in slots) s.minuteOfDay != null]);
+          final perMeal = {for (final (i, s) in slots.indexed) s.id: shares[i]};
           return PageBody(
             maxWidth: 900,
             child: ListView(
@@ -126,6 +129,7 @@ class _DiaryPageState extends State<DiaryPage> {
                     slots: slots,
                     entries: entries.where((e) => e.mealSlotId == s.id).toList(),
                     hideNumbers: hide,
+                    proteinTargetG: perMeal[s.id],
                   ),
                   const SizedBox(height: 12),
                 ],
@@ -243,10 +247,14 @@ class _MealCard extends StatelessWidget {
     required this.slots,
     required this.entries,
     this.hideNumbers = false,
+    this.proteinTargetG,
   });
   final bool hideNumbers;
   final String day;
   final MealSlot? slot;
+
+  /// This meal's share of the daily protein target (core/protein_split.dart).
+  final double? proteinTargetG;
   final List<MealSlot> slots;
   final List<DiaryEntry> entries;
 
@@ -275,7 +283,10 @@ class _MealCard extends StatelessWidget {
                         [
                           if (s?.minuteOfDay != null) timeOfDay(s!.minuteOfDay),
                           if (!hideNumbers) kcal(sum.kcal),
-                          if (!hideNumbers) 'P ${grams(sum.protein)}',
+                          if (!hideNumbers)
+                            proteinTargetG == null || proteinTargetG! <= 0
+                                ? 'P ${grams(sum.protein)}'
+                                : 'Protein ${n0(sum.protein)} / ${n0(proteinTargetG!)} g',
                           if (hideNumbers) '${entries.length} Einträge',
                         ].join(' · '),
                         style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
