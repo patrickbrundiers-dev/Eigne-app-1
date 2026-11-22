@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+## 0.7.0 – Neues Design „Fitness & Performance“, 470 weitere Lebensmittel, Online-Suche beim Tippen (2026-11-22)
+
 - Neues Design „Fitness & Performance“, Schritt 1: neue Farben (hell mit Grün, dunkel mit Limette), neue Schrift
   mit kräftigen Zahlen, einheitliche Karten, Knöpfe und Eingabefelder. Alle Funktionen bleiben wie gehabt;
   die Farbschemata in den Einstellungen ändern weiterhin die Akzentfarbe
