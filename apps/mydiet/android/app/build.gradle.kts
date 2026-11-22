@@ -15,10 +15,13 @@ val keystoreProperties = Properties().apply {
 
 android {
     namespace = "de.mydietai.mydiet_ai"
-    compileSdk = flutter.compileSdkVersion
+    // androidx.core 1.19 (via flutter_local_notifications) needs compileSdk 37; targetSdk stays as Flutter sets it.
+    compileSdk = maxOf(flutter.compileSdkVersion, 37)
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // Needed by flutter_local_notifications (scheduled reminders).
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -67,4 +70,8 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

@@ -2,6 +2,12 @@
 
 ## Nächste Version (in Arbeit)
 
+- Erinnerungen (Einstellungen → Erinnerungen): an Mahlzeiten (zur Uhrzeit oder 10–60 Minuten vorher), ans
+  Trinken (Zeitraum und Abstand wählbar), an Supplement-Einnahmen (aus den eingetragenen Uhrzeiten, gleiche
+  Uhrzeit wird zusammengefasst) und ans Wiegen (Uhrzeit, Wochentage); alles lokal auf dem Gerät, Änderungen an
+  Mahlzeiten oder Supplementen werden automatisch übernommen. Android fragt einmal nach der Erlaubnis für
+  Benachrichtigungen
+
 - Barcode-Scanner: Kamera auf Android, Eingabefeld oder USB-Scanner unter Windows; bekannte Produkte kommen
   offline aus der eigenen Datenbank, neue von Open Food Facts (nur der Barcode wird gesendet) und werden vor
   dem Speichern zur Prüfung vorausgefüllt; Prüfziffer wird kontrolliert
