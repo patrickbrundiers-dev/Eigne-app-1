@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 
+import 'design/tokens.dart';
 import 'format.dart';
 
 /// Card with a title row, used for dashboard tiles and page sections.
@@ -224,11 +225,7 @@ class StatValue extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              maxLines: 1,
-              style: t.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800, color: valueColor, height: 1.15),
-            ),
+            child: Text(value, maxLines: 1, style: numberStyle(26, color: valueColor ?? t.colorScheme.onSurface)),
           ),
           if (sub != null) Text(sub!, style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant)),
         ],
@@ -237,17 +234,13 @@ class StatValue extends StatelessWidget {
   }
 }
 
+/// Makro- und Wasserfarben aus dem Designsystem (`ui/design/tokens.dart`).
 class MacroColors {
-  static Color protein(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFF7FB2FF) : const Color(0xFF2F6FD6);
-  static Color carbs(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFFFFC46B) : const Color(0xFFD98A00);
-  static Color fat(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFFFF8F8F) : const Color(0xFFD14B4B);
-  static Color fiber(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFF8FD99B) : const Color(0xFF3B9A4B);
-  static Color water(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFF6FD3F0) : const Color(0xFF1C8DB5);
+  static Color protein(BuildContext c) => c.tokens.protein;
+  static Color carbs(BuildContext c) => c.tokens.carbs;
+  static Color fat(BuildContext c) => c.tokens.fat;
+  static Color fiber(BuildContext c) => c.tokens.fiber;
+  static Color water(BuildContext c) => c.tokens.water;
 }
 
 void showMessage(BuildContext context, String text, {SnackBarAction? action}) {
