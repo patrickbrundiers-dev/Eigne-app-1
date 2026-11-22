@@ -143,6 +143,7 @@ class MacroBar extends StatelessWidget {
     required this.target,
     required this.color,
     this.unit = 'g',
+    this.showPercent = false,
   });
 
   final String label;
@@ -150,6 +151,9 @@ class MacroBar extends StatelessWidget {
   final double target;
   final Color color;
   final String unit;
+
+  /// Prozent vom Ziel rechts neben dem Wert (Startseite, Design 2).
+  final bool showPercent;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +175,7 @@ class MacroBar extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: n0(value),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
+                      style: numberStyle(18, color: t.colorScheme.onSurface),
                     ),
                     TextSpan(
                       text: ' / ${n0(target)} $unit',
@@ -180,6 +184,15 @@ class MacroBar extends StatelessWidget {
                   ],
                 ),
               ),
+              if (showPercent)
+                SizedBox(
+                  width: 48,
+                  child: Text(
+                    '${(p * 100).round()} %',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: t.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 6),
@@ -187,7 +200,7 @@ class MacroBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: p.clamp(0.0, 1.0),
-              minHeight: 8,
+              minHeight: 6,
               color: p > 1.1 ? t.colorScheme.error : color,
               backgroundColor: t.colorScheme.surfaceContainerHighest,
             ),

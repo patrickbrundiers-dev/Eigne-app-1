@@ -15,6 +15,8 @@ import '../../core/weight_trend.dart';
 import '../../data/database.dart';
 import '../../data/display_prefs.dart';
 import '../../data/targets.dart';
+import '../../ui/design/components.dart';
+import '../../ui/design/tokens.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../fasting/fasting_card.dart';
