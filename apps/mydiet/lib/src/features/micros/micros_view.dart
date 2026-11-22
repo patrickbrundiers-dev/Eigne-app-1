@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
+import '../../data/database.dart';
 import '../../data/targets.dart' show todayDayKey;
 import '../../core/micronutrients.dart';
 import '../../core/supplements.dart';

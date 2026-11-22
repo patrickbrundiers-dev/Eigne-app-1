@@ -10,6 +10,20 @@ weiterarbeiten.
 `habitsDismissed`, Speichern über `saveTemplateFromMeal`). Karte „Wiederkehrend: …“ oben in der Auswahl beim
 Eintragen. Kein Schema. Tests: `test/habits_test.dart` (6), Suite grün. Nächster Schritt: 5.2.
 
+## 2026-11-22 – Datenbank aufgeteilt (Aufgabe 1.4)
+
+Rein strukturell. `lib/src/data/database.dart` (2076 Zeilen) behält Tabellen, Migration, Einstellungen, Seed,
+Profil, Mahlzeiten-Slots, Hilfsfunktionen (`_tombstone`, `_restore`) und die Konstanten. Die Bereiche liegen als
+`extension XxxDao on AppDatabase` in `part`-Dateien unter `lib/src/data/dao/` (foods, diary, templates, body =
+Gewicht/Wasser/Aktivität, recipes, shopping, supplements, meal_plan, fasting, micros, export). Aufrufer bleiben
+gleich (`db.addFood(...)`), nur Dateien, die `AppDatabase` bisher ohne Import von `database.dart` nutzten, importieren
+es jetzt (Extensions brauchen den Import). Kein Schema, generierte Dateien unverändert.
+
+Statt Drift-`DatabaseAccessor` gewählt, weil das alle Aufrufer (`db.dao.methode`) und Tests geändert hätte.
+Neue Methoden gehören in die passende `dao/`-Datei; statische Konstanten bleiben in der Klasse.
+
+Tests: alle 281 unverändert grün, `flutter analyze` ohne Befund.
+
 ## 2026-11-22 – Health Connect: Mahlzeiten schreiben (Aufgabe 6.1, Teil 2)
 
 Phase-2-Thread. `core/health_export.dart` (Mahlzeit je Tag und Slot, Art aus Name/Uhrzeit), `HealthSource.writeDay`
