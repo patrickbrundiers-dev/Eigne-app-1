@@ -8,9 +8,7 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
 | Thema | Umsetzung |
 |---|---|
 | Speicherort | SQLite-Datei im privaten App-Speicher (Android: App-Sandbox, nur die App hat Zugriff; Windows: Benutzerprofil) |
-| Netzwerk | Nur auf Anforderung: Open Food Facts beim Scannen eines unbekannten Barcodes (nur der Barcode) und beim Rezept-Import die eingegebene Webadresse (eine Abfrage, ohne Cookies und Nutzerdaten); jeweils generischer User-Agent. Keine Analyse- oder Werbe-SDKs. |
 | Health Connect (Android) | Lese-Berechtigungen (Schritte, aktive/gesamte Kalorien, Training, Gewicht), erst nach Tippen auf „Verbinden“ angefragt; Schreiben nur für Ernährung (Summen je Mahlzeit, keine Lebensmittelnamen), mit eigenem Schalter und eigener Freigabe. Sattly löscht dort nur selbst Geschriebenes und jederzeit in Health Connect widerrufbar. Werte werden lokal in die eigene Datenbank übernommen, nichts verlässt das Gerät. Berechtigungs-Erklärung über die von Health Connect verlangte Aktivität. |
-
 | Netzwerk | Nur auf Anforderung: Open Food Facts beim Scannen eines unbekannten Barcodes (nur der Barcode), bei der Textsuche „Bei Open Food Facts suchen“ (nur der Suchbegriff, nur auf Knopfdruck) und beim Rezept-Import die eingegebene Webadresse (eine Abfrage, ohne Cookies und Nutzerdaten); jeweils generischer User-Agent. Keine Analyse- oder Werbe-SDKs. |
 | Export | Nur auf ausdrücklichen Wunsch, Speicherort wählt der Benutzer. Export-Dateien sind per `.gitignore` ausgeschlossen. Hinweis: Export ist unverschlüsselt. |
 | Import | Formatprüfung, eine Transaktion, bei Fehlern keine Änderung |
