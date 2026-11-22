@@ -42,7 +42,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 3.4 | ✅ Open-Food-Facts-Textsuche (nicht nur Barcode), nur Suchbegriff senden, Ergebnis prüfen | M | M | N | – | Test mit Mock-Client |
 | 3.5 | Rezept-Import aus Webseite (schema.org Recipe), Zutaten zuordnen – W9 (Phase-2-Thread) | M | M | M | 3.1: `parseLine()`/`matchMealText()` für Zutatenzeilen wiederverwenden | Unit-Tests mit HTML-Beispielen |
 | 3.6 | 🟡 Basisdatenbank erweitern: USDA erledigt (689 Lebensmittel in zwei Lieferungen, D-19, D-21); offen: FTS5 nur bei Bedarf (Schema v7+) | M | L | M (Schema) | W5, Schema v7+ | Datenbanktests |
-| 3.7 | ✅ Open Food Facts beim Tippen, wenn lokal kaum etwas gefunden wird (D-22) | H | S | N | 3.4 | Unit-Tests, Widget-Tests mit Mock-Client |
+| 3.7 | ✅ Open Food Facts beim Tippen, wenn lokal kaum etwas gefunden wird (D-23) | H | S | N | 3.4 | Unit-Tests, Widget-Tests mit Mock-Client |
 
 ## Priorität 4 – Persönliche Ernährungsplanung
 
@@ -79,7 +79,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
 | 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung (SQLCipher) zurückgestellt (Patrick 2026-11-22) | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
 | 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/ (DATENSCHUTZERKLAERUNG, IMPRESSUM mit Patricks Angaben, STORE-TEXTE); offen: Screenshots, rechtliche Prüfung | M | S | N | – | – |
-| 7.4 | ✅ Integrationstests auf Android-Emulator in CI (D-22) | M | M | N | – | CI |
+| 7.4 | ✅ Integrationstests auf Android-Emulator in CI (D-23) | M | M | N | – | CI |
 
 ## Nächster konkreter Schritt
 
