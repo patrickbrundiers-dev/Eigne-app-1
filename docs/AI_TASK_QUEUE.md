@@ -18,13 +18,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 1.3 | Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
-| 1.4 ✅ | `AppDatabase` je Bereich aufteilen (rein strukturell; als Extensions in `data/dao/*.dart`) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
-
 | 1.3 | ✅ Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
-| 1.4 | `AppDatabase` in DatabaseAccessors je Bereich aufteilen (rein strukturell) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
-| 1.5 | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
-
+| 1.4 ✅ | `AppDatabase` je Bereich aufteilen (rein strukturell; als Extensions in `data/dao/*.dart`) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
 | 1.5 ✅ | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
 
 ## Priorität 2 – Kernfunktionen und Bedienbarkeit
@@ -81,7 +76,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
-| 7.2 | Datenbank-Verschlüsselung (SQLCipher) + App-Sperre | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
+| 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung (SQLCipher) zurückgestellt (Patrick 2026-11-22) | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
 | 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/, Angaben zum Anbieter fehlen | M | S | N | – | – |
 | 7.4 | Integrationstests auf Android-Emulator in CI | M | M | N | – | CI |
 

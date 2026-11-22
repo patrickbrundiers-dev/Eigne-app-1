@@ -19,6 +19,16 @@ Impressum (Patrick), Health-Connect-Absatz sobald gemergt, Store-Screenshots.
 
 `features/profile/micro_targets_card.dart` nutzt `dachTargets` + `forPerson` (W5). Prüfung im Profil-Widget-Test.
 
+## 2026-11-22 – App-Sperre (Aufgabe 7.2 ohne Verschlüsselung)
+
+Phase-2-Thread, nach Patricks Entscheidung „Nur App-Sperre“. `core/app_lock.dart` (PIN-Regeln, PBKDF2, Wartezeiten,
+Sperrzeitpunkt, `LockConfig`), `data/app_lock_store.dart` (Datei `applock.json`, `local_auth`), `features/lock/`
+(Sperrbildschirm mit Ziffernblock und Tastatur, `LockGate` über dem Navigator in `app.dart`, Einstellungsseite).
+Neue Abhängigkeiten `local_auth`, `crypto`; Android AppCompat-Theme beim Start (D-18). Windows: `_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS` für das local_auth-Plugin in `windows/CMakeLists.txt`, weil der neue MSVC dessen `<experimental/coroutine>` sonst ablehnt. Kein Schema.
+
+Tests: `test/app_lock_test.dart` (5, u. a. RFC-Testvektor), Widget-Test „App-Sperre“. Fingerabdruck auf dem Gerät
+ungeprüft.
+
 ## 2026-11-22 – Protein über den Tag (Aufgabe 4.3)
 
 `core/protein_split.dart`, Anzeige „Protein x / y g“ je Mahlzeit im Tagebuch. Tests: `test/protein_split_test.dart`
