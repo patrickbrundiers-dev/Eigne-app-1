@@ -4,6 +4,31 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Als Text eintragen (Aufgabe 3.1)
+
+Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es` (neu von `main` nach #28).
+
+Erledigt:
+- Rechenkern `core/meal_text.dart`: Zerlegen, Mengen/Einheiten/Zahlwörter/Brüche, Suchbegriffe mit Synonymen und
+  Einzahl, Umrechnung in die Einheit des Lebensmittels mit Kennzeichnung jeder Annahme, Trefferqualität
+- Daten `data/meal_text_match.dart`: Abgleich nur mit der eigenen Datenbank, zuletzt eingetragene Menge als
+  Vorschlag (keine Änderung an `database.dart`, kein Schema)
+- UI `features/diary/text_entry_page.dart`: Textfeld, erkannte Zeilen mit Häkchen (nur sichere vorausgewählt),
+  Lebensmittel per Auswahl ändern, Menge per Mengendialog, fehlendes Lebensmittel anlegen, Summe, Eintragen.
+  Einstieg im Hinzufügen-Dialog: Symbol „Als Text eintragen“ und Vorschlag „Ganze Mahlzeit erkennen“, wenn
+  die Suche wie eine Mahlzeit aussieht
+- Doku: BERECHNUNGEN (neuer Abschnitt), CHANGELOG, AI_TASK_QUEUE, AI_DECISIONS (D-13)
+
+Tests: `flutter analyze` ohne Befund, `dart format` sauber, `flutter test` 200 grün; neu
+`test/meal_text_test.dart` (18 Tests: Parser, Umrechnung, Datenbank-Abgleich) und ein Widget-Test in
+`test/app_test.dart` (erkennen, Unsicheres bestätigen, eintragen, Mengen geprüft).
+
+Offen / bekannt:
+- Synonymliste ist klein und auf die Basis-Lebensmittel zugeschnitten; wächst mit 3.3 (tippfehlertolerante Suche).
+- Rezept-Import (W9, Phase-2-Thread) kann `parseLine()` für Zutatenzeilen nutzen.
+
+Nächster Schritt: 1.1 „Alle Daten löschen“.
+
 ## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung, 4.1 Wochenplan + Profil
 
 Thread „MyDiet AI Phase 2 entwickeln“, Branch `claude/project-thread-k8k628`.
