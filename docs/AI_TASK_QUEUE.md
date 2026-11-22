@@ -25,6 +25,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 1.4 | `AppDatabase` in DatabaseAccessors je Bereich aufteilen (rein strukturell) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
 | 1.5 | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
 
+| 1.5 ✅ | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
+
 ## Priorität 2 – Kernfunktionen und Bedienbarkeit
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |

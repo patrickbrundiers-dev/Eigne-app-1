@@ -35,6 +35,15 @@ Impressum (Patrick), Health-Connect-Absatz sobald gemergt, Store-Screenshots.
 Entscheidung D-17. Tests: `test/off_search_test.dart` (3, Mock-Client), Widget-Test Suche → Formular → Eintrag.
 Nächster Schritt: 6.1 Health Connect (mit Phase-2-Thread abstimmen), sonst 1.4/1.5.
 
+## 2026-11-22 – Dashboard-Kacheln aufgeteilt (Aufgabe 1.5)
+
+Rein strukturell. `features/dashboard/dashboard_page.dart` (897 Zeilen) behält `DashboardPage`, `DashData` und den
+Rumpf. Die Kacheln liegen als `part`-Dateien in `features/dashboard/tiles/` (`nutrition_tiles.dart`: Kalorien, Makros,
+Protein; `day_tiles.dart`: Wasser, Aktivität, Supplemente, Mahlzeiten, Hinweise; `weight_tiles.dart`: Gewicht, Ziel,
+Gewichtskurve), der Anpassen-Dialog in `customize_sheet.dart`. Neue Kacheln in die passende Datei.
+
+Tests: alle 301 unverändert grün, `flutter analyze` ohne Befund.
+
 ## 2026-11-22 – Barrierefreiheit (Aufgabe 2.3)
 
 `RingGauge(semanticLabel:)` + Prozentwert, `MacroBar` als ein Screenreader-Text, Gewichtskurve mit Zusammenfassung.

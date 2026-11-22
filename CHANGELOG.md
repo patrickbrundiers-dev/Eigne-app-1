@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+- Intern: Dashboard-Kacheln in eigene Dateien aufgeteilt (keine Änderung am Verhalten)
+
 - Homescreen-Widget (Android): zeigt, wie viele Kalorien heute noch offen sind, dazu gegessen / Budget, Protein
   und einen Fortschrittsbalken; Tippen öffnet die App. Beachtet Wochenmodus und „Zahlen ausblenden“
 
