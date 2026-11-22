@@ -2,6 +2,11 @@
 
 ## Nächste Version (in Arbeit)
 
+- Wochenbericht (neue Dashboard-Kachel, Seite mit Wochenwechsel): wie viele Tage eingetragen, Ø Kalorien und
+  Protein gegen das Ziel, Tage im Zielbereich, Wochenend-Muster, Ballaststoffe, eher niedrige Vitamine und
+  Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
+  Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
+
 - Rezept übernehmen (Essen → Rezepte, Link-Knopf): Webadresse eingeben, die App liest Name, Portionen, Zutaten
   und Zubereitung aus den Rezeptdaten der Seite und ordnet jede Zutat deinen Lebensmitteln zu; unsichere
   Zuordnungen und Mengenannahmen sind markiert und lassen sich ändern, fehlende Lebensmittel direkt anlegen.

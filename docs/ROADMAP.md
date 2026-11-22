@@ -68,8 +68,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
   Schätzwerte gekennzeichnet, Speicherung erst nach Bestätigung
 - ⬜ Fotoerkennung von Mahlzeiten (Schätzung, immer bestätigungspflichtig)
 - ⬜ KI-Ernährungscoach: Tagesauswertung, Proteinlücken, nächste Mahlzeit, Muster
-- ⬜ Wochenbericht mit Vorschlag zur Anpassung des Kalorienziels aus dem echten Gewichtsverlauf
-  (transparent erklärt, nur nach Bestätigung)
+- ✅ Wochenbericht (regelbasiert, ohne KI): Befunde mit ihren Zahlen und bis zu drei Vorschläge; die Anpassung des
+  Kalorienziels aus dem echten Gewichtsverlauf bleibt beim adaptiven Ziel unter Gewicht (nur nach Bestätigung)
 
 ## Phase 4 – Integrationen und Sync
 
