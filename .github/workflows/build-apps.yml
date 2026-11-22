@@ -27,9 +27,10 @@ on:
 permissions:
   contents: read
 
+# Release runs (manual with release_tag) get their own group and are never cancelled by a push to main.
 concurrency:
-  group: build-apps-${{ github.ref }}
-  cancel-in-progress: true
+  group: build-apps-${{ github.ref }}-${{ inputs.release_tag || 'ci' }}
+  cancel-in-progress: ${{ !inputs.release_tag }}
 
 jobs:
   windows:
