@@ -11,6 +11,7 @@ import '../../ui/widgets.dart';
 import '../../core/recipes.dart';
 import '../foods/barcode.dart';
 import '../foods/food_form_page.dart';
+import '../foods/off_search_page.dart';
 import '../foods/foods_page.dart' show FoodSourceIcon;
 import 'amount_sheet.dart';
 import 'quick_entry_sheet.dart';
@@ -267,6 +268,16 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     _loadLists();
   }
 
+  Future<void> _offSearch() async {
+    final id = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (_) => OffSearchPage(initialQuery: _q.text.trim())),
+    );
+    if (id == null || !mounted) return;
+    final f = await context.db.getFood(id);
+    if (f != null && mounted) await _pick(f);
+  }
+
   Future<void> _create() async {
     final id = await Navigator.push<String>(
       context,
@@ -349,6 +360,12 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                           child: Text('Nichts gefunden für „${_q.text.trim()}“.', style: t.textTheme.bodyLarge),
                         ),
                       for (final f in _results) _FoodTile(food: f, onTap: () => _pick(f)),
+                      ListTile(
+                        leading: const Icon(Icons.travel_explore),
+                        title: const Text('Bei Open Food Facts suchen'),
+                        subtitle: const Text('Sendet nur den Suchbegriff'),
+                        onTap: _offSearch,
+                      ),
                     ] else ...[
                       for (final h in _habits)
                         Card(

@@ -12,7 +12,8 @@ class OffException implements Exception {
   String toString() => message;
 }
 
-/// Reads products from Open Food Facts (open data, ODbL). Only the barcode is sent.
+/// Reads products from Open Food Facts (open data, ODbL). Only the barcode, or for a text search
+/// only the search term, is sent – and only when the user asks for it.
 class OffClient {
   OffClient({http.Client? client, this.baseUrl = 'https://world.openfoodfacts.org'})
     : _client = client ?? http.Client();
@@ -39,6 +40,50 @@ class OffClient {
     try {
       final json = jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
       return parseOffProduct(json, code);
+    } on FormatException {
+      throw OffException('Antwort von Open Food Facts nicht lesbar.');
+    }
+  }
+
+  /// Text search (only on the user's request). Returns products with usable nutrition values,
+  /// in Open Food Facts' order; empty when nothing fits.
+  Future<List<OffProduct>> search(String query, {int pageSize = 20}) async {
+    final q = query.trim();
+    if (q.isEmpty) return const [];
+    final uri = Uri.parse('$baseUrl/cgi/search.pl').replace(
+      queryParameters: {
+        'search_terms': q,
+        'search_simple': '1',
+        'action': 'process',
+        'json': '1',
+        'page_size': '$pageSize',
+        'fields': offFields,
+      },
+    );
+    http.Response res;
+    try {
+      res = await _client.get(uri, headers: {'User-Agent': userAgent}).timeout(const Duration(seconds: 15));
+    } on TimeoutException {
+      throw OffException('Open Food Facts antwortet nicht. Bitte später erneut versuchen.');
+    } catch (_) {
+      throw OffException('Keine Verbindung zu Open Food Facts.');
+    }
+    if (res.statusCode != 200) throw OffException('Open Food Facts meldet Fehler ${res.statusCode}.');
+    try {
+      final json = jsonDecode(utf8.decode(res.bodyBytes));
+      final products = json is Map ? json['products'] : null;
+      if (products is! List) return const [];
+      bool named(Map p) => [p['product_name_de'], p['product_name']].any((v) => v is String && v.trim().isNotEmpty);
+      String code(Map p) {
+        final c = (p['code'] ?? '').toString().trim();
+        // Only real EAN/UPC codes are kept; others would block saving in the form.
+        return RegExp(r'^\d{8,14}$').hasMatch(c) ? c : '';
+      }
+
+      return [
+        for (final p in products)
+          if (p is Map && named(p)) ?parseOffProduct({'status': 1, 'product': p}, code(p)),
+      ];
     } on FormatException {
       throw OffException('Antwort von Open Food Facts nicht lesbar.');
     }

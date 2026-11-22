@@ -408,6 +408,54 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Open Food Facts: Textsuche aus der Auswahl, prüfen, speichern, eintragen', (tester) async {
+    Uri? sent;
+    offClientFactory = () => OffClient(
+      client: MockClient((req) async {
+        sent = req.url;
+        return http.Response(
+          '{"products":[{"code":"40011234","product_name":"Testmüsli","brands":"Marke",'
+          '"nutriments":{"energy-kcal_100g":380,"proteins_100g":10,"carbohydrates_100g":60,'
+          '"sugars_100g":12,"fat_100g":10,"saturated-fat_100g":2,"fiber_100g":8,"salt_100g":0.1}}]}',
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      }),
+    );
+    addTearDown(() => offClientFactory = OffClient.new);
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Tagebuch'));
+    await pumpApp(tester, db);
+    await tester.tap(find.byTooltip('Frühstück hinzufügen'));
+    await pumpApp(tester, db);
+    await tester.enterText(find.byType(SearchBar), 'Testmüsli');
+    await pumpApp(tester, db);
+    expect(sent, isNull, reason: 'ohne Knopfdruck wird nichts gesendet');
+    await tester.tap(find.text('Bei Open Food Facts suchen'));
+    await pumpApp(tester, db);
+    await tester.tap(find.widgetWithText(FilledButton, 'Suchen'));
+    for (var i = 0; i < 4; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pumpAndSettle();
+    }
+    expect(sent!.queryParameters['search_terms'], 'Testmüsli');
+    await tester.tap(find.widgetWithText(ListTile, 'Testmüsli'));
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Speichern').first);
+    await pumpApp(tester, db);
+    await pumpApp(tester, db);
+    expect(find.text('Hinzufügen'), findsOneWidget);
+    await tester.tap(find.text('Hinzufügen'));
+    await pumpApp(tester, db);
+    final saved = (await tester.runAsync(() => db.findFoodByBarcode('40011234')))!;
+    expect(saved.source, 'off');
+    final entries = (await tester.runAsync(() => db.diaryForDay(todayDayKey())))!;
+    expect(entries.map((e) => e.foodName), contains('Testmüsli'));
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Erinnerungen: Wasser einschalten plant Benachrichtigungen', (tester) async {
     final sched = NoopReminderScheduler();
     reminderScheduler = sched;

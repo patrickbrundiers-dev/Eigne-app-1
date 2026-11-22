@@ -22,6 +22,10 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Open Food Facts auch ohne Barcode: In der Suche beim Eintragen „Bei Open Food Facts suchen“ findet Produkte
+  nach Name oder Marke. Es wird nur der Suchbegriff gesendet und nur auf Knopfdruck; jedes Produkt wird vor dem
+  Speichern im Formular geprüft
+
 - Barrierefreiheit: Kalorien- und Proteinring, Makro-Balken und Gewichtskurve haben Screenreader-Texte mit den
   Zahlen; bei 200 % Schriftgröße läuft auf den Hauptseiten nichts mehr über
 - Gewicht → Fortschritt: Steht das Gewicht drei Wochen still, nennt die App, was deine Daten dazu zeigen
