@@ -4,6 +4,13 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Open-Food-Facts-Textsuche (Aufgabe 3.4)
+
+`OffClient.search()` (nur Suchbegriff, Produkte ohne Namen oder Energie fallen weg, nur gültige Barcodes),
+`features/foods/off_search_page.dart`, Eintrag „Bei Open Food Facts suchen“ in der Auswahl beim Eintragen.
+Entscheidung D-15. Tests: `test/off_search_test.dart` (3, Mock-Client), Widget-Test Suche → Formular → Eintrag.
+Nächster Schritt: 6.1 Health Connect (mit Phase-2-Thread abstimmen), sonst 1.4/1.5.
+
 ## 2026-11-22 – Barrierefreiheit (Aufgabe 2.3)
 
 `RingGauge(semanticLabel:)` + Prozentwert, `MacroBar` als ein Screenreader-Text, Gewichtskurve mit Zusammenfassung.
