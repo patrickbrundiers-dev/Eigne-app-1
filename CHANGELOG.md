@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+## 0.8.0 – Datenbank und Sicherungen verschlüsselt (2026-11-22)
+
 - Datenschutz: Auch die täglichen automatischen Sicherungen werden jetzt verschlüsselt gespeichert, mit demselben
   Schlüssel wie die Datenbank. Ältere Sicherungen werden beim Start umgewandelt; Exporte bleiben lesbare Dateien
 
