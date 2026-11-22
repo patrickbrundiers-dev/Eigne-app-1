@@ -139,5 +139,5 @@ jobs:
           gh release create "$TAG" dist/* \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
-            --title "MyDiet AI $TAG" \
+            --title "Sattly $TAG" \
             --notes "Windows: Setup (.exe) oder portable ZIP. Android: APK direkt installieren (Installation aus unbekannten Quellen erlauben)."

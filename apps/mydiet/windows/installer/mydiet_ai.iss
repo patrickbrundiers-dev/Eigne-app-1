@@ -9,11 +9,12 @@
 
 [Setup]
 AppId={{B7D4A2E1-5C3F-4E8B-9A61-2F0C7D9E4B13}
-AppName=MyDiet AI
+AppName=Sattly
 AppVersion={#AppVersion}
-AppPublisher=MyDiet AI
+AppPublisher=Sattly
+; Ordner bleibt aus v0.1.0 ("MyDiet AI"), damit Updates in dieselbe Installation gehen.
 DefaultDirName={localappdata}\Programs\MyDiet AI
-DefaultGroupName=MyDiet AI
+DefaultGroupName=Sattly
 PrivilegesRequired=lowest
 OutputBaseFilename=MyDietAI-Setup-{#AppVersion}
 Compression=lzma2
@@ -33,8 +34,13 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\MyDiet AI"; Filename: "{app}\mydiet_ai.exe"
-Name: "{autodesktop}\MyDiet AI"; Filename: "{app}\mydiet_ai.exe"; Tasks: desktopicon
+Name: "{group}\Sattly"; Filename: "{app}\mydiet_ai.exe"
+Name: "{autodesktop}\Sattly"; Filename: "{app}\mydiet_ai.exe"; Tasks: desktopicon
+
+[InstallDelete]
+; Verknüpfungen aus der Zeit vor der Umbenennung (v0.1.0 hieß "MyDiet AI") entfernen.
+Type: files; Name: "{group}\MyDiet AI.lnk"
+Type: files; Name: "{autodesktop}\MyDiet AI.lnk"
 
 [Run]
-Filename: "{app}\mydiet_ai.exe"; Description: "{cm:LaunchProgram,MyDiet AI}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\mydiet_ai.exe"; Description: "{cm:LaunchProgram,Sattly}"; Flags: nowait postinstall skipifsilent

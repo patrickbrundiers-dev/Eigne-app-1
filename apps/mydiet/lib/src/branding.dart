@@ -4,7 +4,7 @@
 /// (Paketname mydiet_ai, Android-applicationId, Datenbankname "mydiet",
 /// Exportformat "mydiet-export", Windows-Datenordner) bleiben bewusst gleich,
 /// damit bestehende Installationen und Daten erhalten bleiben.
-const appName = 'MyDiet AI';
+const appName = 'Sattly';
 
 /// Rundes Logo (Teller-Ring mit Blatt), Quelle: docs/branding/mark.svg.
 const appLogoAsset = 'assets/branding/logo.png';
