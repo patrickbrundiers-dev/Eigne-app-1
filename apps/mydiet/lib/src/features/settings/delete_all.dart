@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../data/backup.dart';
+import '../../data/database.dart';
 import '../../data/error_log.dart';
 import '../../data/reminder_scheduler.dart';
 import '../../ui/widgets.dart';
