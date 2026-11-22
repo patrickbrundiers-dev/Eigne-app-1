@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mydiet_ai/src/app.dart';
 import 'package:mydiet_ai/src/branding.dart';
+import 'package:mydiet_ai/src/core/dates.dart';
 import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
@@ -311,6 +312,36 @@ void main() {
     await pumpApp(tester, db, size: const Size(1400, 900));
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Gewicht: Fortschritt mit Start, Trend, Bilanz und Proteinziel', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      final now = DateTime.now();
+      for (var i = 30; i >= 1; i--) {
+        final d = DateTime(now.year, now.month, now.day - i);
+        await db.saveWeight(day: dayKey(d), weightKg: 104 - 0.05 * (30 - i));
+      }
+      final slot = (await db.watchMealSlots().first).first;
+      final skyr = (await db.searchFoods('Skyr')).first;
+      for (var i = 1; i <= 5; i++) {
+        final d = DateTime(now.year, now.month, now.day - i);
+        await db.logFood(day: dayKey(d), mealSlotId: slot.id, food: skyr, amount: 1500);
+      }
+    });
+    for (final size in const [Size(420, 900), Size(1280, 900)]) {
+      await pumpApp(tester, db, size: size);
+      await tester.tap(find.text('Gewicht').last);
+      await pumpApp(tester, db, size: size);
+      expect(find.text('Fortschritt'), findsOneWidget);
+      expect(find.text('Bisher abgenommen'), findsOneWidget);
+      expect(find.text('Noch bis Ziel'), findsOneWidget);
+      expect(find.text('30-Tage-Trend'), findsOneWidget);
+      expect(find.text('Proteinziel erreicht'), findsOneWidget);
+      expect(find.textContaining('Gezählt: 5 von 7 Tagen'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    }
     await closeDb(tester, db);
   });
 }

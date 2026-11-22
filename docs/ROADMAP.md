@@ -1,5 +1,8 @@
 # Roadmap
 
+Priorisierte Aufgaben für die Entwicklung: [AI_TASK_QUEUE.md](AI_TASK_QUEUE.md). Stand am Code:
+[BESTANDSAUFNAHME.md](BESTANDSAUFNAHME.md). Wettbewerb: [WETTBEWERB-MATRIX.md](WETTBEWERB-MATRIX.md).
+
 Legende: ✅ fertig und getestet · 🔜 als Nächstes · ⬜ geplant
 
 ## Phase 1 – Grundsystem ✅ (v0.1.0)

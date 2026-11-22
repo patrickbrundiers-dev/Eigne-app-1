@@ -131,6 +131,23 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
   zeigt weniger als 0,1 kg pro Woche.
 - BMI = kg ÷ m² mit WHO-Kategorien.
 
+## Gewichts-Dashboard „Fortschritt“ (`core/weight_progress.dart`)
+
+- Aktuell = 7-Tage-Mittel (sonst letzte Messung, sonst Startgewicht aus dem Profil).
+- Bisher = aktuell − Startgewicht; noch bis Ziel = Abstand zum Zielgewicht in Zielrichtung, nie negativ.
+- Vorwoche = 7-Tage-Mittel der Tage 8–14 vor der letzten Messung.
+- 30-Tage-Trend: Ausgleichsgerade über alle Messungen der letzten 30 Tage (mind. 4 über 10 Tage);
+  Veränderung = Steigung × abgedeckte Tage (nicht letzter minus erster Wert);
+  Streuung = Standardabweichung der Messungen um die Gerade.
+- Aussagekraft: < 4 Messungen oder < 10 Tage → keine Anzeige; < 8 oder < 14 Tage gering;
+  < 14 oder < 21 Tage mittel; sonst gut. Die Prognose (Gerade über 28 Tage) wird nur mit mindestens
+  „gering“ gezeigt.
+- Ernährung: die 7 Tage vor heute (heute zählt nie), nur Tage ≥ 800 kcal. Bilanz = Ø Aufnahme −
+  geschätzter Verbrauch (Grundumsatz × PAL); erwartete Veränderung = Bilanz × 7 ÷ 7.700 kcal/kg.
+  Proteinziel gilt ab 90 % als erreicht.
+- Vergleich Bilanz ↔ Waage nur ab 4 gezählten Tagen und vorhandenem Trend; Abweichung < 0,3 kg/Woche
+  gilt als passend. Bei größerer Abweichung nennt die App mögliche Ursachen, keine Diagnose.
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

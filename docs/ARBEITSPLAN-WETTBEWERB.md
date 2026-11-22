@@ -3,6 +3,7 @@
 Stand: 22.11.2026. Baut auf [ANALYSE.md](ANALYSE.md) und [ROADMAP.md](ROADMAP.md) auf und ersetzt sie nicht.
 Dieses Dokument sagt, **welche** Funktionen MyDiet AI gegenüber bekannten Apps abheben, **in welcher
 Reihenfolge** sie kommen und **woran** wir messen, dass sie besser sind.
+Ergänzung mit Lifesum und Vergleichsmatrix (Stand 22.11.2026): [WETTBEWERB-MATRIX.md](WETTBEWERB-MATRIX.md).
 
 Grundlage sind ausschließlich öffentlich sichtbare Funktionen, Store-Beschreibungen, Testberichte und
 Nutzerbewertungen (Quellen am Ende). Es wird kein Code, kein Design und keine Datenbank fremder Apps
