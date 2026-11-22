@@ -196,6 +196,18 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Gewicht: 7-Tage-Mittel am Sonntag gegen das 7-Tage-Mittel eine Woche davor.
 - Höchstens drei Vorschläge; ohne Auffälligkeiten „So weitermachen“ mit Verweis auf das adaptive Ziel.
 
+## Stillstand erklären (`core/stall.dart`)
+
+Stillstand, wenn der Trend der letzten 21 Tage (Ausgleichsgerade, mindestens geringe Aussagekraft) weniger als
+0,1 kg/Woche in Zielrichtung zeigt; nicht beim Ziel „halten“ (Ziel ±0,5 kg um den Start). Mögliche Ursachen:
+- Lücken: weniger als 70 % der 21 Tage mit ≥ 800 kcal.
+- Über dem Ziel: Ø eingetragener Tage mehr als 5 % über dem Kalorienziel (beim Zunehmen: darunter).
+- Wochenende: Ø Sa/So mindestens 300 kcal über Ø Mo–Fr (nur beim Abnehmen).
+- Bilanz passt nicht: bei vollständigem Tagebuch Ø mindestens 250 kcal/Tag unter dem geschätzten Verbrauch,
+  erwartet Bilanz × 7 ÷ 7700 kg/Woche, die Waage zeigt das aber nicht. Verweis auf den Wochen-Check.
+- Wenige Messungen: Aussagekraft des Trends nur gering.
+Immer dazu der Hinweis auf Wasserschwankungen. Ziel wird hier nie geändert.
+
 ## Gewohnheiten (`core/habits.dart`)
 
 Mahlzeit = alle Lebensmittel/Rezepte eines Tages in einer Mahlzeit (Schnell-Einträge zählen nicht). Kandidat ist

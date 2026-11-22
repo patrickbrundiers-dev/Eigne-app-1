@@ -16,6 +16,12 @@ Tests: `test/home_widget_test.dart` (5). Android-Build im CI; Aussehen auf dem G
 
 Nächster Schritt: App-Sperre (PIN/Fingerabdruck, ohne Verschlüsselung – Patricks Entscheidung 2026-11-22).
 
+## 2026-11-22 – Stillstand erklären (Aufgabe 5.2)
+
+`core/stall.dart` (`analyzeStall`), Abschnitt „Stillstand: woran es liegen kann“ in der Fortschritt-Karte
+(Gewicht), Tagessummen dort jetzt 21 statt 7 Tage geladen. Bei „Zahlen ausblenden“ nicht angezeigt.
+Tests: `test/stall_test.dart` (7), Suite grün. Nächster Schritt: 2.3 Barrierefreiheit.
+
 ## 2026-11-22 – Gewohnheiten erkennen (Aufgabe 5.1)
 
 `core/habits.dart` (`findHabits`), `data/habits_data.dart` (Vorschläge aus 28 Tagen, Ablehnen per Setting
