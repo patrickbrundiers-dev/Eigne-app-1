@@ -13,6 +13,13 @@ Keine neue Abhängigkeit, kein Schema. Hinweistext bei verlorenem Schlüssel nen
 Tests: drei neue in `backup_csv_test.dart` (kein Klartext in der Datei, Wiederherstellen, fremder Schlüssel,
 Umwandlung alter Sicherungen, Verhalten ohne Schlüssel). Offen: Emulator-Test nach #57.
 
+## 2026-11-22 – Android-Emulator-Tests in der CI (Aufgabe 7.4)
+
+Phase-2-Thread, Patrick: „Android auch testen“. `integration_test/app_android_test.dart` (4 Tests: Datenbank als
+Datei schreiben/wieder öffnen, App-Sperre-Datei, Widget-Daten an Android, App-Start Einrichtung → Dashboard →
+Tagebuch). Job `android-emulator` in `.github/workflows/mydiet-ci.yml` (Android 14, x86_64, KVM). Lokal nur
+`flutter analyze`, ausgeführt werden die Tests erst in der CI. Format-Prüfung umfasst jetzt auch `integration_test/`.
+
 ## 2026-11-22 – Datenbank verschlüsselt (7.2)
 
 Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-24: `lib/src/data/db_encryption.dart`

@@ -44,9 +44,10 @@ Destruktive Änderungen, Datenbankmigrationen mit möglichem Datenverlust, koste
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs   # nach Änderungen an tables.dart/database.dart
 dart run drift_dev make-migrations                         # nach Erhöhung von schemaVersion
-dart format --output=none --set-exit-if-changed $(git ls-files 'lib/*.dart' 'test/*.dart' | grep -v '\.g\.dart$')
+dart format --output=none --set-exit-if-changed $(git ls-files 'lib/*.dart' 'test/*.dart' 'integration_test/*.dart' | grep -v '\.g\.dart$')
 flutter analyze
 flutter test                      # alles; einzelne Datei: flutter test test/<datei>_test.dart
+flutter test integration_test -d <gerät>   # Gerätetests (Android-Emulator, in CI Job android-emulator)
 ```
 
 Nie `dart format` auf `*.g.dart`. CI (`.github/workflows`) prüft Format, Analyse, Tests und generierte Dateien.
