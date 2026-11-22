@@ -675,6 +675,28 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('PC: Tagebuch als Tabelle mit wählbaren Spalten', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    await tester.tap(find.text('Tagebuch').last);
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.byType(DataTable), findsWidgets);
+    expect(find.text('300 g'), findsOneWidget); // Skyr in der Spalte „Menge“
+    expect(find.text('Zucker'), findsNothing);
+    await tester.tap(find.byTooltip('Spalten im Tagebuch wählen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Zucker'));
+    await tester.tap(find.text('Übernehmen'));
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.text('Zucker'), findsWidgets);
+    expect((await tester.runAsync(() => db.getSetting('diaryTableColumns')))!, contains('sugar'));
+    await tester.tap(find.byTooltip(RegExp(r'entfernen$')).first);
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.text('300 g'), findsNothing);
+    expect(find.text('Rückgängig'), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Breites Fenster nutzt die Seitennavigation', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db, size: const Size(1400, 900));

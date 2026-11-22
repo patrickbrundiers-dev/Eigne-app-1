@@ -30,7 +30,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 2.2 | ✅ Gewichts-Fortschritt auch als Dashboard-Kachel (kompakt) | M | S | N | dieser PR, W5 (Enum-Ende) | Widget-Test |
 | 2.3 | ✅ Barrierefreiheit: Semantics-Labels für Ringe/Diagramme, Schriftgröße 200 % ohne Überlauf | M | M | N | – | Widget-Test mit `textScaler` 2.0 |
 | 2.4 | ✅ Tastenkürzel unter Windows (Eintragen, Bereiche, Tag/Woche vor/zurück, F1) – W8, siehe AI_PROGRESS | M | S | N | – | Widget-Test mit Tastenereignissen |
-| 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8; Lebensmittel ✅, Tagebuch offen | N | M | N | – | Widget-Test |
+| 2.5 | ✅ Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8 | N | M | N | – | Widget-Test |
 
 ## Priorität 3 – Lebensmittelerfassung und Datenqualität
 
@@ -77,7 +77,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 |---|---|---|---|---|---|---|
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
 | 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung (SQLCipher) zurückgestellt (Patrick 2026-11-22) | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
-| 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/, Angaben zum Anbieter fehlen | M | S | N | – | – |
+| 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/ (inkl. Health Connect, Widget, App-Sperre), Angaben zum Anbieter fehlen | M | S | N | – | – |
 | 7.4 | Integrationstests auf Android-Emulator in CI | M | M | N | – | CI |
 
 ## Nächster konkreter Schritt

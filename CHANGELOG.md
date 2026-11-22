@@ -5,6 +5,9 @@
 - Homescreen-Widget: zeigt jetzt auch das heute getrunkene Wasser; der Knopf „+ 250 ml Wasser“ trägt es mit einem
   Tipp ein (öffnet kurz die App)
 
+- PC: Tagebuch als Tabelle je Mahlzeit; „Spalten“ wählt aus Menge, Marke, kcal, Eiweiß, Kohlenhydrate, Zucker,
+  Fett, gesättigte Fettsäuren, Ballaststoffe und Salz. Zeile antippen ändert, Papierkorb entfernt (mit Rückgängig)
+
 - Intern: Dashboard-Kacheln in eigene Dateien aufgeteilt (keine Änderung am Verhalten)
 
 - App-Sperre (Einstellungen → App-Sperre): PIN mit 4–8 Ziffern, auf Wunsch Fingerabdruck oder Windows Hello.
