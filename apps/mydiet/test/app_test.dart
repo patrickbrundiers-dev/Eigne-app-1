@@ -25,6 +25,10 @@ import 'package:mydiet_ai/src/core/health_export.dart';
 import 'package:mydiet_ai/src/core/health_import.dart';
 import 'package:mydiet_ai/src/data/health_source.dart';
 import 'package:mydiet_ai/src/features/settings/health_page.dart';
+import 'package:mydiet_ai/src/core/app_lock.dart';
+import 'package:mydiet_ai/src/data/app_lock_store.dart';
+import 'package:mydiet_ai/src/features/lock/app_lock_page.dart';
+import 'package:mydiet_ai/src/features/lock/lock_gate.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -34,6 +38,8 @@ void main() {
   setUpAll(() async {
     await initializeDateFormatting('de_DE');
     reminderScheduler = NoopReminderScheduler(); // no notification plugin in tests
+    lockStoreFactory = MemoryLockStore.new; // no app lock unless a test sets one
+    biometricsFactory = _NoBiometrics.new;
     // Real font, so layout overflows in tests match the app.
     final loader = FontLoader('Inter');
     for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
@@ -298,6 +304,65 @@ void main() {
     await settle();
     expect(src.written[dayKey(now)], hasLength(1), reason: 'Skyr aus dem Profil-Setup');
     expect(find.textContaining('Mahlzeiten der letzten 7 Tage nach Health Connect geschrieben'), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('App-Sperre: PIN setzen, gesperrt starten, falsche und richtige PIN', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    final store = MemoryLockStore();
+    lockStoreFactory = () => store;
+    addTearDown(() => lockStoreFactory = MemoryLockStore.new);
+    Future<void> settle() async {
+      for (var i = 0; i < 10; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 30)));
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+    }
+
+    await pumpApp(tester, db);
+    expect(find.byType(LockScreen), findsNothing);
+    tester
+        .state<NavigatorState>(find.byType(Navigator).first)
+        .push(MaterialPageRoute<void>(builder: (_) => const AppLockPage()));
+    await settle();
+    await tester.tap(find.text('App mit PIN sperren'));
+    await settle();
+    final fields = find.byType(TextField);
+    await tester.enterText(fields.at(0), '1234');
+    await tester.enterText(fields.at(1), '1234');
+    await tester.tap(find.text('Speichern'));
+    await settle();
+    expect(find.text('Keine einfache Zahlenfolge'), findsOneWidget);
+    await tester.enterText(fields.at(0), '4711');
+    await tester.enterText(fields.at(1), '4711');
+    await tester.tap(find.text('Speichern'));
+    await settle();
+    expect(store.config.enabled, isTrue);
+    expect(store.config.toJsonString(), isNot(contains('4711')));
+
+    // Neustart: gesperrt.
+    await tester.pumpWidget(const SizedBox());
+    await pumpApp(tester, db);
+    await settle();
+    expect(find.byType(LockScreen), findsOneWidget);
+    expect(find.text('Sattly ist gesperrt'), findsOneWidget);
+    for (final d in ['0', '0', '0', '1']) {
+      await tester.tap(find.widgetWithText(FilledButton, d));
+      await tester.pump();
+    }
+    await tester.tap(find.bySemanticsLabel('Entsperren'));
+    await settle();
+    expect(find.text('Falsche PIN'), findsOneWidget);
+    expect(store.config.failed, 1);
+    for (final d in ['4', '7', '1', '1']) {
+      await tester.tap(find.widgetWithText(FilledButton, d));
+      await tester.pump();
+    }
+    await tester.tap(find.bySemanticsLabel('Entsperren'));
+    await settle();
+    expect(find.byType(LockScreen), findsNothing);
+    expect(store.config.failed, 0);
+    expect(LockConfig.parse(store.config.toJsonString()).enabled, isTrue);
     await closeDb(tester, db);
   });
 
@@ -673,4 +738,11 @@ class _FakeHealthSource implements HealthSource {
   Future<bool> requestWritePermission() async => true;
   @override
   Future<void> writeDay(String day, List<HealthMeal> meals) async => written[day] = meals;
+}
+
+class _NoBiometrics implements Biometrics {
+  @override
+  Future<bool> available() async => false;
+  @override
+  Future<bool> authenticate() async => false;
 }

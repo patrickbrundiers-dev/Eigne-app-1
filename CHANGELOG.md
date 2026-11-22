@@ -2,6 +2,10 @@
 
 ## Nächste Version (in Arbeit)
 
+- App-Sperre (Einstellungen → App-Sperre): PIN mit 4–8 Ziffern, auf Wunsch Fingerabdruck oder Windows Hello.
+  Sperrt beim Start und nach einer wählbaren Zeit im Hintergrund; nach mehreren falschen Versuchen wartet die
+  App. Die PIN wird nur als Prüfwert gespeichert und ist nicht Teil von Sicherungen oder Exporten
+
 - Homescreen-Widget (Android): zeigt, wie viele Kalorien heute noch offen sind, dazu gegessen / Budget, Protein
   und einen Fortschrittsbalken; Tippen öffnet die App. Beachtet Wochenmodus und „Zahlen ausblenden“
 - Intern: Datenbankzugriffe nach Bereichen in eigene Dateien aufgeteilt (keine Änderung an Daten oder Verhalten)

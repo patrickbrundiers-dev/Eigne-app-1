@@ -4,6 +4,16 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – App-Sperre (Aufgabe 7.2 ohne Verschlüsselung)
+
+Phase-2-Thread, nach Patricks Entscheidung „Nur App-Sperre“. `core/app_lock.dart` (PIN-Regeln, PBKDF2, Wartezeiten,
+Sperrzeitpunkt, `LockConfig`), `data/app_lock_store.dart` (Datei `applock.json`, `local_auth`), `features/lock/`
+(Sperrbildschirm mit Ziffernblock und Tastatur, `LockGate` über dem Navigator in `app.dart`, Einstellungsseite).
+Neue Abhängigkeiten `local_auth`, `crypto`; Android AppCompat-Theme beim Start (D-17). Kein Schema.
+
+Tests: `test/app_lock_test.dart` (5, u. a. RFC-Testvektor), Widget-Test „App-Sperre“. Fingerabdruck auf dem Gerät
+ungeprüft.
+
 ## 2026-11-22 – Homescreen-Widget Android (Aufgabe 6.4, W13)
 
 Phase-2-Thread. `core/widget_summary.dart` (Texte, Tausenderpunkte, freundlicher Status – `gentleStatus` nutzt ihn

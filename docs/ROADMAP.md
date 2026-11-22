@@ -85,7 +85,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 
 ## Phase 5 – Optimierung
 
-- ⬜ Datenbank-Verschlüsselung auf dem Gerät (SQLCipher) und App-Sperre
+- ✅ App-Sperre mit PIN und Fingerabdruck / Windows Hello
+- ⬜ Datenbank-Verschlüsselung auf dem Gerät (SQLCipher), zurückgestellt
 - ⬜ Automatische Backups, Fehlerberichte ohne Gesundheitsdaten
 - ⬜ Performance, Barrierefreiheit, weitere Tests (Integrationstests auf Geräten)
 - ⬜ App-Icon, Store-Veröffentlichung

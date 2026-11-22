@@ -16,6 +16,7 @@ import 'delete_all.dart';
 import 'error_log_page.dart';
 import '../../ui/widgets.dart';
 import 'health_page.dart';
+import '../lock/app_lock_page.dart';
 import 'reminders_page.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -98,6 +99,16 @@ class SettingsPage extends StatelessWidget {
                   subtitle: const Text('Schritte, Training und Gewicht übernehmen (z. B. von Garmin)'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const HealthPage())),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.lock_outline),
+                  title: const Text('App-Sperre'),
+                  subtitle: const Text('PIN oder Fingerabdruck beim Öffnen'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const AppLockPage())),
                 ),
               ),
               const SizedBox(height: 12),
