@@ -120,6 +120,13 @@ void main() {
     await pumpApp(tester, db);
     expect(find.text('Deine Tagesziele'), findsOneWidget);
     expect(find.text('Grundumsatz'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Vitamine und Mineralstoffe'),
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    expect(find.textContaining('D-A-CH-Referenzwerten für Männer'), findsOneWidget);
+    expect(find.text('20 µg'), findsWidgets); // Vitamin D
     await closeDb(tester, db);
   });
 
@@ -645,6 +652,26 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
     }
     expect(find.byType(FoodPickerPage), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('PC: Lebensmittel als Tabelle mit wählbaren Spalten', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    await tester.tap(find.text('Essen').last);
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.byType(DataTable), findsOneWidget);
+    final before = find.text('Zucker').evaluate().length; // auch ein Lebensmittel heißt so
+    await tester.tap(find.byTooltip('Spalten wählen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Zucker'));
+    await tester.tap(find.text('Übernehmen'));
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.text('Zucker').evaluate().length, before + 1);
+    expect((await tester.runAsync(() => db.getSetting('foodTableColumns')))!, contains('sugar'));
+    await tester.tap(find.text('kcal')); // sortieren
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(tester.takeException(), isNull);
     await closeDb(tester, db);
   });
 
