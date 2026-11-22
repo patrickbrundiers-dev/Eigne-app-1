@@ -89,6 +89,7 @@ class EnergyInput {
     this.today,
     this.proteinPerKg = 1.8,
     this.fatPercent = 30,
+    this.carbCapG,
     this.fiberTargetG = 30,
     this.calorieOverride,
     this.proteinOverrideG,
@@ -107,6 +108,9 @@ class EnergyInput {
   final DateTime? today;
   final double proteinPerKg;
   final double fatPercent;
+
+  /// Upper limit for carbohydrates (low carb / keto). Energy above it goes to fat.
+  final double? carbCapG;
   final double fiberTargetG;
   final int? calorieOverride;
   final int? proteinOverrideG;
@@ -296,13 +300,25 @@ EnergyResult calculateEnergy(EnergyInput i) {
       '$proteinG g',
     ),
   );
-  final fatG = (targetKcal * i.fatPercent / 100 / 9).round();
+  var fatG = (targetKcal * i.fatPercent / 100 / 9).round();
   steps.add(CalcStep('Fett', '${_kcal(targetKcal)} × ${_f1(i.fatPercent)} % ÷ 9', '$fatG g'));
   final carbKcal = targetKcal - proteinG * 4 - fatG * 9;
-  final carbsG = math.max(0, carbKcal / 4).round();
+  var carbsG = math.max(0, carbKcal / 4).round();
   steps.add(CalcStep('Kohlenhydrate', '(${_kcal(targetKcal)} − $proteinG g × 4 − $fatG g × 9) ÷ 4', '$carbsG g'));
   if (carbKcal < 0) {
     warnings.add('Protein und Fett übersteigen das Kalorienziel; für Kohlenhydrate bleibt nichts übrig.');
+  }
+  final cap = i.carbCapG;
+  if (cap != null && cap >= 0 && carbsG > cap) {
+    carbsG = cap.round();
+    fatG = math.max(0, (targetKcal - proteinG * 4 - carbsG * 4) / 9).round();
+    steps.add(
+      CalcStep(
+        'Kohlenhydrat-Grenze',
+        'höchstens ${_f1(cap)} g; Rest als Fett: (${_kcal(targetKcal)} − $proteinG g × 4 − $carbsG g × 4) ÷ 9',
+        'Fett $fatG g',
+      ),
+    );
   }
   final fiberG = i.fiberTargetG.round();
 
@@ -352,3 +368,38 @@ DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 /// Whole calendar days between two dates (DST-safe).
 int _dayDiff(DateTime a, DateTime b) =>
     DateTime.utc(b.year, b.month, b.day).difference(DateTime.utc(a.year, a.month, a.day)).inDays;
+
+/// Macro presets per diet style. They only fill the adjustable fields; every value can be
+/// changed afterwards. Protein per kg of the reference weight, fat in % of energy.
+class MacroPreset {
+  const MacroPreset(
+    this.id,
+    this.label, {
+    required this.proteinPerKg,
+    required this.fatPercent,
+    this.carbCapG,
+    this.note,
+  });
+  final String id;
+  final String label;
+  final double proteinPerKg;
+  final double fatPercent;
+  final double? carbCapG;
+  final String? note;
+}
+
+const macroPresets = <MacroPreset>[
+  MacroPreset('balanced', 'Ausgewogen', proteinPerKg: 1.6, fatPercent: 30, note: 'DGE-nah, Kohlenhydrate als Rest'),
+  MacroPreset('high_protein', 'High Protein', proteinPerKg: 2.0, fatPercent: 30, note: 'mehr Sättigung, Muskelerhalt'),
+  MacroPreset('low_carb', 'Low Carb', proteinPerKg: 1.8, fatPercent: 40, carbCapG: 100, note: 'höchstens 100 g KH'),
+  MacroPreset('keto', 'Ketogen', proteinPerKg: 1.6, fatPercent: 70, carbCapG: 30, note: 'höchstens 30 g KH'),
+  MacroPreset('endurance', 'Ausdauersport', proteinPerKg: 1.6, fatPercent: 25, note: 'mehr Kohlenhydrate'),
+];
+
+/// Suggested preset for a diet style from the profile.
+MacroPreset presetForDietStyle(String? style) => switch (style) {
+  'high_protein' => macroPresets[1],
+  'low_carb' => macroPresets[2],
+  'keto' => macroPresets[3],
+  _ => macroPresets[0],
+};

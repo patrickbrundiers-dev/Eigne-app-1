@@ -28,9 +28,13 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 
 - ✅ Rezeptverwaltung: Zutaten, Portionen, Nährwerte pro Portion, Endgewicht nach dem Kochen, ins Tagebuch
   (Portionen oder Gramm), Einkaufsliste mit Zusammenfassen gleicher Zutaten
-- ⬜ Ernährungsplanung: Wochenplan, 1–6 Mahlzeiten, Intervallfasten, Low Carb/High Protein/vegetarisch/vegan,
-  Familiengerichte, günstig, schnell, Meal Prep; Plan anpassen, ohne die Planung zu verlieren
-- ⬜ Makro-Aufteilung nach Ernährungsweise (z. B. Low Carb) statt fester Prozentwerte
+- ✅ Ernährungsplanung: Wochenplan für alle Mahlzeiten, automatisch mit eigenen Rezepten füllen (Filter über
+  Rezept-Stichworte wie vegetarisch, günstig, schnell, Meal Prep, Familie), Portionen passend zum Kalorienziel,
+  Einträge ändern/entfernen mit Rückgängig, Woche kopieren, Tag oder Woche ins Tagebuch (ohne Doppelzählung),
+  Einkaufsliste aus dem Plan
+- ✅ Intervallfasten (14:10 bis 36 h): Timer, Start nachträglich, Verlauf, Dashboard-Kachel
+- ✅ Makro-Aufteilung nach Ernährungsweise: Vorlagen Ausgewogen, High Protein, Low Carb, Ketogen, Ausdauer;
+  Kohlenhydrat-Obergrenze mit Rechenweg
 - ✅ Supplement-Verwaltung: Produkte mit Inhaltsstoffen je Portion, Herstellerempfehlung, Einnahmezeiten,
   Vorrat, Abhaken pro Uhrzeit, Summen über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit Hinweis ab
   80 % und Warnung über der tolerierbaren Höchstmenge (EFSA UL); keine eigenen Dosierungsempfehlungen

@@ -43,6 +43,19 @@ Die Werte liegen am unteren Rand der DGE-Spannen, weil Formeln den Bedarf bei h�
 - Ballaststoffe: 30 g (DGE), einstellbar
 - Wasser: 30 ml × kg, 1,5–3,5 l, einstellbar
 
+### Makro-Vorlagen
+
+| Vorlage | Protein g/kg | Fett % | Kohlenhydrate |
+|---|---|---|---|
+| Ausgewogen | 1,6 | 30 | Rest |
+| High Protein | 2,0 | 30 | Rest |
+| Low Carb | 1,8 | 40 | höchstens 100 g |
+| Ketogen | 1,6 | 70 | höchstens 30 g |
+| Ausdauersport | 1,6 | 25 | Rest |
+
+Mit Kohlenhydrat-Grenze: Liegt der Rest über der Grenze, gilt die Grenze und die übrige Energie geht in
+Fett: (Kalorienziel − Protein × 4 − KH × 4) ÷ 9. Die Energie bleibt gleich (getestet).
+
 ## Lebensmittel und Tagebuch
 
 - Nährwert eines Eintrags = Wert pro 100 g/ml × Menge ÷ 100. Gerundet wird nur in der Anzeige.
@@ -74,6 +87,19 @@ Die App empfiehlt keine Dosierungen. Sie addiert, was eingetragen ist, und vergl
   \* gilt nur für Nahrungsergänzung/zugesetzte Formen.
 - Lebensmittel sind nicht enthalten, weil die Lebensmitteldatenbank keine Mikronährstoffe führt; die App
   weist darauf hin.
+
+## Wochenplan
+
+- Anteil je Mahlzeit: Snacks je 10 % (zusammen höchstens 40 %), die übrigen Mahlzeiten teilen sich den Rest.
+- Automatisch füllen: für jede leere Mahlzeit das nächste passende Rezept (rotierend, am selben Tag kein
+  Rezept doppelt); Menge = Kalorienziel × Anteil ÷ kcal pro 100 g × 100, begrenzt auf 0,5–2,5 Portionen,
+  auf 10 g gerundet.
+- Übernehmen ins Tagebuch kopiert die geplanten Werte; ein schon übernommener Eintrag wird nicht noch einmal
+  eingetragen (erst wieder, wenn er im Tagebuch gelöscht wurde).
+
+## Intervallfasten
+
+Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abgeschlossene Fastenzeiten.
 
 ## Aktivität
 

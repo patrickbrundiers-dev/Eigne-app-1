@@ -14,6 +14,7 @@ import '../../data/database.dart';
 import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
+import '../fasting/fasting_card.dart';
 import '../home_shell.dart';
 import '../supplements/supplements_view.dart';
 import '../weight/weight_chart.dart';
@@ -203,6 +204,7 @@ class _DashboardBody extends StatelessWidget {
     DashTile.meals => _MealsTile(d),
     DashTile.hints => _HintsTile(d),
     DashTile.supplements => const _SupplementsTile(),
+    DashTile.fasting => const FastingCard(),
   };
 }
 

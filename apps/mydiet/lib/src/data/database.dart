@@ -6,8 +6,10 @@ import 'package:drift_flutter/drift_flutter.dart';
 import '../core/dashboard_layout.dart';
 import '../core/dates.dart';
 import '../core/nutrition.dart';
+import '../core/meal_plan.dart';
 import '../core/recipes.dart';
 import '../core/supplements.dart';
+import 'database.steps.dart';
 import 'seed_foods.dart';
 import 'tables.dart';
 
@@ -116,6 +118,8 @@ const int seedVersion = 1;
     Supplements,
     SupplementIngredients,
     SupplementIntakes,
+    MealPlanEntries,
+    FastingSessions,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -127,34 +131,43 @@ class AppDatabase extends _$AppDatabase {
   );
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();
     },
-    onUpgrade: (m, from, to) async {
-      if (from < 2) {
+    // Each step uses the schema of its target version (database.steps.dart, generated
+    // by `dart run drift_dev make-migrations`), so old databases upgrade one version at a time.
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
         // Phase 2: recipes and shopping list.
-        await m.addColumn(diaryEntries, diaryEntries.recipeId);
-        await m.createTable(recipes);
-        await m.createTable(recipeItems);
-        await m.createTable(shoppingItems);
-        await m.createIndex(recipesKey);
-        await m.createIndex(recipeItemsRecipe);
-      }
-      if (from < 3) {
+        await m.addColumn(schema.diaryEntries, schema.diaryEntries.recipeId);
+        await m.createTable(schema.recipes);
+        await m.createTable(schema.recipeItems);
+        await m.createTable(schema.shoppingItems);
+        await m.createIndex(schema.recipesKey);
+        await m.createIndex(schema.recipeItemsRecipe);
+      },
+      from2To3: (m, schema) async {
         // Phase 2: supplements.
-        await m.createTable(supplements);
-        await m.createTable(supplementIngredients);
-        await m.createTable(supplementIntakes);
-        await m.createIndex(supplementsKey);
-        await m.createIndex(supplementIngredientsSup);
-        await m.createIndex(supplementIntakeSlot);
-        await m.createIndex(supplementIntakeDay);
-      }
-    },
+        await m.createTable(schema.supplements);
+        await m.createTable(schema.supplementIngredients);
+        await m.createTable(schema.supplementIntakes);
+        await m.createIndex(schema.supplementsKey);
+        await m.createIndex(schema.supplementIngredientsSup);
+        await m.createIndex(schema.supplementIntakeSlot);
+        await m.createIndex(schema.supplementIntakeDay);
+      },
+      from3To4: (m, schema) async {
+        // Phase 2: meal plan, fasting, carb limit.
+        await m.addColumn(schema.profiles, schema.profiles.carbCapG);
+        await m.createTable(schema.mealPlanEntries);
+        await m.createTable(schema.fastingSessions);
+        await m.createIndex(schema.mealPlanDay);
+      },
+    ),
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
       if (details.wasCreated) {
@@ -1088,6 +1101,301 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  // ---------------------------------------------------------------- meal plan
+
+  Stream<List<MealPlanEntry>> watchPlan(String fromDay, String toDay) =>
+      (select(mealPlanEntries)
+            ..where((e) => e.dayKey.isBetweenValues(fromDay, toDay) & e.deletedAt.isNull())
+            ..orderBy([(e) => OrderingTerm.asc(e.dayKey), (e) => OrderingTerm.asc(e.createdAt)]))
+          .watch();
+
+  Future<List<MealPlanEntry>> planEntries(String fromDay, String toDay) => watchPlan(fromDay, toDay).first;
+
+  Future<String> _insertPlan({
+    required String day,
+    required String mealSlotId,
+    String? foodId,
+    String? recipeId,
+    required String name,
+    required String unit,
+    required double amount,
+    required Nutrients per100,
+    DateTime? createdAt,
+  }) async {
+    if (!(amount > 0) || amount > 5000) throw ArgumentError('Die Menge muss zwischen 0 und 5000 liegen.');
+    final id = newId();
+    await into(mealPlanEntries).insert(
+      MealPlanEntriesCompanion.insert(
+        id: Value(id),
+        dayKey: day,
+        mealSlotId: mealSlotId,
+        foodId: Value(foodId),
+        recipeId: Value(recipeId),
+        name: name,
+        unit: unit,
+        amount: amount,
+        kcal100: per100.kcal,
+        protein100: per100.protein,
+        carbs100: per100.carbs,
+        sugar100: per100.sugar,
+        fat100: per100.fat,
+        saturatedFat100: per100.saturatedFat,
+        fiber100: per100.fiber,
+        salt100: per100.salt,
+        createdAt: createdAt == null ? const Value.absent() : Value(createdAt),
+      ),
+    );
+    return id;
+  }
+
+  Future<String> planFood({
+    required String day,
+    required String mealSlotId,
+    required Food food,
+    required double amount,
+  }) => _insertPlan(
+    day: day,
+    mealSlotId: mealSlotId,
+    foodId: food.id,
+    name: food.brand == null ? food.name : '${food.name} (${food.brand})',
+    unit: food.unit,
+    amount: amount,
+    per100: food.per100,
+  );
+
+  Future<String> planRecipe({
+    required String day,
+    required String mealSlotId,
+    required Recipe recipe,
+    required double grams,
+  }) async {
+    final n = await recipeNutritionOf(recipe);
+    if (!(n.finalWeight > 0)) throw ArgumentError('Das Rezept hat keine Zutaten.');
+    return _insertPlan(
+      day: day,
+      mealSlotId: mealSlotId,
+      recipeId: recipe.id,
+      name: recipe.name,
+      unit: 'g',
+      amount: grams,
+      per100: n.per100,
+    );
+  }
+
+  Future<void> updatePlanEntry(String id, {double? amount, String? mealSlotId, String? day}) async {
+    if (amount != null && (!(amount > 0) || amount > 5000)) {
+      throw ArgumentError('Die Menge muss zwischen 0 und 5000 liegen.');
+    }
+    await (update(mealPlanEntries)..where((e) => e.id.equals(id))).write(
+      MealPlanEntriesCompanion(
+        amount: amount == null ? const Value.absent() : Value(amount),
+        mealSlotId: mealSlotId == null ? const Value.absent() : Value(mealSlotId),
+        dayKey: day == null ? const Value.absent() : Value(day),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  Future<void> deletePlanEntry(String id) => _tombstone(mealPlanEntries, id);
+  Future<void> restorePlanEntry(String id) => _restore(mealPlanEntries, id);
+
+  /// Copies planned entries from [fromDays] to [toDays] (same length, day by day).
+  /// Returns the number of copied entries.
+  Future<int> copyPlanDays(List<String> fromDays, List<String> toDays) async {
+    if (fromDays.length != toDays.length) throw ArgumentError('Ungleiche Anzahl Tage.');
+    return transaction(() async {
+      var n = 0;
+      final now = DateTime.now();
+      for (var i = 0; i < fromDays.length; i++) {
+        final src = await planEntries(fromDays[i], fromDays[i]);
+        for (final e in src) {
+          await into(mealPlanEntries).insert(
+            e.copyWith(
+              id: newId(),
+              dayKey: toDays[i],
+              diaryEntryId: const Value(null),
+              createdAt: now.add(Duration(milliseconds: n)),
+              updatedAt: now,
+            ),
+          );
+          n++;
+        }
+      }
+      return n;
+    });
+  }
+
+  /// Removes all planned entries of the given days.
+  Future<int> clearPlanDays(String fromDay, String toDay) {
+    final now = DateTime.now();
+    return (update(mealPlanEntries)..where((e) => e.dayKey.isBetweenValues(fromDay, toDay) & e.deletedAt.isNull()))
+        .write(MealPlanEntriesCompanion(deletedAt: Value(now), updatedAt: Value(now)));
+  }
+
+  /// Puts planned entries into the diary of their day. Entries already in the diary
+  /// (and not deleted there) are skipped, so nothing is counted twice.
+  /// Returns the number of new diary entries.
+  Future<int> planToDiary(List<String> planIds) async {
+    return transaction(() async {
+      var n = 0;
+      final rows = await (select(mealPlanEntries)..where((e) => e.id.isIn(planIds) & e.deletedAt.isNull())).get();
+      for (final e in rows) {
+        if (e.diaryEntryId != null) {
+          final live = await (select(
+            diaryEntries,
+          )..where((d) => d.id.equals(e.diaryEntryId!) & d.deletedAt.isNull())).getSingleOrNull();
+          if (live != null) continue;
+        }
+        final id = newId();
+        await into(diaryEntries).insert(
+          DiaryEntriesCompanion.insert(
+            id: Value(id),
+            dayKey: e.dayKey,
+            mealSlotId: e.mealSlotId,
+            foodId: Value(e.foodId),
+            recipeId: Value(e.recipeId),
+            foodName: e.name,
+            unit: e.unit,
+            amount: e.amount,
+            kcal100: e.kcal100,
+            protein100: e.protein100,
+            carbs100: e.carbs100,
+            sugar100: e.sugar100,
+            fat100: e.fat100,
+            saturatedFat100: e.saturatedFat100,
+            fiber100: e.fiber100,
+            salt100: e.salt100,
+            createdAt: Value(DateTime.now().add(Duration(milliseconds: n))),
+          ),
+        );
+        await (update(mealPlanEntries)..where((p) => p.id.equals(e.id))).write(
+          MealPlanEntriesCompanion(diaryEntryId: Value(id), updatedAt: Value(DateTime.now())),
+        );
+        n++;
+      }
+      return n;
+    });
+  }
+
+  /// Fills [days] with recipes (see [generatePlan]). Existing entries stay; slots that
+  /// already have something planned are skipped. Returns the number of new entries.
+  Future<int> generatePlanFor({
+    required List<String> days,
+    required double targetKcal,
+    Set<String> tags = const {},
+    bool includeSnacks = false,
+  }) async {
+    final slots = await watchMealSlots().first;
+    final recipesList = await watchRecipes().first;
+    final pool = <PlanRecipe>[];
+    final byId = <String, Recipe>{};
+    for (final r in recipesList) {
+      final n = await recipeNutritionOf(r);
+      if (!(n.finalWeight > 0)) continue;
+      byId[r.id] = r;
+      pool.add(PlanRecipe(id: r.id, kcalPer100: n.per100.kcal, servingWeight: n.servingWeight, tags: r.tags));
+    }
+    final filtered = filterByTags(pool, tags);
+    if (filtered.isEmpty) return 0;
+    final shares = slotShares([for (final s in slots) (id: s.id, name: s.name)]);
+    final snackIds = {
+      for (final s in slots)
+        if (!includeSnacks && RegExp(r'snack|zwischen', caseSensitive: false).hasMatch(s.name)) s.id,
+    };
+    final plan = generatePlan(
+      pool: filtered,
+      shares: shares,
+      days: days.length,
+      targetKcal: targetKcal,
+      skipSlots: snackIds,
+    );
+    return transaction(() async {
+      final existing = await planEntries(days.first, days.last);
+      final taken = {for (final e in existing) '${e.dayKey}|${e.mealSlotId}'};
+      var n = 0;
+      for (final m in plan) {
+        final day = days[m.dayIndex];
+        if (taken.contains('$day|${m.slotId}')) continue;
+        await planRecipe(day: day, mealSlotId: m.slotId, recipe: byId[m.recipeId]!, grams: m.grams);
+        n++;
+      }
+      return n;
+    });
+  }
+
+  /// Puts everything planned between the two days on the shopping list. Recipes are
+  /// scaled to the planned grams. Returns the number of planned entries used.
+  Future<int> planToShopping(String fromDay, String toDay) async {
+    final entries = await planEntries(fromDay, toDay);
+    return transaction(() async {
+      for (final e in entries) {
+        if (e.recipeId != null) {
+          final r = await getRecipe(e.recipeId!);
+          if (r == null) continue;
+          final n = await recipeNutritionOf(r);
+          if (!(n.servingWeight > 0)) continue;
+          await addRecipeToShopping(r.id, servings: e.amount / n.servingWeight);
+        } else {
+          final f = e.foodId == null ? null : await getFood(e.foodId!);
+          await addShoppingItem(
+            label: e.name,
+            amount: e.amount,
+            unit: e.unit,
+            foodId: e.foodId,
+            category: f?.category,
+            fromRecipe: 'Wochenplan',
+          );
+        }
+      }
+      return entries.length;
+    });
+  }
+
+  // ---------------------------------------------------------------- fasting
+
+  Stream<List<FastingSession>> watchFasting({int limit = 30}) =>
+      (select(fastingSessions)
+            ..where((f) => f.deletedAt.isNull())
+            ..orderBy([(f) => OrderingTerm.desc(f.startAt)])
+            ..limit(limit))
+          .watch();
+
+  Future<FastingSession?> activeFast() =>
+      (select(fastingSessions)
+            ..where((f) => f.deletedAt.isNull() & f.endAt.isNull())
+            ..orderBy([(f) => OrderingTerm.desc(f.startAt)])
+            ..limit(1))
+          .getSingleOrNull();
+
+  /// Starts a fast. An already running fast is returned unchanged (never two at once).
+  Future<String> startFast({required double targetHours, DateTime? at}) async {
+    if (!(targetHours > 0 && targetHours <= 168)) throw ArgumentError('Fastendauer 1 bis 168 Stunden.');
+    final start = at ?? DateTime.now();
+    if (start.isAfter(DateTime.now().add(const Duration(minutes: 1)))) {
+      throw ArgumentError('Der Beginn liegt in der Zukunft.');
+    }
+    return transaction(() async {
+      final open = await activeFast();
+      if (open != null) return open.id;
+      final id = newId();
+      await into(fastingSessions)
+          .insert(FastingSessionsCompanion.insert(id: Value(id), startAt: start, targetHours: targetHours));
+      return id;
+    });
+  }
+
+  Future<void> endFast({DateTime? at}) async {
+    final open = await activeFast();
+    if (open == null) return;
+    final end = at ?? DateTime.now();
+    if (end.isBefore(open.startAt)) throw ArgumentError('Das Ende liegt vor dem Beginn.');
+    await (update(fastingSessions)..where((f) => f.id.equals(open.id))).write(
+      FastingSessionsCompanion(endAt: Value(end), updatedAt: Value(DateTime.now())),
+    );
+  }
+
+  Future<void> deleteFast(String id) => _tombstone(fastingSessions, id);
+
   // ---------------------------------------------------------------- helpers
 
   Future<void> _tombstone(TableInfo table, String id) async {
@@ -1127,6 +1435,8 @@ class AppDatabase extends _$AppDatabase {
     supplements,
     supplementIngredients,
     supplementIntakes,
+    mealPlanEntries,
+    fastingSessions,
   ];
 
   /// All data, including tombstones, as JSON.
@@ -1238,6 +1548,20 @@ extension SupplementTimes on Supplement {
       return [];
     }
   }
+}
+
+extension MealPlanNutrients on MealPlanEntry {
+  Nutrients get per100 => Nutrients(
+    kcal: kcal100,
+    protein: protein100,
+    carbs: carbs100,
+    sugar: sugar100,
+    fat: fat100,
+    saturatedFat: saturatedFat100,
+    fiber: fiber100,
+    salt: salt100,
+  );
+  Nutrients get nutrients => per100.forAmount(amount);
 }
 
 extension RecipeTags on Recipe {

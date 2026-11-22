@@ -106,6 +106,8 @@ void main() {
     await tester.tap(find.text('Essen'));
     await pumpApp(tester, db);
     expect(find.text('Lebensmittel'), findsOneWidget); // Tab
+    await tester.ensureVisible(find.text('Rezepte'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Rezepte'));
     await tester.pumpAndSettle(); // tab animation
     await pumpApp(tester, db);
@@ -120,6 +122,8 @@ void main() {
     await tester.pumpAndSettle();
     await pumpApp(tester, db);
 
+    await tester.ensureVisible(find.text('Einkauf'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Einkauf'));
     await tester.pumpAndSettle();
     await pumpApp(tester, db);
@@ -146,6 +150,8 @@ void main() {
     expect(find.text('Supplemente heute'), findsOneWidget);
     await tester.tap(find.text('Essen'));
     await pumpApp(tester, db);
+    await tester.ensureVisible(find.text('Supplemente'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Supplemente'));
     await tester.pumpAndSettle();
     await pumpApp(tester, db);
@@ -156,6 +162,40 @@ void main() {
     await pumpApp(tester, db);
     final intakes = await tester.runAsync(() => db.watchIntakes(todayDayKey()).first);
     expect(intakes!.single.plannedMinute, 480);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Wochenplan und Fasten', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      final id = await db.saveRecipe(name: 'Porridge', servings: 2, items: [IngredientInput.fromFood(oats, 200)]);
+      final slot = (await db.watchMealSlots().first).first;
+      await db.planRecipe(day: todayDayKey(), mealSlotId: slot.id, recipe: (await db.getRecipe(id))!, grams: 150);
+      await db.setDashTileVisible('fasting', true);
+      await db.startFast(targetHours: 16, at: DateTime.now().subtract(const Duration(hours: 2)));
+    });
+    await pumpApp(tester, db);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -3000));
+    await pumpApp(tester, db);
+    expect(find.text('Intervallfasten'), findsOneWidget);
+    expect(find.text('Beenden'), findsOneWidget);
+
+    await tester.tap(find.text('Essen'));
+    await pumpApp(tester, db);
+    await tester.ensureVisible(find.text('Wochenplan'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Wochenplan'));
+    await tester.pumpAndSettle();
+    await pumpApp(tester, db);
+    expect(find.text('Porridge'), findsOneWidget);
+    expect(find.textContaining('· heute'), findsOneWidget);
+    await tester.ensureVisible(find.text('Tag ins Tagebuch'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tag ins Tagebuch'));
+    await pumpApp(tester, db);
+    final diary = await tester.runAsync(() => db.diaryForDay(todayDayKey()));
+    expect(diary!.map((e) => e.foodName), contains('Porridge'));
     await closeDb(tester, db);
   });
 

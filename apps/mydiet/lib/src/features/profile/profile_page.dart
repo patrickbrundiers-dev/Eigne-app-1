@@ -273,13 +273,14 @@ class _AdjustCardState extends State<_AdjustCard> {
   late final _ppk = TextEditingController(text: numField(widget.profile.proteinPerKg));
   late final _fatPct = TextEditingController(text: numField(widget.profile.fatPercent));
   late final _fiber = TextEditingController(text: numField(widget.profile.fiberTargetG));
+  late final _carbCap = TextEditingController(text: numField(widget.profile.carbCapG));
   late final _water = TextEditingController(text: widget.profile.waterOverrideMl?.toString() ?? '');
   late int _credit = widget.profile.activityCreditPercent;
   bool _dirty = false;
 
   @override
   void dispose() {
-    for (final c in [_kcal, _protein, _ppk, _fatPct, _fiber, _water]) {
+    for (final c in [_kcal, _protein, _ppk, _fatPct, _fiber, _water, _carbCap]) {
       c.dispose();
     }
     super.dispose();
@@ -295,6 +296,7 @@ class _AdjustCardState extends State<_AdjustCard> {
             proteinOverrideG: Value(parseNum(_protein.text)?.round()),
             proteinPerKg: Value(parseNum(_ppk.text) ?? 1.8),
             fatPercent: Value(parseNum(_fatPct.text) ?? 30),
+            carbCapG: Value(parseNum(_carbCap.text)),
             fiberTargetG: Value(parseNum(_fiber.text) ?? 30),
             waterOverrideMl: Value(parseNum(_water.text)?.round()),
             activityCreditPercent: Value(_credit),
@@ -328,6 +330,38 @@ class _AdjustCardState extends State<_AdjustCard> {
           children: [
             Text(
               'Leere Felder verwenden den berechneten Wert.',
+              style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 12),
+            Text('Makro-Vorlage', style: t.textTheme.labelLarge),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final p in macroPresets)
+                  Tooltip(
+                    message: p.note ?? '',
+                    child: ActionChip(
+                      avatar: p.id == presetForDietStyle(widget.profile.dietStyle).id
+                          ? const Icon(Icons.star_outline, size: 16)
+                          : null,
+                      label: Text(p.label),
+                      onPressed: () => setState(() {
+                        _ppk.text = numField(p.proteinPerKg);
+                        _fatPct.text = numField(p.fatPercent);
+                        _carbCap.text = numField(p.carbCapG);
+                        _protein.clear();
+                        _dirty = true;
+                      }),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Füllt Protein pro kg, Fettanteil und Kohlenhydrat-Grenze aus; der Stern passt zu deiner Ernährungsweise. '
+              'Danach ist alles frei änderbar.',
               style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
@@ -370,12 +404,23 @@ class _AdjustCardState extends State<_AdjustCard> {
             const SizedBox(height: 12),
             pair(
               NumberField(
+                controller: _carbCap,
+                label: 'Kohlenhydrate höchstens',
+                suffix: 'g',
+                helper: 'leer = keine Grenze',
+                validator: numRange(0, 800, required: false),
+                onChanged: changed,
+              ),
+              NumberField(
                 controller: _fiber,
                 label: 'Ballaststoffe',
                 suffix: 'g',
                 validator: numRange(10, 80),
                 onChanged: changed,
               ),
+            ),
+            const SizedBox(height: 12),
+            pair(
               NumberField(
                 controller: _water,
                 label: 'Wasserziel',
@@ -385,6 +430,7 @@ class _AdjustCardState extends State<_AdjustCard> {
                 validator: numRange(500, 6000, required: false),
                 onChanged: changed,
               ),
+              const SizedBox.shrink(),
             ),
             const SizedBox(height: 16),
             Text('Aktivitätskalorien zum Budget addieren', style: t.textTheme.labelLarge),

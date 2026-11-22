@@ -15,6 +15,12 @@
 - Tagessumme je Inhaltsstoff über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit % der Referenzmenge
   und der tolerierbaren Höchstmenge (EFSA): Hinweis ab 80 %, Warnung darüber; keine Dosierungsempfehlungen
 - Datenbank Schema 3
+- Wochenplan (Essen → Wochenplan): Rezepte und Lebensmittel pro Tag und Mahlzeit planen, Woche mit Rezepten
+  automatisch füllen (passend zum Kalorienziel, Filter über Stichworte), kopieren, leeren, ins Tagebuch
+  übernehmen (ohne Doppelzählung), Einkaufsliste aus dem Plan
+- Makro-Vorlagen je Ernährungsweise und Kohlenhydrat-Obergrenze (Low Carb, Ketogen) im Profil
+- Intervallfasten mit Timer, nachträglichem Start und Verlauf als Dashboard-Kachel
+- Datenbank Schema 4; Migrationen laufen jetzt schrittweise über die gespeicherten Schemata
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

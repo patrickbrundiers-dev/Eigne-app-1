@@ -35,6 +35,7 @@ EnergyInput energyInputFor(Profile p, List<WeightEntry> weights, {DateTime? toda
     today: now,
     proteinPerKg: p.proteinPerKg,
     fatPercent: p.fatPercent,
+    carbCapG: p.carbCapG,
     fiberTargetG: p.fiberTargetG,
     calorieOverride: p.calorieOverride,
     proteinOverrideG: p.proteinOverrideG,
