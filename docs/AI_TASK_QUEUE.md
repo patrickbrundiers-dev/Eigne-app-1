@@ -41,7 +41,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 3.3 | ✅ Tippfehlertolerante Suche (Umlaute, ß, Trigramme) und Sortierung nach eigener Nutzung | H | M | N | – | Unit-Tests |
 | 3.4 | ✅ Open-Food-Facts-Textsuche (nicht nur Barcode), nur Suchbegriff senden, Ergebnis prüfen | M | M | N | – | Test mit Mock-Client |
 | 3.5 | Rezept-Import aus Webseite (schema.org Recipe), Zutaten zuordnen – W9 (Phase-2-Thread) | M | M | M | 3.1: `parseLine()`/`matchMealText()` für Zutatenzeilen wiederverwenden | Unit-Tests mit HTML-Beispielen |
-| 3.6 | Basisdatenbank erweitern (USDA FDC gemeinfrei, Lizenz prüfen), FTS5-Suche | M | L | M (Schema) | W5, Schema v7+ | Datenbanktests |
+| 3.6 | 🟡 Basisdatenbank erweitern: USDA-Teil erledigt (219 Lebensmittel, D-19); offen: FTS5 bei Bedarf – (USDA FDC gemeinfrei, Lizenz prüfen), FTS5-Suche | M | L | M (Schema) | W5, Schema v7+ | Datenbanktests |
 
 ## Priorität 4 – Persönliche Ernährungsplanung
 

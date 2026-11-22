@@ -63,6 +63,22 @@ Fett: (Kalorienziel − Protein × 4 − KH × 4) ÷ 9. Die Energie bleibt gleic
   Ballaststoffe + Salz ≤ 100 g, Zucker ≤ Kohlenhydrate, gesättigt ≤ Fett (Fehler); Abweichung der kcal von
   4 × E + 4 × KH + 9 × F + 2 × Ballaststoffe um mehr als 15 % + 20 kcal (Warnung).
 
+### Basis-Lebensmittel aus USDA FoodData Central (`data/seed_usda.dart`, erzeugt von `tool/usda/generate.py`)
+
+- Quelle: SR Legacy (April 2018), gemeinfrei (CC0). Auswahl und deutsche Namen: `tool/usda/auswahl.csv`
+  (FDC-Nummer je Eintrag, im erzeugten Code als Kommentar mit der englischen Bezeichnung).
+- Übernommen je 100 g: Energie (kcal), Eiweiß, Fett, gesättigte Fettsäuren, Zucker, Ballaststoffe.
+- Kohlenhydrate (EU) = „Carbohydrate, by difference“ − Ballaststoffe; liegt das unter dem gemessenen Zucker
+  (Rundung der Differenzmethode), gilt Kohlenhydrate = Zucker.
+- Salz = Natrium (mg) × 2,5 ÷ 1000. Omega-3 = EPA + DHA (g × 1000 = mg).
+- Vitamine/Mineralstoffe: Vitamin D, B12, Folat (gesamt), C, Calcium, Magnesium, Eisen, Zink, Kalium.
+  Bei in den USA üblicherweise angereicherten Produkten (Brot, Mehlprodukte, Pflanzendrinks) werden keine
+  Mikronährstoffe übernommen; bei Milch und Mehl die nicht angereicherten Varianten.
+- Nicht übernommen: Einträge ohne einen der Hauptwerte (das Skript meldet sie), alkoholische Getränke (die
+  App kennt keinen Alkohol-Wert, Energie wäre nicht erklärbar) und Einträge, die die Plausibilitätsprüfung
+  oben nicht bestehen (z. B. Kakaopulver, Haferkleie: USDA rechnet mit stoffspezifischen Atwater-Faktoren).
+- Werte gelten für US-Produkte; Abweichungen zu deutschen Produkten sind möglich (Anzeige „Richtwert“).
+
 ## Rezepte
 
 - Gesamtwerte = Summe aller Zutaten (Wert pro 100 × Menge ÷ 100)

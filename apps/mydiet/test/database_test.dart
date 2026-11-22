@@ -3,7 +3,6 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mydiet_ai/src/core/nutrition.dart';
 import 'package:mydiet_ai/src/data/database.dart';
-import 'package:mydiet_ai/src/data/seed_foods.dart';
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -17,10 +16,24 @@ void main() {
   group('Start', () {
     test('Basis-Lebensmittel werden genau einmal angelegt', () async {
       final foods = await db.watchFoods().first;
-      expect(foods.length, referenceFoods.length);
+      expect(foods.length, baseFoods.length);
       await db.setSetting('seedVersion', '0');
       await db.seedReferenceFoods();
-      expect((await db.watchFoods().first).length, referenceFoods.length);
+      expect((await db.watchFoods().first).length, baseFoods.length);
+    });
+
+    test('Neue Basis-Lebensmittel kommen dazu, gelöschte nicht zurück', () async {
+      final foods = await db.watchFoods().first;
+      final apfel = foods.firstWhere((f) => f.name == 'Apfel');
+      await db.deleteFood(apfel.id);
+      // Stand vor Version 2: nur die handgepflegten Werte, USDA fehlt noch.
+      await db.customStatement("DELETE FROM foods WHERE name = 'Himbeeren'");
+      await db.setSetting('seedVersion', '1');
+      await db.seedReferenceFoods();
+      final after = await db.watchFoods().first;
+      expect(after.where((f) => f.name == 'Himbeeren'), hasLength(1));
+      expect(after.where((f) => f.name == 'Apfel'), isEmpty);
+      expect(await db.getSetting('seedVersion'), '2');
     });
 
     test('Vier Standard-Mahlzeiten', () async {
@@ -331,7 +344,7 @@ void main() {
       expect((await other.allWeights()).single.waistCm, 101);
       expect(await other.watchWaterMl('2026-01-05').first, 500);
       expect(await other.getSetting('themeMode'), 'dark');
-      expect((await other.watchFoods().first).length, referenceFoods.length + 1);
+      expect((await other.watchFoods().first).length, baseFoods.length + 1);
       final again = await other.exportJson();
       String strip(String s) => s.replaceAll(RegExp(r'"exportedAt": "[^"]*"'), '');
       expect(strip(again), strip(json));

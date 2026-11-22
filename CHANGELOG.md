@@ -4,6 +4,10 @@
 
 ## 0.5.0 – App-Sperre, Homescreen-Widget, Barrierefreiheit, Open-Food-Facts-Suche (2026-11-22)
 
+- Basisdatenbank: rund 220 weitere Lebensmittel mit deutschen Namen (Obst, Gemüse, Fisch, Fleisch, Käse,
+  Brot, Getreide, Hülsenfrüchte, Nüsse, Öle), Werte aus USDA FoodData Central (gemeinfrei), meist mit Vitaminen
+  und Mineralstoffen. Kommt beim Update automatisch dazu; eigene und gelöschte Lebensmittel bleiben unberührt
+
 - Intern: Dashboard-Kacheln in eigene Dateien aufgeteilt (keine Änderung am Verhalten)
 
 - App-Sperre (Einstellungen → App-Sperre): PIN mit 4–8 Ziffern, auf Wunsch Fingerabdruck oder Windows Hello.
