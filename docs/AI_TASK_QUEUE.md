@@ -12,7 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| Redesign Design 2: Designsystem ✅, dann Navigation, Startseite, Tagebuch, Fortschritt, Profil (je ein PR) | Thread „Sattly auf Design 2 umstellen“ | nein | folgt |
+| Redesign Design 2: Designsystem ✅, Navigation ✅, Startseite (#63), Tagebuch, Fortschritt, Profil gebaut und getestet; PRs folgen nacheinander | Thread „Sattly auf Design 2 umstellen“ | nein | #63, weitere folgen |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 

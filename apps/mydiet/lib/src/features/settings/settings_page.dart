@@ -14,6 +14,7 @@ import '../../data/display_prefs.dart';
 import 'backup_card.dart';
 import 'delete_all.dart';
 import 'error_log_page.dart';
+import '../../ui/design/tokens.dart';
 import '../../ui/widgets.dart';
 import 'health_page.dart';
 import '../lock/app_lock_page.dart';
@@ -31,214 +32,233 @@ class SettingsPage extends StatelessWidget {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
-          child: ListView(
+          // Kein ListView: Die Karten bauen ihre Streams im build; ein Lazy-Neuaufbau beim Scrollen würde
+          // denselben Stream ein zweites Mal abonnieren. Die Seite ist kurz genug, um alles auf einmal zu bauen.
+          child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
-            children: [
-              SectionCard(
-                title: 'Darstellung',
-                icon: Icons.palette_outlined,
-                child: StreamBuilder<List<Object?>>(
-                  stream: combineLatest([db.watchSetting('themeMode'), db.watchSetting('colorScheme')]),
-                  builder: (context, snap) {
-                    final mode = (snap.data?[0] as String?) ?? 'system';
-                    final color = (snap.data?[1] as String?) ?? 'green';
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SegmentedButton<String>(
-                          segments: const [
-                            ButtonSegment(value: 'system', label: Text('System'), icon: Icon(Icons.brightness_auto)),
-                            ButtonSegment(value: 'light', label: Text('Hell'), icon: Icon(Icons.light_mode_outlined)),
-                            ButtonSegment(value: 'dark', label: Text('Dunkel'), icon: Icon(Icons.dark_mode_outlined)),
-                          ],
-                          selected: {mode},
-                          onSelectionChanged: (s) => db.setSetting('themeMode', s.first),
-                        ),
-                        const SizedBox(height: 16),
-                        Text('Farbschema', style: t.textTheme.labelLarge),
-                        const SizedBox(height: 8),
-                        Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: [
-                            for (final e in colorSchemes.entries)
-                              Tooltip(
-                                message: e.value.$1,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(24),
-                                  onTap: () => db.setSetting('colorScheme', e.key),
-                                  child: CircleAvatar(
-                                    radius: 22,
-                                    backgroundColor: e.value.$2,
-                                    child: color == e.key ? const Icon(Icons.check, color: Colors.white) : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SectionCard(
+                  title: 'Darstellung',
+                  icon: Icons.palette_outlined,
+                  child: StreamBuilder<List<Object?>>(
+                    stream: combineLatest([db.watchSetting('themeMode'), db.watchSetting('colorScheme')]),
+                    builder: (context, snap) {
+                      final mode = (snap.data?[0] as String?) ?? 'system';
+                      final color = (snap.data?[1] as String?) ?? 'green';
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SegmentedButton<String>(
+                            segments: const [
+                              ButtonSegment(value: 'system', label: Text('System'), icon: Icon(Icons.brightness_auto)),
+                              ButtonSegment(value: 'light', label: Text('Hell'), icon: Icon(Icons.light_mode_outlined)),
+                              ButtonSegment(value: 'dark', label: Text('Dunkel'), icon: Icon(Icons.dark_mode_outlined)),
+                            ],
+                            selected: {mode},
+                            onSelectionChanged: (s) => db.setSetting('themeMode', s.first),
+                          ),
+                          const SizedBox(height: 16),
+                          Text('Farbschema', style: t.textTheme.labelLarge),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: [
+                              for (final e in colorSchemes.entries)
+                                Tooltip(
+                                  message: e.value.$1,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(24),
+                                    onTap: () => db.setSetting('colorScheme', e.key),
+                                    // „Sattly“ (green) zeigt den echten Design-Akzent: hell Grün, dunkel Limette.
+                                    child: CircleAvatar(
+                                      radius: 22,
+                                      backgroundColor: e.key == 'green'
+                                          ? SattlyTokens.of(t.brightness).primary
+                                          : e.value.$2,
+                                      child: color == e.key
+                                          ? Icon(
+                                              Icons.check,
+                                              color: e.key == 'green'
+                                                  ? SattlyTokens.of(t.brightness).onPrimary
+                                                  : Colors.white,
+                                            )
+                                          : null,
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    );
-                  },
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.notifications_outlined),
-                  title: const Text('Erinnerungen'),
-                  subtitle: const Text('Mahlzeiten, Wasser, Supplemente, Wiegen'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const RemindersPage())),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.favorite_outline),
-                  title: const Text('Health Connect'),
-                  subtitle: const Text('Schritte, Training und Gewicht übernehmen (z. B. von Garmin)'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const HealthPage())),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.lock_outline),
-                  title: const Text('App-Sperre'),
-                  subtitle: const Text('PIN oder Fingerabdruck beim Öffnen'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const AppLockPage())),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.bug_report_outlined),
-                  title: const Text('Fehlerprotokoll'),
-                  subtitle: const Text('Technische Fehler, nur auf diesem Gerät, ohne persönliche Daten'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const ErrorLogPage())),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SectionCard(
-                title: 'Daten',
-                icon: Icons.storage_outlined,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
-                      'Ins Internet geht nur ein gescannter Barcode an Open Food Facts '
-                      '(ohne persönliche Daten). Die Synchronisierung zwischen Handy und PC '
-                      'folgt in Phase 4. Bis dahin sichert die App täglich automatisch (siehe Sicherungen).',
-                      style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton.tonalIcon(
-                      onPressed: () => _export(context),
-                      icon: const Icon(Icons.download_outlined),
-                      label: const Text('Daten exportieren (JSON)'),
-                    ),
-                    const SizedBox(height: 8),
-                    OutlinedButton.icon(
-                      onPressed: () => _import(context),
-                      icon: const Icon(Icons.upload_outlined),
-                      label: const Text('Export importieren (ersetzt alle Daten)'),
-                    ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        OutlinedButton.icon(
-                          onPressed: () => _exportCsv(context, diary: true),
-                          icon: const Icon(Icons.table_view_outlined),
-                          label: const Text('Tagebuch als CSV'),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () => _exportCsv(context, diary: false),
-                          icon: const Icon(Icons.table_view_outlined),
-                          label: const Text('Gewicht als CSV'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton.icon(
-                      style: TextButton.styleFrom(foregroundColor: t.colorScheme.error),
-                      onPressed: () => confirmAndDeleteAll(context),
-                      icon: const Icon(Icons.delete_forever_outlined),
-                      label: const Text('Alle Daten löschen'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              const BackupCard(),
-              const SizedBox(height: 12),
-              SectionCard(
-                title: 'Ziel und Anzeige',
-                icon: Icons.tune,
-                child: StreamBuilder<List<Object?>>(
-                  stream: combineLatest([db.watchSetting(budgetModeKey), db.watchSetting(hideNumbersKey)]),
-                  builder: (context, snap) => Column(
+                const SizedBox(height: 12),
+                // Design 2: Unterseiten als eine Liste in einer Karte statt vier einzelner Karten.
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
                     children: [
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text('Wochenbudget statt Tagesziel'),
-                        subtitle: const Text(
-                          'Mehr oder weniger an einem Tag wird auf die restlichen Tage der Woche verteilt '
-                          '(höchstens +20 %, nie unter dem Mindestwert).',
-                        ),
-                        value: snap.data?[0] == 'week',
-                        onChanged: (v) => db.setSetting(budgetModeKey, v ? 'week' : 'day'),
+                      ListTile(
+                        leading: const Icon(Icons.notifications_outlined),
+                        title: const Text('Erinnerungen'),
+                        subtitle: const Text('Mahlzeiten, Wasser, Supplemente, Wiegen'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () =>
+                            Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const RemindersPage())),
                       ),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text('Zahlen ausblenden'),
-                        subtitle: const Text(
-                          'Dashboard und Tagebuch zeigen nur den Fortschritt, keine Kalorien und Gramm. '
-                          'Die App rechnet im Hintergrund unverändert weiter.',
-                        ),
-                        value: snap.data?[1] == 'true',
-                        onChanged: (v) => db.setSetting(hideNumbersKey, v ? 'true' : 'false'),
+                      const Divider(indent: 56),
+                      ListTile(
+                        leading: const Icon(Icons.favorite_outline),
+                        title: const Text('Health Connect'),
+                        subtitle: const Text('Schritte, Training und Gewicht übernehmen (z. B. von Garmin)'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () =>
+                            Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const HealthPage())),
+                      ),
+                      const Divider(indent: 56),
+                      ListTile(
+                        leading: const Icon(Icons.lock_outline),
+                        title: const Text('App-Sperre'),
+                        subtitle: const Text('PIN oder Fingerabdruck beim Öffnen'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () =>
+                            Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const AppLockPage())),
+                      ),
+                      const Divider(indent: 56),
+                      ListTile(
+                        leading: const Icon(Icons.bug_report_outlined),
+                        title: const Text('Fehlerprotokoll'),
+                        subtitle: const Text('Technische Fehler, nur auf diesem Gerät, ohne persönliche Daten'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () =>
+                            Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const ErrorLogPage())),
                       ),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              SectionCard(
-                title: 'Lebensmittelsuche',
-                icon: Icons.travel_explore,
-                child: StreamBuilder<String?>(
-                  stream: db.watchSetting(offLiveSearchKey),
-                  builder: (context, snap) => SwitchListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Beim Tippen auch online suchen'),
-                    subtitle: const Text(
-                      'Findet deine eigene Datenbank kaum etwas, fragt $appName nach einer kurzen Tipp-Pause '
-                      'Open Food Facts. Gesendet wird nur der Suchbegriff. Ohne Internet suchst du wie gewohnt '
-                      'nur in deiner Datenbank.',
-                    ),
-                    value: offLiveSearchEnabled(snap.data),
-                    onChanged: (v) => db.setSetting(offLiveSearchKey, v ? 'true' : 'false'),
+                const SizedBox(height: 12),
+                SectionCard(
+                  title: 'Daten',
+                  icon: Icons.storage_outlined,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
+                        'Ins Internet geht nur ein gescannter Barcode an Open Food Facts '
+                        '(ohne persönliche Daten). Die Synchronisierung zwischen Handy und PC '
+                        'folgt in Phase 4. Bis dahin sichert die App täglich automatisch (siehe Sicherungen).',
+                        style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
+                      ),
+                      const SizedBox(height: 12),
+                      FilledButton.tonalIcon(
+                        onPressed: () => _export(context),
+                        icon: const Icon(Icons.download_outlined),
+                        label: const Text('Daten exportieren (JSON)'),
+                      ),
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: () => _import(context),
+                        icon: const Icon(Icons.upload_outlined),
+                        label: const Text('Export importieren (ersetzt alle Daten)'),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: () => _exportCsv(context, diary: true),
+                            icon: const Icon(Icons.table_view_outlined),
+                            label: const Text('Tagebuch als CSV'),
+                          ),
+                          OutlinedButton.icon(
+                            onPressed: () => _exportCsv(context, diary: false),
+                            icon: const Icon(Icons.table_view_outlined),
+                            label: const Text('Gewicht als CSV'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      TextButton.icon(
+                        style: TextButton.styleFrom(foregroundColor: t.colorScheme.error),
+                        onPressed: () => confirmAndDeleteAll(context),
+                        icon: const Icon(Icons.delete_forever_outlined),
+                        label: const Text('Alle Daten löschen'),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              SectionCard(
-                title: 'Über $appName',
-                icon: Icons.info_outline,
-                child: Text(
-                  'Daten zu Lebensmitteln mit Barcode: Open Food Facts (ODbL).\n'
-                  'Basis-Lebensmittel teilweise aus USDA FoodData Central (gemeinfrei, CC0).\n'
-                  'Berechnungen sind Schätzwerte und ersetzen keine ärztliche oder ernährungsmedizinische Beratung.',
-                  style: t.textTheme.bodySmall,
+                const SizedBox(height: 12),
+                const BackupCard(),
+                const SizedBox(height: 12),
+                SectionCard(
+                  title: 'Ziel und Anzeige',
+                  icon: Icons.tune,
+                  child: StreamBuilder<List<Object?>>(
+                    stream: combineLatest([db.watchSetting(budgetModeKey), db.watchSetting(hideNumbersKey)]),
+                    builder: (context, snap) => Column(
+                      children: [
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Wochenbudget statt Tagesziel'),
+                          subtitle: const Text(
+                            'Mehr oder weniger an einem Tag wird auf die restlichen Tage der Woche verteilt '
+                            '(höchstens +20 %, nie unter dem Mindestwert).',
+                          ),
+                          value: snap.data?[0] == 'week',
+                          onChanged: (v) => db.setSetting(budgetModeKey, v ? 'week' : 'day'),
+                        ),
+                        SwitchListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Zahlen ausblenden'),
+                          subtitle: const Text(
+                            'Dashboard und Tagebuch zeigen nur den Fortschritt, keine Kalorien und Gramm. '
+                            'Die App rechnet im Hintergrund unverändert weiter.',
+                          ),
+                          value: snap.data?[1] == 'true',
+                          onChanged: (v) => db.setSetting(hideNumbersKey, v ? 'true' : 'false'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                SectionCard(
+                  title: 'Lebensmittelsuche',
+                  icon: Icons.travel_explore,
+                  child: StreamBuilder<String?>(
+                    stream: db.watchSetting(offLiveSearchKey),
+                    builder: (context, snap) => SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Beim Tippen auch online suchen'),
+                      subtitle: const Text(
+                        'Findet deine eigene Datenbank kaum etwas, fragt $appName nach einer kurzen Tipp-Pause '
+                        'Open Food Facts. Gesendet wird nur der Suchbegriff. Ohne Internet suchst du wie gewohnt '
+                        'nur in deiner Datenbank.',
+                      ),
+                      value: offLiveSearchEnabled(snap.data),
+                      onChanged: (v) => db.setSetting(offLiveSearchKey, v ? 'true' : 'false'),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SectionCard(
+                  title: 'Über $appName',
+                  icon: Icons.info_outline,
+                  child: Text(
+                    'Daten zu Lebensmitteln mit Barcode: Open Food Facts (ODbL).\n'
+                    'Basis-Lebensmittel teilweise aus USDA FoodData Central (gemeinfrei, CC0).\n'
+                    'Berechnungen sind Schätzwerte und ersetzen keine ärztliche oder ernährungsmedizinische Beratung.',
+                    style: t.textTheme.bodySmall,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

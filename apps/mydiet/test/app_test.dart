@@ -135,6 +135,9 @@ void main() {
     await pumpApp(tester, db);
     expect(find.text('Deine Tagesziele'), findsOneWidget);
     expect(find.text('Grundumsatz'), findsOneWidget);
+    // Design 2: Makroziele als Kennzahl-Leiste in Makrofarben.
+    expect(find.text('PROTEIN'), findsOneWidget);
+    expect(find.text('WASSER'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('Vitamine und Mineralstoffe'),
       300,

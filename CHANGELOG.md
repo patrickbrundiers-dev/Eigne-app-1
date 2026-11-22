@@ -13,6 +13,8 @@
   farbigen Punkten für Protein, Kohlenhydrate und Fett; ruhigere Tabellenköpfe am PC
 - Fortschritt: dein Trendgewicht groß oben, daneben ein Knopf zum Eintragen, darunter Tempo pro Woche, BMI und
   Prognose fürs Ziel. Die Karte „Fortschritt“ heißt jetzt „Zielfortschritt“ wie auf der Startseite
+- Profil: Kopf mit Avatar und Namen, Makroziele farbig wie im Tagebuch. Einstellungen: Erinnerungen,
+  Health Connect, App-Sperre und Fehlerprotokoll in einer Liste; das Farbfeld „Frisch“ zeigt die echte Akzentfarbe
 
 - Lebensmittelsuche: Findet deine eigene Datenbank kaum etwas, sucht Sattly nach einer kurzen Tipp-Pause
   automatisch bei Open Food Facts und zeigt die Treffer direkt unter den eigenen an (auch bei der Zutatensuche
