@@ -34,7 +34,8 @@ jobs:
           dart run build_runner build
           git diff --exit-code -- lib
       - name: Format
-        run: dart format --output=none --set-exit-if-changed lib test
+        # Generated *.g.dart files keep build_runner's own formatting.
+        run: dart format --output=none --set-exit-if-changed $(git ls-files 'lib/*.dart' 'test/*.dart' | grep -v '\.g\.dart$')
       - name: Analyze
         run: flutter analyze
       - name: Test
