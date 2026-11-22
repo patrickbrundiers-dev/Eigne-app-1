@@ -52,7 +52,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 |---|---|---|---|---|---|---|
 | 4.1 | ✅ Wochenplan berücksichtigt Unverträglichkeiten, Abneigungen und Vorlieben aus dem Profil (Essenszeiten: Snacks wie bisher) | H | M | N | – | Unit-Tests `meal_plan` |
 | 4.2 | Mikronährstoffziele (D-A-CH) im Profil sichtbar | M | S | N | W5 | Unit-Tests |
-| 4.3 | Proteinziel über den Tag verteilen (Hinweis je Mahlzeit) | M | S | N | – | Unit-Test |
+| 4.3 | ✅ Proteinziel über den Tag verteilen (Hinweis je Mahlzeit) | M | S | N | – | Unit-Test |
 
 ## Priorität 5 – KI und Lernfunktionen
 

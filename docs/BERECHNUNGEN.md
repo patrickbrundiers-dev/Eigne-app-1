@@ -237,6 +237,11 @@ Die Vorlage wird erst nach Bestätigung vom letzten Tag mit genau dieser Mahlzei
   neu geschrieben: zuerst wird gelöscht, was Sattly für den Tag geschrieben hat (Health Connect erlaubt nur das
   Löschen eigener Daten), dann neu geschrieben. So kommen Änderungen und Löschungen an, nichts doppelt.
 
+## Protein je Mahlzeit (`core/protein_split.dart`)
+
+Tagesziel ÷ Summe der Gewichte; Mahlzeiten mit Uhrzeit zählen 1, ohne Uhrzeit (Snacks) 0,5. Beispiel 150 g bei
+Frühstück, Mittag, Abend, Snacks: 150 ÷ 3,5 = 43 g je Hauptmahlzeit, 21 g für Snacks. Nur Orientierung.
+
 ## Übliche Portion (`core/portion_memory.dart`)
 
 Von den letzten 10 Einträgen eines Lebensmittels (auf ganze g/ml gerundet) die häufigste Menge, bei Gleichstand
