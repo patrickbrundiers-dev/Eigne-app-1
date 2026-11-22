@@ -322,4 +322,33 @@ void main() {
     }
     await closeDb(tester, db);
   });
+
+  testWidgets('Als Text eintragen: Mahlzeit erkennen, Unsicheres bestätigen, eintragen', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Tagebuch'));
+    await pumpApp(tester, db);
+    await tester.tap(find.byTooltip('Frühstück hinzufügen'));
+    await pumpApp(tester, db);
+    await tester.enterText(find.byType(SearchBar), '2 Eier, 1 Banane und 1 EL Olivenöl');
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Ganze Mahlzeit erkennen'));
+    await pumpApp(tester, db);
+    expect(find.text('Als Text eintragen'), findsOneWidget);
+    expect(find.text('Hühnerei'), findsOneWidget);
+    expect(find.text('Banane'), findsOneWidget);
+    // Löffel sind eine Annahme: Zeile nicht vorausgewählt.
+    expect(find.textContaining('1 EL ≈ 15 g angenommen'), findsOneWidget);
+    expect(find.text('2 eintragen'), findsOneWidget);
+    await tester.tap(find.byType(Checkbox).last);
+    await pumpApp(tester, db);
+    await tester.tap(find.text('3 eintragen'));
+    await pumpApp(tester, db);
+    final entries = (await tester.runAsync(() => db.diaryForDay(todayDayKey())))!;
+    expect(entries.map((e) => e.foodName), containsAll(['Hühnerei', 'Banane', 'Olivenöl']));
+    expect(entries.firstWhere((e) => e.foodName == 'Hühnerei').amount, 120);
+    expect(entries.firstWhere((e) => e.foodName == 'Olivenöl').amount, 15);
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
 }

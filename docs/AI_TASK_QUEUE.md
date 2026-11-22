@@ -14,7 +14,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 |---|---|---|---|
 | Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen) | Phase-2-Thread | nein | #27 |
 | W5 Mikronährstoffe aus Lebensmitteln + Supplemente | Phase-2-Thread | v6 (reserviert) | – |
-| Gewichts-Dashboard „Fortschritt“ | Thread „Sattly auf Niveau führender Apps“ | nein | dieser PR |
+| 3.1 Texteingabe ohne KI (+ Teil von 3.2: zuletzt eingetragene Menge als Vorschlag) | Thread „Sattly auf Niveau führender Apps“ | nein | dieser PR |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -40,10 +40,10 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 3.1 | **Texteingabe ohne KI**: „200 g Hähnchen, 2 Eier, 1 Banane“ → lokaler Parser (Mengen, Einheiten, Stück-Gewichte, Synonyme) → Treffer aus eigener DB, unsichere markiert, Speichern erst nach Bestätigung | H | M | N | – | Unit-Tests Parser, Widget-Test Bestätigung |
-| 3.2 | Portionen lernen: zuletzt genutzte Menge je Lebensmittel als Vorschlag | H | S | N | – | Unit-Test |
+| 3.2 | Portionen lernen: zuletzt genutzte Menge je Lebensmittel als Vorschlag auch in Suche/Mengendialog (in der Texteingabe schon umgesetzt) | H | S | N | – | Unit-Test |
 | 3.3 | Tippfehlertolerante Suche (Umlaute, ß, Trigramme) und Sortierung nach eigener Nutzung | H | M | N | – | Unit-Tests |
 | 3.4 | Open-Food-Facts-Textsuche (nicht nur Barcode), nur Suchbegriff senden, Ergebnis prüfen | M | M | N | – | Test mit Mock-Client |
-| 3.5 | Rezept-Import aus Webseite (schema.org Recipe), Zutaten zuordnen – W9 | M | M | M | 3.1 (Parser wiederverwenden) | Unit-Tests mit HTML-Beispielen |
+| 3.5 | Rezept-Import aus Webseite (schema.org Recipe), Zutaten zuordnen – W9 (Phase-2-Thread) | M | M | M | 3.1: `parseLine()`/`matchMealText()` für Zutatenzeilen wiederverwenden | Unit-Tests mit HTML-Beispielen |
 | 3.6 | Basisdatenbank erweitern (USDA FDC gemeinfrei, Lizenz prüfen), FTS5-Suche | M | L | M (Schema) | W5, Schema v7+ | Datenbanktests |
 
 ## Priorität 4 – Persönliche Ernährungsplanung
@@ -85,5 +85,6 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 
 ## Nächster konkreter Schritt
 
-Nach diesem PR: **3.1 Texteingabe ohne KI** (größter Nutzen bei geringem Risiko, kein Schema, keine Kosten,
-Grundlage für spätere KI- und Spracheingabe). Danach 1.1 und 1.2.
+Nach dem Texteingabe-PR: **1.1 „Alle Daten löschen“** (Tabelle `food_micronutrients` aus Schema 6 mitlöschen,
+danach `seedReferenceMicros()` über Setting `microSeedVersion`), dann **1.2 Fehlerprotokoll**, dann **3.3
+tippfehlertolerante Suche**.

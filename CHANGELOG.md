@@ -17,6 +17,12 @@
 - Gewicht: neue Karte „Fortschritt“ mit Start, bisher abgenommen, noch bis Ziel, 7-Tage-Durchschnitt gegen
   Vorwoche, 30-Tage-Trend mit Aussagekraft und typischer Tagesschwankung, geschätzter Zielerreichung sowie
   Kalorienbilanz und Proteinziel der letzten 7 Tage; erklärt, wenn Bilanz und Waage nicht zusammenpassen
+- Als Text eintragen: ganze Mahlzeit in einem Satz („200 g Haferflocken, 300 ml Milch, 1 Banane, 2 EL
+  Erdnussbutter“), auch direkt aus der Suche. Erkennt Mengen, Einheiten (g, kg, ml, l, EL, TL, Stück, Scheibe,
+  Becher …), Zahlwörter und Brüche, ordnet nur eigene Lebensmittel zu (offline, nichts wird gesendet).
+  Annahmen und unsichere Treffer sind markiert und werden erst nach Häkchen eingetragen; Lebensmittel und
+  Menge lassen sich vorher ändern, fehlende Lebensmittel direkt anlegen. Ohne Mengenangabe wird die zuletzt
+  eingetragene Menge vorgeschlagen
 
 ## 0.2.0 – Phase 2: Ernährung (2026-11-22)
 

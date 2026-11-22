@@ -10,6 +10,7 @@ import '../foods/food_form_page.dart';
 import '../foods/foods_page.dart' show FoodSourceIcon;
 import 'amount_sheet.dart';
 import 'quick_entry_sheet.dart';
+import 'text_entry_page.dart';
 
 /// Search, pick a food, enter the amount, log it.
 class FoodPickerPage extends StatefulWidget {
@@ -161,6 +162,24 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     if (ok && mounted) setState(() => _added++);
   }
 
+  Future<void> _textEntry() async {
+    final n = await Navigator.push<int>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => TextEntryPage(
+          day: widget.day,
+          mealSlotId: widget.mealSlotId,
+          slots: widget.slots,
+          initialText: looksLikeMealText(_q.text) ? _q.text : '',
+        ),
+      ),
+    );
+    if (n == null || n == 0 || !mounted) return;
+    setState(() => _added += n);
+    showMessage(context, '$n ${n == 1 ? 'Eintrag' : 'Einträge'} eingetragen');
+    _loadLists();
+  }
+
   Future<void> _create() async {
     final id = await Navigator.push<String>(
       context,
@@ -206,6 +225,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                   hintText: 'Lebensmittel oder Rezept suchen',
                   leading: const Icon(Icons.search),
                   trailing: [
+                    IconButton(tooltip: 'Als Text eintragen', icon: const Icon(Icons.notes), onPressed: _textEntry),
                     IconButton(
                       tooltip: 'Barcode scannen',
                       icon: const Icon(Icons.qr_code_scanner),
@@ -234,6 +254,14 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                 child: ListView(
                   children: [
                     if (searching) ...[
+                      if (looksLikeMealText(_q.text))
+                        ListTile(
+                          leading: const Icon(Icons.auto_fix_high),
+                          title: const Text('Ganze Mahlzeit erkennen'),
+                          subtitle: Text('„${_q.text.trim()}“ als Text eintragen'),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: _textEntry,
+                        ),
                       for (final r in _recipeResults) _RecipeTile(recipe: r, onTap: () => _pickRecipe(r)),
                       if (_results.isEmpty && _recipeResults.isEmpty)
                         Padding(
