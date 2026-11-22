@@ -4,6 +4,12 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Portionen lernen (Aufgabe 3.2)
+
+`core/portion_memory.dart` (`usualAmount`), `recentAmounts`/`usualLoggedAmount` in `data/meal_text_match.dart`.
+Mengendialog: Vorbelegung + Chip „Wie üblich“; Text-Eintrag nutzt die übliche statt der letzten Menge.
+Tests: `test/portion_memory_test.dart` (7), Suite grün. Nächster Schritt: 5.1 Gewohnheiten erkennen.
+
 ## 2026-11-22 – Dashboard „Eintragen“ und Gewichtstempo (Aufgaben 2.1 + 2.2)
 
 Erledigt:

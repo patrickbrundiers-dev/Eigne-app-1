@@ -196,6 +196,11 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Gewicht: 7-Tage-Mittel am Sonntag gegen das 7-Tage-Mittel eine Woche davor.
 - Höchstens drei Vorschläge; ohne Auffälligkeiten „So weitermachen“ mit Verweis auf das adaptive Ziel.
 
+## Übliche Portion (`core/portion_memory.dart`)
+
+Von den letzten 10 Einträgen eines Lebensmittels (auf ganze g/ml gerundet) die häufigste Menge, bei Gleichstand
+die neuere; ein Eintrag genügt. Nur ein Vorschlag im Mengendialog und im Text-Eintrag, nie ohne Bestätigung.
+
 ## Tippfehlertolerante Suche (`core/fuzzy_search.dart`, `data/food_search.dart`)
 
 1. Suchtext und Namen werden normalisiert (Kleinschrift, ä→ae, ö→oe, ü→ue, ß→ss, Satzzeichen weg).

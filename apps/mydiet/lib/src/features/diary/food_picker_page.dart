@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../app.dart';
 import '../../data/database.dart';
 import '../../data/food_search.dart';
+import '../../data/meal_text_match.dart' show usualLoggedAmount;
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../../core/recipes.dart';
@@ -135,8 +136,11 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   }
 
   Future<void> _pick(Food f) async {
+    final usual = await usualLoggedAmount(context.db, f.id);
+    if (!mounted) return;
     final res = await showAmountSheet(
       context,
+      usualAmount: usual,
       name: f.name,
       brand: f.brand,
       unit: f.unit,

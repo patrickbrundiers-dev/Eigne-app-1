@@ -37,7 +37,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 3.1 | **Texteingabe ohne KI**: „200 g Hähnchen, 2 Eier, 1 Banane“ → lokaler Parser (Mengen, Einheiten, Stück-Gewichte, Synonyme) → Treffer aus eigener DB, unsichere markiert, Speichern erst nach Bestätigung | H | M | N | – | Unit-Tests Parser, Widget-Test Bestätigung |
-| 3.2 | Portionen lernen: zuletzt genutzte Menge je Lebensmittel als Vorschlag auch in Suche/Mengendialog (in der Texteingabe schon umgesetzt) | H | S | N | – | Unit-Test |
+| 3.2 | ✅ Portionen lernen: zuletzt genutzte Menge je Lebensmittel als Vorschlag auch in Suche/Mengendialog (in der Texteingabe schon umgesetzt) | H | S | N | – | Unit-Test |
 | 3.3 | ✅ Tippfehlertolerante Suche (Umlaute, ß, Trigramme) und Sortierung nach eigener Nutzung | H | M | N | – | Unit-Tests |
 | 3.4 | Open-Food-Facts-Textsuche (nicht nur Barcode), nur Suchbegriff senden, Ergebnis prüfen | M | M | N | – | Test mit Mock-Client |
 | 3.5 | Rezept-Import aus Webseite (schema.org Recipe), Zutaten zuordnen – W9 (Phase-2-Thread) | M | M | M | 3.1: `parseLine()`/`matchMealText()` für Zutatenzeilen wiederverwenden | Unit-Tests mit HTML-Beispielen |

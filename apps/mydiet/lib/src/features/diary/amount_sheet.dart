@@ -18,6 +18,9 @@ Future<AmountResult?> showAmountSheet(
   double? servingAmount,
   String? servingLabel,
   double? initialAmount,
+
+  /// The amount the user usually logs (learned portion); shown as the first chip.
+  double? usualAmount,
   required List<MealSlot> slots,
   required String mealSlotId,
   String confirmLabel = 'Hinzufügen',
@@ -33,6 +36,7 @@ Future<AmountResult?> showAmountSheet(
     servingAmount: servingAmount,
     servingLabel: servingLabel,
     initialAmount: initialAmount,
+    usualAmount: usualAmount,
     slots: slots,
     mealSlotId: mealSlotId,
     confirmLabel: confirmLabel,
@@ -48,6 +52,7 @@ class _AmountSheet extends StatefulWidget {
     this.servingAmount,
     this.servingLabel,
     this.initialAmount,
+    this.usualAmount,
     required this.slots,
     required this.mealSlotId,
     required this.confirmLabel,
@@ -60,6 +65,7 @@ class _AmountSheet extends StatefulWidget {
   final double? servingAmount;
   final String? servingLabel;
   final double? initialAmount;
+  final double? usualAmount;
   final List<MealSlot> slots;
   final String mealSlotId;
   final String confirmLabel;
@@ -69,7 +75,9 @@ class _AmountSheet extends StatefulWidget {
 }
 
 class _AmountSheetState extends State<_AmountSheet> {
-  late final _c = TextEditingController(text: numField(widget.initialAmount ?? widget.servingAmount ?? 100));
+  late final _c = TextEditingController(
+    text: numField(widget.initialAmount ?? widget.usualAmount ?? widget.servingAmount ?? 100),
+  );
   late String _slot = widget.mealSlotId;
 
   @override
@@ -92,6 +100,7 @@ class _AmountSheetState extends State<_AmountSheet> {
     final n = a == null ? null : widget.per100.forAmount(a);
     final u = widget.unit;
     final chips = <(String, double)>[
+      if (widget.usualAmount != null) ('Wie üblich (${n1opt(widget.usualAmount!)} $u)', widget.usualAmount!),
       if (widget.servingAmount != null)
         ('1 ${widget.servingLabel ?? 'Portion'} (${n1opt(widget.servingAmount!)} $u)', widget.servingAmount!),
       for (final v in const [50.0, 100.0, 150.0, 200.0, 250.0]) ('${n0(v)} $u', v),
