@@ -6,5 +6,5 @@
 /// damit bestehende Installationen und Daten erhalten bleiben.
 const appName = 'Sattly';
 
-/// Rundes Logo (Teller-Ring mit Blatt), Quelle: docs/branding/mark.svg.
+/// Rundes Logo (Teller-Ring mit Blatt und „S“), Quelle: docs/branding/mark.svg.
 const appLogoAsset = 'assets/branding/logo.png';
