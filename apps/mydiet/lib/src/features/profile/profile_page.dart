@@ -5,6 +5,8 @@ import '../../app.dart';
 import '../../core/energy.dart';
 import '../../data/database.dart';
 import '../../data/targets.dart';
+import '../../ui/design/components.dart';
+import '../../ui/design/tokens.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import 'micro_targets_card.dart';
@@ -111,25 +113,45 @@ class ProfilePage extends StatelessWidget {
       if (p.sleepHours != null) '${n1opt(p.sleepHours!)} h Schlaf',
       if (p.dietStyle != null) dietStyles[p.dietStyle] ?? p.dietStyle!,
     ];
+    final tk = context.tokens;
+    final name = p.displayName ?? 'Dein Profil';
+    final initial = (p.displayName?.trim().isNotEmpty ?? false)
+        ? p.displayName!.trim().characters.first.toUpperCase()
+        : null;
     return SectionCard(
-      title: p.displayName ?? 'Dein Profil',
-      icon: Icons.person_outline,
-      trailing: TextButton.icon(
-        icon: const Icon(Icons.edit_outlined, size: 18),
-        label: const Text('Bearbeiten'),
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (c) => Scaffold(
-              appBar: AppBar(title: const Text('Profil bearbeiten')),
-              body: ProfileForm(profile: p, onSaved: () => Navigator.pop(c)),
-            ),
-          ),
-        ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: tk.primarySoft,
+                foregroundColor: tk.primaryInk,
+                child: initial == null
+                    ? const Icon(Icons.person_outline)
+                    : Text(initial, style: numberStyle(26, color: tk.primaryInk)),
+              ),
+              const SizedBox(width: SattlySpace.m),
+              Expanded(
+                child: Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: t.textTheme.titleLarge),
+              ),
+              TextButton.icon(
+                icon: const Icon(Icons.edit_outlined, size: 18),
+                label: const Text('Bearbeiten'),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (c) => Scaffold(
+                      appBar: AppBar(title: const Text('Profil bearbeiten')),
+                      body: ProfileForm(profile: p, onSaved: () => Navigator.pop(c)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: SattlySpace.m),
           Wrap(
             spacing: 6,
             runSpacing: 6,
@@ -139,7 +161,7 @@ class ProfilePage extends StatelessWidget {
                   label: Text(f),
                   visualDensity: VisualDensity.compact,
                   side: BorderSide.none,
-                  backgroundColor: t.colorScheme.surfaceContainerHigh,
+                  backgroundColor: tk.surface2,
                 ),
             ],
           ),
@@ -163,6 +185,7 @@ class _TargetsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
+    final tk = context.tokens;
     Widget v(String l, String val, {String? sub}) => Expanded(
       child: StatValue(label: l, value: val, sub: sub),
     );
@@ -190,16 +213,21 @@ class _TargetsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              v('Protein', '${r.proteinG} g', sub: r.isProteinOverridden ? 'eigenes Ziel' : null),
-              v('Kohlenhydrate', '${r.carbsG} g'),
-              v('Fett', '${r.fatG} g'),
+          StatStrip(
+            items: [
+              ('Protein', '${r.proteinG} g', tk.protein),
+              ('Kohlenhydrate', '${r.carbsG} g', tk.carbs),
+              ('Fett', '${r.fatG} g', tk.fat),
             ],
+            notes: [r.isProteinOverridden ? 'eigenes Ziel' : null, null, null],
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [v('Ballaststoffe', '${r.fiberG} g'), v('Wasser', '${n1(r.waterMl / 1000)} l'), const Spacer()],
+          StatStrip(
+            items: [
+              ('Ballaststoffe', '${r.fiberG} g', tk.fiber),
+              ('Wasser', '${n1(r.waterMl / 1000)} l', tk.water),
+              ('', '', Colors.transparent),
+            ],
           ),
           for (final w in r.warnings)
             Padding(
