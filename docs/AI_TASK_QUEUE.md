@@ -67,7 +67,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 6.1 | ✅ Health Connect: Schritte, Training, Gewicht lesen; Mahlzeiten schreiben | H | L | M | – | Unit-Tests Zuordnung, manuell auf Gerät |
-| 6.2 | Garmin Connect lesen und schreiben (Phase-2-Thread) | H | L | H (API-Zugang) | 6.1 | Mock-Tests |
+| 6.2 | Garmin Connect lesen und schreiben (Phase-2-Thread). Voraussetzungen an Patrick gemeldet (2026-11-22): Business-Zugang im Garmin Connect Developer Program (Antrag Patrick, laut Terra derzeit pausiert), OAuth 2.0 + Server-Endpunkt für Push; kein Schreiben von Ernährung/Gewicht möglich, nur Workouts/Strecken. Empfehlung: mit Sync (Phase 4) | H | L | H (API-Zugang) | 6.1 | Mock-Tests |
 | 6.3 | Sync über PostgreSQL EU + gemeinsamer Katalog (Phase-2-Thread) | H | L | H (**Freigabe** für Anbieter/Konto) | – | Konflikt-Tests |
 | 6.4 | ✅ Homescreen-Widget Android (W13): „Kalorien übrig“, „+ 250 ml Wasser“, Schnell-Eintrag „+ Essen“ | M | M | N | – | manuell |
 
@@ -76,7 +76,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
-| 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung (SQLCipher) zurückgestellt (Patrick 2026-11-22) | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
+| 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung umgesetzt (Patrick 2026-11-22 19:10, D-20), auf Geräten noch ungeprüft; offen 7.2b: tägliche Sicherungen verschlüsseln | M | M | H (Migration bestehender Daten, freigegeben) | – | Migrationstest |
 | 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/ (DATENSCHUTZERKLAERUNG, IMPRESSUM mit Patricks Angaben, STORE-TEXTE); offen: Screenshots, rechtliche Prüfung | M | S | N | – | – |
 | 7.4 | Integrationstests auf Android-Emulator in CI | M | M | N | – | CI |
 
@@ -84,4 +84,4 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 
 Reihenfolge (Plan vom 22.11.2026, Thread „Sattly auf Niveau führender Apps“): **2.1 + 2.2** Heute-Seite mit
 Gewichts-Kachel, dann **3.2** Portionen lernen, **5.1** Gewohnheiten, **5.2** Stagnations-Analyse, **2.3**
-Barrierefreiheit, **3.4** OFF-Textsuche. Phase-2-Thread: 5.4, dann 6.1/6.2. Freigabe nötig: 5.3, 6.3, 7.2.
+Barrierefreiheit, **3.4** OFF-Textsuche. Phase-2-Thread: 5.4, dann 6.1/6.2. Freigabe nötig: 5.3, 6.3.

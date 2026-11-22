@@ -4,6 +4,18 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Datenbank verschlüsselt (7.2)
+
+Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-20: `lib/src/data/db_encryption.dart`
+(`prepareEncryptedDatabase`, ohne Flutter-Import), `lib/src/data/app_database_open.dart` (`openAppDatabase`,
+Schlüssel in `flutter_secure_storage`), `AppDatabase.openEncrypted/openPlain`, `main.dart` öffnet darüber.
+Hinweisdialog nach beiseitegelegter Datei, Fehlerseite `StartupErrorApp`, Status unter Einstellungen →
+App-Sperre. Android `allowBackup="false"`. Keine Schemaänderung (v8 nicht reserviert).
+Tests: `db_encryption_test.dart` (Neuinstallation, Umstellung mit Datenvergleich und Schemaversion, WAL-Reste,
+Schlüssel verloren/falsch, Speicher nicht lesbar/beschreibbar, abgebrochene Umstellung) und zwei Widget-Tests in
+`app_test.dart`. Offen: auf Android und Windows ungeprüft (Windows-Build braucht ATL, auf GitHub-Runnern
+vorhanden); Android-Emulator-Test aus #57 kann Schlüssel und Umstellung echt prüfen; 7.2b Sicherungen verschlüsseln.
+
 ## 2026-11-22 – Impressum und Verantwortlicher (7.3)
 
 Patrick hat Name, Anschrift und E-Mail geliefert: eingetragen in `docs/DATENSCHUTZERKLAERUNG.md` (Abschnitt 1) und

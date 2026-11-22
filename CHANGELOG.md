@@ -2,6 +2,11 @@
 
 ## Nächste Version (in Arbeit)
 
+- Datenschutz: Die Datenbank auf dem Gerät ist jetzt verschlüsselt. Der Schlüssel liegt im sicheren Speicher von
+  Android bzw. Windows. Vorhandene Daten werden beim ersten Start automatisch umgestellt; das Original bleibt
+  erhalten, bis die verschlüsselte Kopie vollständig geprüft ist. Die Android-Gerätesicherung ist dafür
+  abgeschaltet, den Umzug auf ein neues Gerät bitte über Einstellungen → Daten → Export
+
 ## 0.6.0 – Widget mit Wasser und Essen, 220 neue Lebensmittel, Tagebuch-Tabelle am PC (2026-11-22)
 
 - Homescreen-Widget: Knopf „+ Essen“ öffnet direkt die Suche für die Mahlzeit, die gerade dran ist

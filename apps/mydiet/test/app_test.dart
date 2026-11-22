@@ -10,6 +10,7 @@ import 'package:mydiet_ai/src/core/dates.dart';
 import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/core/weight_trend.dart' show weekStart;
 import 'package:mydiet_ai/src/ui/format.dart' show weekdayShort;
+import 'package:mydiet_ai/src/data/app_database_open.dart' show DbProtection;
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
 import 'package:mydiet_ai/src/data/reminder_scheduler.dart';
@@ -92,6 +93,34 @@ void main() {
     // The in-memory database is dropped with the test; closing it inside the fake-async
     // zone of a widget test would wait forever.
   }
+
+  testWidgets('Hinweis nach dem Start: beiseitegelegte Datenbank wird erklärt (7.2)', (tester) async {
+    final db = (await tester.runAsync(() => openDb()))!;
+    tester.view.physicalSize = const Size(420, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MyDietApp(db: db, protection: DbProtection.encrypted, notice: 'Alte Datei beiseitegelegt.'),
+    );
+    for (var i = 0; i < 5; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('Datenbank neu angelegt'), findsOneWidget);
+    expect(find.text('Alte Datei beiseitegelegt.'), findsOneWidget);
+    await tester.tap(find.text('Verstanden'));
+    for (var i = 0; i < 5; i++) {
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+    expect(find.text('Datenbank neu angelegt'), findsNothing);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Schlüssel nicht lesbar: Fehlerseite statt App, ohne Datenänderung (7.2)', (tester) async {
+    await tester.pumpWidget(StartupErrorApp(error: StateError('x')));
+    expect(find.text('Datenbank gerade nicht lesbar'), findsOneWidget);
+    expect(find.textContaining('nichts verändert oder gelöscht'), findsOneWidget);
+  });
 
   testWidgets('Ohne Profil startet die Einrichtung', (tester) async {
     final db = (await tester.runAsync(openDb))!;
