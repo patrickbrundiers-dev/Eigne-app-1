@@ -26,7 +26,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 
 ## Phase 2 – Ernährung 🔜
 
-- ⬜ Rezeptverwaltung: Zutaten, Portionen, Nährwerte pro Portion, Einkaufsliste
+- ✅ Rezeptverwaltung: Zutaten, Portionen, Nährwerte pro Portion, Endgewicht nach dem Kochen, ins Tagebuch
+  (Portionen oder Gramm), Einkaufsliste mit Zusammenfassen gleicher Zutaten
 - ⬜ Ernährungsplanung: Wochenplan, 1–6 Mahlzeiten, Intervallfasten, Low Carb/High Protein/vegetarisch/vegan,
   Familiengerichte, günstig, schnell, Meal Prep; Plan anpassen, ohne die Planung zu verlieren
 - ⬜ Makro-Aufteilung nach Ernährungsweise (z. B. Low Carb) statt fester Prozentwerte

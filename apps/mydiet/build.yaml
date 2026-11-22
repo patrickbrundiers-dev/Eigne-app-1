@@ -5,3 +5,8 @@ targets:
         options:
           # ISO-8601 text with milliseconds: exact ordering and sync timestamps.
           store_date_time_values_as_text: true
+          # Schema snapshots per version for migration tests (dart run drift_dev make-migrations).
+          databases:
+            app_database: lib/src/data/database.dart
+          schema_dir: drift_schemas/
+          test_dir: test/drift/

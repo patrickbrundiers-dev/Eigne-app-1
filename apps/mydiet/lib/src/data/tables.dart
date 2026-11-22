@@ -101,6 +101,9 @@ class DiaryEntries extends Table with SyncColumns {
   RealColumn get saturatedFat100 => real()();
   RealColumn get fiber100 => real()();
   RealColumn get salt100 => real()();
+
+  /// Set when the entry was logged from a recipe (schema 2). Values are still a copy.
+  TextColumn get recipeId => text().nullable()();
 }
 
 /// One weight entry per day (unique), optional body fat and waist.
@@ -131,6 +134,60 @@ class ActivityEntries extends Table with SyncColumns {
   IntColumn get steps => integer().nullable()();
   TextColumn get source => text().withDefault(const Constant('manual'))();
   TextColumn get externalId => text().nullable()();
+}
+
+/// Recipes (schema 2). Nutrients are computed from [RecipeItems].
+@TableIndex(name: 'recipes_key', columns: {#nameKey}, unique: true)
+class Recipes extends Table with SyncColumns {
+  TextColumn get name => text().withLength(min: 1, max: 120)();
+
+  /// Normalised name. Unique among live rows (deleted rows get a suffix).
+  TextColumn get nameKey => text()();
+  RealColumn get servings => real()();
+
+  /// Weight of the finished dish in g, if weighed. Changes the values per 100 g.
+  RealColumn get cookedWeightG => real().nullable()();
+  IntColumn get prepMinutes => integer().nullable()();
+  TextColumn get instructions => text().nullable()();
+  TextColumn get tagsJson => text().withDefault(const Constant('[]'))();
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+}
+
+/// Ingredients of a recipe with a copy of the food's values per 100, so a recipe
+/// stays correct when a food is changed or deleted later.
+@TableIndex(name: 'recipe_items_recipe', columns: {#recipeId})
+class RecipeItems extends Table with SyncColumns {
+  TextColumn get recipeId => text()();
+  TextColumn get foodId => text().nullable()();
+  TextColumn get foodName => text()();
+  TextColumn get brand => text().nullable()();
+  TextColumn get unit => text()();
+  RealColumn get amount => real()();
+  IntColumn get sortOrder => integer()();
+  RealColumn get kcal100 => real()();
+  RealColumn get protein100 => real()();
+  RealColumn get carbs100 => real()();
+  RealColumn get sugar100 => real()();
+  RealColumn get fat100 => real()();
+  RealColumn get saturatedFat100 => real()();
+  RealColumn get fiber100 => real()();
+  RealColumn get salt100 => real()();
+}
+
+/// Shopping list (schema 2). Lines with the same item key and unit are merged.
+class ShoppingItems extends Table with SyncColumns {
+  TextColumn get label => text().withLength(min: 1, max: 120)();
+
+  /// foodId if known, else the normalised label. Used to merge lines.
+  TextColumn get itemKey => text()();
+  RealColumn get amount => real().nullable()();
+  TextColumn get unit => text().nullable()();
+  TextColumn get foodId => text().nullable()();
+  TextColumn get category => text().nullable()();
+
+  /// Names of the recipes this line came from, for display.
+  TextColumn get fromRecipes => text().nullable()();
+  BoolColumn get checked => boolean().withDefault(const Constant(false))();
 }
 
 /// App settings (theme, colours, dashboard layout, ...).
