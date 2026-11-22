@@ -101,7 +101,12 @@ Stream<WidgetSummary> watchWidgetSummary(AppDatabase db, {DateTime? now}) {
 }
 
 /// Keeps the widget current while the app runs; restarts after midnight. Errors are only logged.
-StreamSubscription<void> startHomeWidgetSync(AppDatabase db, {HomeWidgetBridge? bridge}) {
+/// [onAddFood] runs when the widget's „+ Essen“ button opened the app.
+StreamSubscription<void> startHomeWidgetSync(
+  AppDatabase db, {
+  HomeWidgetBridge? bridge,
+  FutureOr<void> Function()? onAddFood,
+}) {
   final b = bridge ?? homeWidgetBridgeFactory();
   final out = StreamController<void>();
   StreamSubscription<WidgetSummary>? sub;
@@ -124,6 +129,14 @@ StreamSubscription<void> startHomeWidgetSync(AppDatabase db, {HomeWidgetBridge? 
   if (b is NoHomeWidget) return out.stream.listen((_) {});
   subscribe();
   final clicks = b.launches().listen((uri) async {
+    if (isAddFoodWidgetLink(uri)) {
+      try {
+        await onAddFood?.call();
+      } catch (e) {
+        debugPrint('Schnell-Eintrag aus dem Widget fehlgeschlagen: $e');
+      }
+      return;
+    }
     final ml = waterFromWidgetLink(uri);
     if (ml == null) return;
     try {

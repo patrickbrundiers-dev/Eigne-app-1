@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+- Homescreen-Widget: Knopf „+ Essen“ öffnet direkt die Suche für die Mahlzeit, die gerade dran ist
+
 - Homescreen-Widget: zeigt jetzt auch das heute getrunkene Wasser; der Knopf „+ 250 ml Wasser“ trägt es mit einem
   Tipp ein (öffnet kurz die App)
 

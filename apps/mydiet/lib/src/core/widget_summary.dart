@@ -102,6 +102,11 @@ int? waterFromWidgetLink(Uri? uri) {
   return ml;
 }
 
+/// The link the widget's „+ Essen“ button opens: `sattly://add`. Opens the food search for the meal due now.
+const widgetAddFoodLink = 'sattly://add';
+
+bool isAddFoodWidgetLink(Uri? uri) => uri != null && uri.scheme == 'sattly' && uri.host == 'add';
+
 /// Text instead of numbers when "hide numbers" is on (also used by `gentleStatus`).
 String gentle(double progress) {
   if (progress <= 0) return 'Noch nichts eingetragen';

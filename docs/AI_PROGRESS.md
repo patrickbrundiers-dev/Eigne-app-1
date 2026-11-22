@@ -4,6 +4,12 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Widget: Schnell-Eintrag „+ Essen“ (W13 fertig)
+
+Phase-2-Thread. Knopf `widget_add` öffnet `sattly://add` (`isAddFoodWidgetLink`), `startHomeWidgetSync(onAddFood:)`
+ruft in `home_shell.dart` `addNow` auf (wie Strg+E: Suche für die fällige Mahlzeit heute). Kein Schema, keine
+Abhängigkeit. Tests: `home_widget_test.dart` (Link, Rückruf). Auf dem Gerät ungeprüft.
+
 ## 2026-11-22 – Tagebuch als Tabelle am PC (Aufgabe 2.5 fertig)
 
 Phase-2-Thread. `features/diary/diary_table.dart` (`DiaryColumn`, `DiaryTable`, Setting `diaryTableColumns`),
