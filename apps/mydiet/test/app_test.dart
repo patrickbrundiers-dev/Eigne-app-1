@@ -123,7 +123,10 @@ void main() {
     expect(find.text('Skyr natur'), findsOneWidget);
     expect(find.textContaining(RegExp(r'Protein \d+ / \d+ g')), findsWidgets); // Anteil am Tagesziel je Mahlzeit
 
-    await tester.tap(find.text('Profil'));
+    // Profil: auf dem Handy über den Avatar oben auf „Heute“.
+    await tester.tap(find.text('Heute').last);
+    await pumpApp(tester, db);
+    await tester.tap(find.byKey(const Key('profile-avatar')));
     await pumpApp(tester, db);
     expect(find.text('Deine Tagesziele'), findsOneWidget);
     expect(find.text('Grundumsatz'), findsOneWidget);
@@ -815,7 +818,7 @@ void main() {
       }
     });
     await pumpApp(tester, db);
-    await tester.tap(find.text('Gewicht').last);
+    await tester.tap(find.text('Fortschritt').last);
     await pumpApp(tester, db);
     final more = find.textContaining('Ältere anzeigen (noch 11)');
     await tester.scrollUntilVisible(more, 2000, scrollable: find.byType(Scrollable).last);
@@ -845,9 +848,9 @@ void main() {
     });
     for (final size in const [Size(420, 900), Size(1280, 900)]) {
       await pumpApp(tester, db, size: size);
-      await tester.tap(find.text('Gewicht').last);
+      await tester.tap(find.text('Fortschritt').last);
       await pumpApp(tester, db, size: size);
-      expect(find.text('Fortschritt'), findsOneWidget);
+      expect(find.widgetWithText(Card, 'Fortschritt'), findsOneWidget);
       expect(find.text('Bisher abgenommen'), findsOneWidget);
       expect(find.text('Noch bis Ziel'), findsOneWidget);
       expect(find.text('30-Tage-Trend'), findsOneWidget);
@@ -862,7 +865,7 @@ void main() {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db);
     expect(find.textContaining('30 Tage:'), findsOneWidget);
-    await tester.tap(find.widgetWithText(FloatingActionButton, 'Eintragen'));
+    await tester.tap(find.byKey(const Key('nav-log')));
     await pumpApp(tester, db);
     expect(find.text('Eintragen für'), findsOneWidget);
     await tester.tap(find.widgetWithText(ChoiceChip, 'Abendessen'));
@@ -888,11 +891,14 @@ void main() {
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await pumpApp(tester, db);
     expect(tester.takeException(), isNull, reason: 'Dashboard');
-    for (final page in ['Tagebuch', 'Gewicht', 'Essen', 'Profil']) {
+    for (final page in ['Tagebuch', 'Fortschritt', 'Essen', 'Heute']) {
       await tester.tap(find.text(page).last);
       await pumpApp(tester, db);
       expect(tester.takeException(), isNull, reason: page);
     }
+    await tester.tap(find.byKey(const Key('profile-avatar')));
+    await pumpApp(tester, db);
+    expect(tester.takeException(), isNull, reason: 'Profil');
     await closeDb(tester, db);
   });
 
@@ -902,7 +908,7 @@ void main() {
     await pumpApp(tester, db);
     expect(find.bySemanticsLabel(RegExp(r'Kalorien heute: [\d.]+ kcal (übrig|zu viel)')), findsWidgets);
     expect(find.bySemanticsLabel(RegExp(r'Protein: [\d.]+ von [\d.]+ g')), findsWidgets);
-    await tester.tap(find.text('Gewicht').last);
+    await tester.tap(find.text('Fortschritt').last);
     await pumpApp(tester, db);
     expect(find.bySemanticsLabel(RegExp(r'Fortschritt zum Ziel')), findsWidgets);
     handle.dispose();
@@ -941,7 +947,7 @@ void main() {
   testWidgets('Alle Daten löschen: erst nach Bestätigungswort, danach Neustart der Einrichtung', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db, size: const Size(420, 1400));
-    await tester.tap(find.text('Profil'));
+    await tester.tap(find.byKey(const Key('profile-avatar')));
     await pumpApp(tester, db, size: const Size(420, 1400));
     await tester.tap(find.byTooltip('Einstellungen'));
     await pumpApp(tester, db, size: const Size(420, 1400));

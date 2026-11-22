@@ -4,6 +4,15 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign Schritt 2: Navigation mit zentralem Plus
+
+Handy: eigene untere Leiste (`_BottomBar` in `home_shell.dart`) Heute · Tagebuch · **+** · Fortschritt · Essen;
+das Plus öffnet `showQuickLogSheet` (Suchen, Barcode, Text, Nur kcal, Gewicht). Profil über den Avatar oben auf
+„Heute“ (Key `profile-avatar`), am PC weiter in der Seitenleiste, dort oben eine Plus-Taste. „Gewicht“ heißt
+in der Navigation jetzt „Fortschritt“ (Seite unverändert). Der Dashboard-Knopf „Eintragen“ entfällt (ersetzt
+durch das Plus). Seitenindizes und Strg+1 … 5 unverändert. Tests angepasst (Avatar, Plus, „Fortschritt“),
+alle 344 grün. Nächster Schritt: Startseite.
+
 ## 2026-11-22 – Redesign Schritt 1: Designsystem Design 2 (D-22)
 
 Patrick hat Design 2 „Fitness & Performance“ gewählt. `lib/src/ui/design/tokens.dart` (`SattlyTokens` als
