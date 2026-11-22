@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../data/backup.dart';
+import '../../data/error_log.dart';
 import '../../data/reminder_scheduler.dart';
 import '../../ui/widgets.dart';
 
@@ -22,6 +23,7 @@ Future<void> confirmAndDeleteAll(BuildContext context, {BackupService? backups})
       removed = await b.deleteAll();
     }
     await reminderScheduler.apply(const []);
+    await ErrorLog.instance?.clear();
     if (context.mounted) {
       showMessage(
         context,
@@ -67,7 +69,7 @@ class _DeleteAllDialogState extends State<_DeleteAllDialog> {
           children: [
             const Text(
               'Profil, Tagebuch, Gewicht, eigene Lebensmittel, Rezepte, Pläne, Supplemente, Fasten, '
-              'Einstellungen und Erinnerungen werden endgültig von diesem Gerät gelöscht. '
+              'Einstellungen, Erinnerungen und das Fehlerprotokoll werden endgültig von diesem Gerät gelöscht. '
               'Die App startet danach wie neu installiert.',
             ),
             const SizedBox(height: 8),

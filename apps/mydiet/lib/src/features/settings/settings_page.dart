@@ -12,6 +12,7 @@ import '../../data/csv_export.dart';
 import '../../data/display_prefs.dart';
 import 'backup_card.dart';
 import 'delete_all.dart';
+import 'error_log_page.dart';
 import '../../ui/widgets.dart';
 import 'reminders_page.dart';
 
@@ -85,6 +86,16 @@ class SettingsPage extends StatelessWidget {
                   subtitle: const Text('Mahlzeiten, Wasser, Supplemente, Wiegen'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const RemindersPage())),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.bug_report_outlined),
+                  title: const Text('Fehlerprotokoll'),
+                  subtitle: const Text('Technische Fehler, nur auf diesem Gerät, ohne persönliche Daten'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const ErrorLogPage())),
                 ),
               ),
               const SizedBox(height: 12),
