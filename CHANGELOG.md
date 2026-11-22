@@ -34,6 +34,9 @@
 - Sicherungen: täglich automatisch eine lokale Sicherung (die letzten 14 bleiben), „Jetzt sichern“ und
   Wiederherstellen in den Einstellungen; vor jeder Wiederherstellung wird der aktuelle Stand gesichert
 - CSV-Export für Tagebuch und Gewicht (Semikolon, Dezimalkomma, öffnet direkt in Excel)
+- Mahlzeiten-Vorlagen: Mahlzeit im Tagebuch „Als Vorlage speichern“, in der Lebensmittelauswahl mit einem Tipp
+  komplett eintragen (Vorlagen der gleichen Mahlzeit zuerst), gleicher Name ersetzt, lange drücken löscht
+- Datenbank Schema 5 (Vorlagen) mit getesteter Migration
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

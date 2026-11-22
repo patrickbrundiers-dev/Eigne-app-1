@@ -269,6 +269,40 @@ class FastingSessions extends Table with SyncColumns {
   RealColumn get targetHours => real()();
 }
 
+/// A saved meal ("Mein Frühstück") that can be logged with one tap (schema 5).
+@TableIndex(name: 'meal_templates_key', columns: {#nameKey}, unique: true)
+class MealTemplates extends Table with SyncColumns {
+  TextColumn get name => text().withLength(min: 1, max: 120)();
+
+  /// Normalised name; unique among live rows (deleted rows get a suffix).
+  TextColumn get nameKey => text()();
+
+  /// Meal the template was saved from, used as default when logging.
+  TextColumn get mealSlotId => text().nullable()();
+  IntColumn get useCount => integer().withDefault(const Constant(0))();
+}
+
+/// One food of a meal template. Values are a copy, like diary entries.
+@TableIndex(name: 'meal_template_items_tpl', columns: {#templateId})
+class MealTemplateItems extends Table with SyncColumns {
+  TextColumn get templateId => text()();
+  IntColumn get sortOrder => integer().withDefault(const Constant(0))();
+  TextColumn get foodId => text().nullable()();
+  TextColumn get foodName => text()();
+  TextColumn get brand => text().nullable()();
+  TextColumn get unit => text()();
+  RealColumn get amount => real()();
+  RealColumn get kcal100 => real()();
+  RealColumn get protein100 => real()();
+  RealColumn get carbs100 => real()();
+  RealColumn get sugar100 => real()();
+  RealColumn get fat100 => real()();
+  RealColumn get saturatedFat100 => real()();
+  RealColumn get fiber100 => real()();
+  RealColumn get salt100 => real()();
+  TextColumn get recipeId => text().nullable()();
+}
+
 /// App settings (theme, colours, dashboard layout, ...).
 class Settings extends Table {
   TextColumn get key => text()();
