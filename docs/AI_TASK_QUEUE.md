@@ -12,7 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 1.3 Gewichtsliste nachladen | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
+| 4.3 Protein je Mahlzeit | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
