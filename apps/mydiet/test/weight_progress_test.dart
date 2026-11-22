@@ -175,4 +175,13 @@ void main() {
       expect(p.nutrition!.proteinHitDays, 1);
     });
   });
+
+  test('Bilanz gegen Waage: Toleranz 0,3 kg/Woche, Richtung der Abweichung', () {
+    expect(checkBalance(expectedWeeklyKg: -0.5, measuredWeeklyKg: -0.3), BalanceCheck.matches);
+    // erwartet -0,5, Waage -0,1: weniger Abnahme als erwartet
+    expect(checkBalance(expectedWeeklyKg: -0.5, measuredWeeklyKg: -0.1), BalanceCheck.scaleHigher);
+    expect(checkBalance(expectedWeeklyKg: -0.2, measuredWeeklyKg: -0.8), BalanceCheck.scaleLower);
+    // Zunahme-Ziel: erwartet +0,3, Waage +0,8
+    expect(checkBalance(expectedWeeklyKg: 0.3, measuredWeeklyKg: 0.8), BalanceCheck.scaleHigher);
+  });
 }

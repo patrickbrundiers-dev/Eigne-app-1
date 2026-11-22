@@ -88,25 +88,27 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
     final wow = g.weekOverWeekKg;
     final tr = g.trend30;
 
-    final head = [
-      StatValue(label: 'Start', value: kg(g.startKg), sub: g.startDate == null ? null : 'ab ${dateTiny(g.startDate!)}'),
+    final items = <Widget>[
+      StatValue(
+        label: 'Start',
+        value: kg(g.startKg),
+        sub: g.startDate == null ? null : 'erste Messung ${dateTiny(g.startDate!)}',
+      ),
       StatValue(
         label: g.goalIsLoss ? 'Bisher abgenommen' : 'Bisher verändert',
         value: '${change <= 0 ? '−' : '+'}${kg(change.abs())}',
         valueColor: change.abs() < 0.05 ? null : (towardsGoal ? t.colorScheme.primary : t.colorScheme.error),
-        sub: 'Trend gegen Start',
+        sub: '7-Tage-Ø gegen Start',
       ),
       StatValue(
         label: 'Noch bis Ziel',
         value: g.goalReached ? 'erreicht' : kg(g.remainingKg),
         sub: 'Ziel ${kg(g.targetKg)}',
       ),
-    ];
-    final trends = [
       StatValue(
-        label: '7-Tage-Ø',
-        value: g.average7Kg == null ? '–' : kg(g.average7Kg!),
-        sub: wow == null ? 'Vorwoche fehlt' : '${wow <= 0 ? '−' : '+'}${n1(wow.abs())} kg zur Vorwoche',
+        label: 'Zur Vorwoche',
+        value: wow == null ? '–' : '${wow <= 0 ? '−' : '+'}${kg(wow.abs())}',
+        sub: wow == null ? 'Vorwoche fehlt' : '7-Tage-Ø gegen Vorwoche',
       ),
       StatValue(
         label: '30-Tage-Trend',
@@ -116,18 +118,12 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
             : '${tr.weeklyRateKg! <= 0 ? '−' : '+'}${n1(tr.weeklyRateKg!.abs())} kg/Woche · ${reliabilityText(tr.reliability)}',
       ),
       StatValue(
-        label: 'Ziel erreicht etwa',
-        value: g.goalReached ? 'jetzt' : (g.forecastDate == null ? '–' : dateShort(g.forecastDate!)),
-        sub: g.goalReached
-            ? null
-            : g.forecastDate == null
-            ? 'Trend reicht noch nicht'
-            : reliabilityText(g.forecastReliability),
+        label: 'Tagesschwankung',
+        value: tr.fluctuationKg == null ? '–' : '±${kg(tr.fluctuationKg!)}',
+        sub: tr.fluctuationKg == null ? 'zu wenige Messungen' : 'normal, kein Grund zur Sorge',
       ),
     ];
-
-    Widget row(List<Widget> items) =>
-        wide || items.length < 3 ? Row(children: [for (final i in items) Expanded(child: i)]) : _wrap(items);
+    final perRow = wide ? 3 : 2;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -150,15 +146,12 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
           ],
         ),
         const SizedBox(height: 12),
-        row(head),
-        const SizedBox(height: 12),
-        row(trends),
-        if (tr.fluctuationKg != null) ...[
-          const SizedBox(height: 8),
-          Text(
-            'Einzelne Messungen weichen bei dir typischerweise um ±${n1(tr.fluctuationKg!)} kg vom Trend ab. '
-            'Ein Tag mit mehr oder weniger auf der Waage sagt deshalb wenig aus.',
-            style: muted,
+        for (var i = 0; i < items.length; i += perRow) ...[
+          if (i > 0) const SizedBox(height: 12),
+          Row(
+            children: [
+              for (var j = i; j < i + perRow; j++) Expanded(child: j < items.length ? items[j] : const SizedBox()),
+            ],
           ),
         ],
         if (g.nutrition != null) ...[const Divider(height: 24), _nutrition(context, g.nutrition!, tr, hide)],
@@ -166,24 +159,6 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
       ],
     );
   }
-
-  Widget _wrap(List<Widget> items) => Column(
-    children: [
-      Row(
-        children: [
-          Expanded(child: items[0]),
-          Expanded(child: items[1]),
-        ],
-      ),
-      const SizedBox(height: 12),
-      Row(
-        children: [
-          Expanded(child: items[2]),
-          const Expanded(child: SizedBox()),
-        ],
-      ),
-    ],
-  );
 
   Widget _nutrition(BuildContext context, NutritionWindow n, WeightTrendWindow tr, bool hide) {
     final t = Theme.of(context);
@@ -217,19 +192,20 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
     String? compare;
     final rate = tr.weeklyRateKg;
     if (rate != null && tr.reliability != Reliability.none && n.loggedDays >= 4) {
-      final diff = rate - exp;
       final expTxt = '${exp <= 0 ? '−' : '+'}${n1(exp.abs())} kg';
-      if (diff.abs() < 0.3) {
+      final rateTxt = '${rate <= 0 ? '−' : '+'}${n1(rate.abs())} kg';
+      final check = checkBalance(expectedWeeklyKg: exp, measuredWeeklyKg: rate);
+      if (check == BalanceCheck.matches) {
         compare = 'Nach deiner Bilanz wären etwa $expTxt pro Woche zu erwarten, das passt zum gemessenen Trend.';
-      } else if (exp < rate) {
+      } else if (check == BalanceCheck.scaleHigher) {
         compare =
-            'Nach deiner Bilanz wären etwa $expTxt pro Woche zu erwarten, die Waage zeigt weniger Abnahme. '
+            'Nach deiner Bilanz wären etwa $expTxt pro Woche zu erwarten, der Trend der Waage zeigt $rateTxt. '
             'Häufige Gründe: nicht alles eingetragen (Getränke, Öl, Snacks), Portionen geschätzt, '
             'Wassereinlagerung oder ein niedrigerer Verbrauch als die Formel annimmt. '
             'Der Wochen-Check unten rechnet mit deinem echten Verlauf.';
       } else {
         compare =
-            'Nach deiner Bilanz wären etwa $expTxt pro Woche zu erwarten, die Waage zeigt mehr Abnahme. '
+            'Nach deiner Bilanz wären etwa $expTxt pro Woche zu erwarten, der Trend der Waage zeigt $rateTxt. '
             'Dein Verbrauch ist vermutlich höher als geschätzt; der Wochen-Check unten rechnet genauer.';
       }
     }
@@ -255,6 +231,8 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
     final style = t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant);
     return Text(
       '• „Bisher“ und „Noch bis Ziel“ rechnen mit dem 7-Tage-Durchschnitt, nicht mit der letzten Messung.\n'
+      '• Tagesschwankung: so weit weichen einzelne Messungen typischerweise vom Trend ab (Wasser, Salz, '
+      'Verdauung). Ein Tag mit mehr oder weniger auf der Waage sagt deshalb wenig aus.\n'
       '• Der 30-Tage-Trend ist eine Ausgleichsgerade durch alle Messungen der letzten 30 Tage. '
       'Die Veränderung wird entlang dieser Geraden abgelesen, deshalb verschieben einzelne Ausreißer sie kaum.\n'
       '• Aussagekraft: ab 4 Messungen über mindestens 10 Tage gering, ab 8 Messungen über 14 Tage mittel, '

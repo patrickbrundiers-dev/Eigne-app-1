@@ -8,6 +8,9 @@
 - Datenqualität sichtbar: Quelle (Basis, eigen, Open Food Facts, KI) und Stufe (Richtwert, vom Etikett,
   vollständig, prüfen, Schätzung) als Symbol in Liste und Suche; Open-Food-Facts-Werte mit Energie-Check
 - Android: Internet-Berechtigung ergänzt (nötig für Open Food Facts)
+- Gewicht: neue Karte „Fortschritt“ mit Start, bisher abgenommen, noch bis Ziel, 7-Tage-Durchschnitt gegen
+  Vorwoche, 30-Tage-Trend mit Aussagekraft und typischer Tagesschwankung, geschätzter Zielerreichung sowie
+  Kalorienbilanz und Proteinziel der letzten 7 Tage; erklärt, wenn Bilanz und Waage nicht zusammenpassen
 
 ## 0.2.0 – Phase 2: Ernährung (2026-11-22)
 

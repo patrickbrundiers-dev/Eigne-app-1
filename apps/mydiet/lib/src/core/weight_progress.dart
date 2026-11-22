@@ -307,3 +307,24 @@ String reliabilityText(Reliability r) => switch (r) {
   Reliability.medium => 'Aussagekraft mittel',
   Reliability.high => 'Aussagekraft gut',
 };
+
+/// How the measured weight trend relates to what the logged balance would explain.
+enum BalanceCheck {
+  /// Within ±[balanceTolerancePerWeekKg]: logging and expenditure estimate look consistent.
+  matches,
+
+  /// The scale trend is higher than expected: intake missing from the diary, estimated
+  /// portions, water, or a lower expenditure than the formula assumes.
+  scaleHigher,
+
+  /// The scale trend is lower than expected: expenditure probably higher than estimated.
+  scaleLower,
+}
+
+const double balanceTolerancePerWeekKg = 0.3;
+
+BalanceCheck checkBalance({required double expectedWeeklyKg, required double measuredWeeklyKg}) {
+  final diff = measuredWeeklyKg - expectedWeeklyKg;
+  if (diff.abs() < balanceTolerancePerWeekKg) return BalanceCheck.matches;
+  return diff > 0 ? BalanceCheck.scaleHigher : BalanceCheck.scaleLower;
+}
