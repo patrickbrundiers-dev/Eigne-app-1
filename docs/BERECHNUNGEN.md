@@ -148,6 +148,21 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Vergleich Bilanz ↔ Waage nur ab 4 gezählten Tagen und vorhandenem Trend; Abweichung < 0,3 kg/Woche
   gilt als passend. Bei größerer Abweichung nennt die App mögliche Ursachen, keine Diagnose.
 
+## Als Text eintragen (`core/meal_text.dart`, keine KI)
+
+- Zerlegen an Komma, Semikolon, Zeilenumbruch, „+“, „und“, „sowie“. Zahlen mit Komma oder Punkt, Brüche
+  (1/2, ½), Zahlwörter (ein … zehn, halbe, paar). Einheit darf am Wert kleben („200g“).
+- Umrechnung in die Einheit des Lebensmittels: kg × 1000, l × 1000, cl × 10; 1 EL = 15, 1 TL = 5 (immer als
+  Annahme markiert); g ↔ ml 1:1 nur als Annahme.
+- Stück/Scheibe/Becher …: Anzahl × hinterlegte Portion; passt das Wort nicht zur Portionsbezeichnung, ist es
+  eine Annahme. Ohne hinterlegte Portion bleibt die Menge offen (nie geraten).
+- Zahl ohne Einheit: ≤ 10 = Stück (Portion), > 10 = g bzw. ml. Ohne Zahl: 1 Portion bzw. die zuletzt
+  eingetragene Menge dieses Lebensmittels, jeweils als Annahme.
+- Suche nur in der eigenen Datenbank: Synonym (z. B. „Eier“ → Hühnerei), ganzer Text, Einzahl, längstes Wort.
+  Treffer gilt als sicher, wenn der Name mit dem Suchbegriff beginnt und kein Ausweichbegriff nötig war.
+- Vorausgewählt sind nur Zeilen ohne jede Annahme; alles andere braucht ein Häkchen. Nicht gefundene
+  Lebensmittel bekommen keine Werte.
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

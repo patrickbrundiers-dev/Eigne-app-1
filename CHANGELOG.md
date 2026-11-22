@@ -2,7 +2,12 @@
 
 ## Nächste Version (in Arbeit)
 
-## 0.3.0 – Barcode, Erinnerungen, Vitamine und Mineralstoffe (2026-11-22)
+## 0.3.0 – Barcode, Erinnerungen, Text-Eingabe, Vitamine und Mineralstoffe (2026-11-22)
+
+- PC als Planungs-Arbeitsplatz: der Wochenplan zeigt im breiten Fenster die Tage nebeneinander; Einträge lassen
+  sich mit der Maus (am Handy lange drücken) auf einen anderen Tag ziehen, mit Strg kopieren, oder über das Menü
+  „Auf anderen Tag verschieben/kopieren“, jeweils mit Rückgängig. Tastenkürzel: Strg+E Eintragen für die
+  aktuelle Mahlzeit, Strg+1–5 Bereiche, Alt+←/→ Tag bzw. Woche wechseln, Alt+Pos1 heute, F1 Übersicht
 
 - Vitamine und Mineralstoffe: Tagessumme aus Essen und Supplementen zusammen (Vitamin D, B12, Folat, C,
   Calcium, Magnesium, Eisen, Zink, Jod, Kalium, Omega-3) mit Ziel nach D-A-CH, Ampel und EFSA-Höchstmengen;
@@ -25,6 +30,12 @@
 - Gewicht: neue Karte „Fortschritt“ mit Start, bisher abgenommen, noch bis Ziel, 7-Tage-Durchschnitt gegen
   Vorwoche, 30-Tage-Trend mit Aussagekraft und typischer Tagesschwankung, geschätzter Zielerreichung sowie
   Kalorienbilanz und Proteinziel der letzten 7 Tage; erklärt, wenn Bilanz und Waage nicht zusammenpassen
+- Als Text eintragen: ganze Mahlzeit in einem Satz („200 g Haferflocken, 300 ml Milch, 1 Banane, 2 EL
+  Erdnussbutter“), auch direkt aus der Suche. Erkennt Mengen, Einheiten (g, kg, ml, l, EL, TL, Stück, Scheibe,
+  Becher …), Zahlwörter und Brüche, ordnet nur eigene Lebensmittel zu (offline, nichts wird gesendet).
+  Annahmen und unsichere Treffer sind markiert und werden erst nach Häkchen eingetragen; Lebensmittel und
+  Menge lassen sich vorher ändern, fehlende Lebensmittel direkt anlegen. Ohne Mengenangabe wird die zuletzt
+  eingetragene Menge vorgeschlagen
 
 ## 0.2.0 – Phase 2: Ernährung (2026-11-22)
 
