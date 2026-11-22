@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+- Intern: Tests laufen jetzt auch auf einem Android-Emulator (Datenbank, App-Sperre, Widget, App-Start)
+
 ## 0.6.0 – Widget mit Wasser und Essen, 220 neue Lebensmittel, Tagebuch-Tabelle am PC (2026-11-22)
 
 - Homescreen-Widget: Knopf „+ Essen“ öffnet direkt die Suche für die Mahlzeit, die gerade dran ist

@@ -4,6 +4,14 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+
+## 2026-11-22 – Android-Emulator-Tests in der CI (Aufgabe 7.4)
+
+Phase-2-Thread, Patrick: „Android auch testen“. `integration_test/app_android_test.dart` (4 Tests: Datenbank als
+Datei schreiben/wieder öffnen, App-Sperre-Datei, Widget-Daten an Android, App-Start Einrichtung → Dashboard →
+Tagebuch). Job `android-emulator` in `.github/workflows/mydiet-ci.yml` (Android 14, x86_64, KVM). Lokal nur
+`flutter analyze`, ausgeführt werden die Tests erst in der CI. Format-Prüfung umfasst jetzt auch `integration_test/`.
+
 ## 2026-11-22 – Impressum und Verantwortlicher (7.3)
 
 Patrick hat Name, Anschrift und E-Mail geliefert: eingetragen in `docs/DATENSCHUTZERKLAERUNG.md` (Abschnitt 1) und
