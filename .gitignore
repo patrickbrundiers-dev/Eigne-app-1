@@ -1,42 +1,25 @@
 # Secrets and local configuration
 .env
 .env.*
-!.env.example
 *.pem
 *.key
+*.jks
+key.properties
 secrets/
-private-documents/
 
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-dist/
-build/
-*.egg-info/
-
-# Local development data
-backend/data/
-data/
+# Local data (exports may contain health data)
 *.db
+*.sqlite
 *.sqlite3
+mydiet-export-*.json
 
 # Flutter / Dart
 .dart_tool/
-.packages
 .pub-cache/
 .pub/
 build/
-.flutter-plugins
 .flutter-plugins-dependencies
-.metadata
 .idea/
-.vscode/
 *.iml
 
 # OS

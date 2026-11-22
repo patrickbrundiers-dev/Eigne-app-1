@@ -1,48 +1,60 @@
 # Roadmap
 
-## Phase 1 — Foundation
-- [ ] Repository and CI (workflows exist; remote repo + branch protection pending)
-- [x] Flutter Android/Windows shell with light/dark themes
-- [x] Backend health endpoint
-- [x] Database schema and migrations
-- [x] Family, user, space and membership model
-- [x] Authorization policy tests
-- [ ] Local encrypted storage design and implementation review
-- [ ] Document import and PDF preview (backend pipeline done; endpoint + UI pending auth)
-- [ ] Search and categories
-- [ ] Backup and restore proof
+Legende: ✅ fertig und getestet · 🔜 als Nächstes · ⬜ geplant
 
-## Phase 2 — Document intelligence
-- [ ] OCR pipeline
-- [ ] Classification
-- [ ] Structured extraction with confidence values
-- [ ] Human review and correction
-- [ ] Local model adapter (Ollama)
-- [ ] Source-grounded document Q&A
+## Phase 1 – Grundsystem ✅ (v0.1.0)
 
-## Phase 3 — Workflow
-- [ ] Contracts and invoices
-- [ ] Deadlines and reminders
-- [ ] Recurring payment detection
-- [ ] Document comparison
+- ✅ Projektarchitektur: Flutter-App `apps/mydiet`, Rechenkern, lokale SQLite-Datenbank, CI
+- ✅ Benutzerprofil: Geschlecht, Geburtsdatum, Größe, Gewicht, Zielgewicht, Zieldatum, Körperfett,
+  Beruf, Alltagsaktivität, Sport, Schlaf, Ernährungsweise, Gewohnheiten, Unverträglichkeiten,
+  Vorlieben, Abneigungen, Mahlzeiten (1–6, Uhrzeiten), eigenes Kalorienziel
+- ✅ Kalorienberechnung: Grundumsatz (Mifflin-St Jeor oder Katch-McArdle), Gesamtumsatz (PAL),
+  Kalorienziel mit Sicherheitsgrenzen, Protein/Fett/Kohlenhydrate/Ballaststoffe/Wasser,
+  alles manuell überschreibbar, Rechenweg sichtbar
+- ✅ Dashboard: Kalorien, Makros, Gewicht, Zielfortschritt, Wasser, Aktivität, Gewichtskurve,
+  Tageshinweise; Kacheln sortier-, aus- und einblendbar
+- ✅ Lebensmittelverwaltung: 100 Basis-Lebensmittel, eigene Lebensmittel, Favoriten,
+  Plausibilitätsprüfung, Duplikat-Schutz (Name + Marke, Barcode)
+- ✅ Manuelle Mahlzeitenerfassung: Suche, zuletzt verwendet, Menge in g/ml, Portionen,
+  Bearbeiten, Löschen mit Rückgängig, Mahlzeit vom Vortag übernehmen
+- ✅ Gewichtstracking: ein Wert pro Tag, Körperfett, Bauchumfang, Trend (7 Tage), Tempo,
+  Prognose, Plateau-Erkennung, Wochen- und Monatsmittel, BMI
+- ✅ Wasser- und manuelle Aktivitätserfassung, JSON-Export/-Import, Hell/Dunkel, 6 Farbschemata
 
-## Serverless family sync over Google Drive (decided 2026-11-14)
-Plan: https://claude.ai/artifact/2T9qB6ZTYTXLBdgwjq74RB. Setup for the owner: docs/GOOGLE_SETUP.de.md.
-- [ ] D0 Verify whether `drive.file` can read files in a shared folder (else full `drive` scope)
-- [ ] D1 Google sign-in (Android, Windows), personal key pair, vault password, recovery code
-- [ ] D2 Encrypted documents in Drive, per-device change logs, Drive Changes API sync, on-device previews
-- [ ] D3 Family: invite, roles, private and child spaces, read/write via folder permissions, key rotation on removal
-- [ ] D4 Import from Drive, one-time move from the optional server
+Bewusst noch nicht in Phase 1: Barcode-Scanner, Fotoerkennung, KI-Texteingabe, Rezepte,
+Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargestellt.
 
-## Phase 4 — Sync and optional cloud
-- [ ] Device enrollment
-- [x] Sync change feed (`/api/v1/sync`, see docs/SYNC.md)
-- [ ] Conflict handling
-- [ ] Encrypted backup target adapters
-- [x] Offline cache, upload queue and retry in the app
+## Phase 2 – Ernährung 🔜
 
-## Phase 5 — Hardening
-- [ ] Security review
-- [ ] Performance and large-file tests
-- [ ] Restore drills
-- [ ] Android and Windows release packaging
+- ⬜ Rezeptverwaltung: Zutaten, Portionen, Nährwerte pro Portion, Einkaufsliste
+- ⬜ Ernährungsplanung: Wochenplan, 1–6 Mahlzeiten, Intervallfasten, Low Carb/High Protein/vegetarisch/vegan,
+  Familiengerichte, günstig, schnell, Meal Prep; Plan anpassen, ohne die Planung zu verlieren
+- ⬜ Makro-Aufteilung nach Ernährungsweise (z. B. Low Carb) statt fester Prozentwerte
+- ⬜ Supplement-Verwaltung: Produkte mit Inhaltsstoffen je Portion, Herstellerempfehlung, Einnahmezeiten,
+  Summen über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit Hinweis bei Überschreiten der
+  tolerierbaren Höchstmenge (EFSA UL); keine eigenen Dosierungsempfehlungen
+- ⬜ Barcode-Scanner (Kamera) + Open Food Facts
+- ⬜ Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen)
+
+## Phase 3 – KI
+
+- ⬜ KI-Texteingabe („200 g Hähnchen, 250 g Kartoffeln …“) mit Zuordnung zur Datenbank,
+  Schätzwerte gekennzeichnet, Speicherung erst nach Bestätigung
+- ⬜ Fotoerkennung von Mahlzeiten (Schätzung, immer bestätigungspflichtig)
+- ⬜ KI-Ernährungscoach: Tagesauswertung, Proteinlücken, nächste Mahlzeit, Muster
+- ⬜ Wochenbericht mit Vorschlag zur Anpassung des Kalorienziels aus dem echten Gewichtsverlauf
+  (transparent erklärt, nur nach Bestätigung)
+
+## Phase 4 – Integrationen und Sync
+
+- ⬜ Konto + Sync über gehostetes PostgreSQL (EU), offline-first, Row-Level-Security
+- ⬜ Google Health Connect (Schritte, Aktivitätskalorien, Training, Herzfrequenz, Schlaf)
+- ⬜ Garmin Connect, Apple Health (mit iOS-App)
+- ⬜ Erweiterte Auswertungen und eigene Diagramme
+
+## Phase 5 – Optimierung
+
+- ⬜ Datenbank-Verschlüsselung auf dem Gerät (SQLCipher) und App-Sperre
+- ⬜ Automatische Backups, Fehlerberichte ohne Gesundheitsdaten
+- ⬜ Performance, Barrierefreiheit, weitere Tests (Integrationstests auf Geräten)
+- ⬜ App-Icon, Store-Veröffentlichung
