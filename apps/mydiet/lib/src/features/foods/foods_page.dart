@@ -6,6 +6,7 @@ import '../../ui/format.dart';
 import '../home_shell.dart';
 import 'barcode.dart';
 import 'food_form_page.dart';
+import 'food_table.dart';
 
 class FoodsPage extends StatefulWidget {
   const FoodsPage({super.key, this.embedded = false});
@@ -31,6 +32,7 @@ class _FoodsPageState extends State<FoodsPage> {
   Widget build(BuildContext context) {
     final db = context.db;
     final t = Theme.of(context);
+    final wide = MediaQuery.sizeOf(context).width >= 900;
     return Scaffold(
       appBar: widget.embedded ? null : AppBar(title: const Text('Lebensmittel')),
       floatingActionButton: FloatingActionButton.extended(
@@ -40,7 +42,7 @@ class _FoodsPageState extends State<FoodsPage> {
         label: const Text('Neu'),
       ),
       body: PageBody(
-        maxWidth: 900,
+        maxWidth: wide ? 1280 : 900,
         child: Column(
           children: [
             Padding(
@@ -69,6 +71,18 @@ class _FoodsPageState extends State<FoodsPage> {
                 spacing: 8,
                 runSpacing: 4,
                 children: [
+                  if (wide)
+                    ActionChip(
+                      avatar: const Icon(Icons.view_column_outlined, size: 18),
+                      label: const Text('Spalten'),
+                      tooltip: 'Spalten wählen',
+                      onPressed: () async {
+                        final cur = parseFoodColumns(await db.getSetting(foodTableColumnsKey));
+                        if (!context.mounted) return;
+                        final next = await chooseFoodColumns(context, cur);
+                        if (next != null) await db.setSetting(foodTableColumnsKey, encodeFoodColumns(next));
+                      },
+                    ),
                   for (final (i, l) in const [(0, 'Alle'), (1, 'Eigene'), (2, 'Favoriten')])
                     Padding(
                       padding: EdgeInsets.zero,
@@ -94,6 +108,23 @@ class _FoodsPageState extends State<FoodsPage> {
                         child: Text(
                           _filter == 1 ? 'Noch keine eigenen Lebensmittel.' : 'Keine Treffer.',
                           style: t.textTheme.bodyLarge,
+                        ),
+                      ),
+                    );
+                  }
+                  if (wide) {
+                    return StreamBuilder<String?>(
+                      stream: db.watchSetting(foodTableColumnsKey),
+                      builder: (context, colSnap) => SingleChildScrollView(
+                        padding: const EdgeInsets.only(bottom: 96, top: 4),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: FoodTable(
+                            items: items,
+                            columns: parseFoodColumns(colSnap.data),
+                            onOpen: (f) => _open(context, f),
+                            onFavorite: (f) => db.setFavorite(f.id, !f.isFavorite),
+                          ),
                         ),
                       ),
                     );

@@ -33,7 +33,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 2.2 | ✅ Gewichts-Fortschritt auch als Dashboard-Kachel (kompakt) | M | S | N | dieser PR, W5 (Enum-Ende) | Widget-Test |
 | 2.3 | ✅ Barrierefreiheit: Semantics-Labels für Ringe/Diagramme, Schriftgröße 200 % ohne Überlauf | M | M | N | – | Widget-Test mit `textScaler` 2.0 |
 | 2.4 | ✅ Tastenkürzel unter Windows (Eintragen, Bereiche, Tag/Woche vor/zurück, F1) – W8, siehe AI_PROGRESS | M | S | N | – | Widget-Test mit Tastenereignissen |
-| 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8 | N | M | N | – | Widget-Test |
+| 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8; Lebensmittel ✅, Tagebuch offen | N | M | N | – | Widget-Test |
 
 ## Priorität 3 – Lebensmittelerfassung und Datenqualität
 

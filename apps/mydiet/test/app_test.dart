@@ -590,6 +590,26 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('PC: Lebensmittel als Tabelle mit wählbaren Spalten', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    await tester.tap(find.text('Essen').last);
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.byType(DataTable), findsOneWidget);
+    final before = find.text('Zucker').evaluate().length; // auch ein Lebensmittel heißt so
+    await tester.tap(find.byTooltip('Spalten wählen'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Zucker'));
+    await tester.tap(find.text('Übernehmen'));
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(find.text('Zucker').evaluate().length, before + 1);
+    expect((await tester.runAsync(() => db.getSetting('foodTableColumns')))!, contains('sugar'));
+    await tester.tap(find.text('kcal')); // sortieren
+    await pumpApp(tester, db, size: const Size(1400, 900));
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Breites Fenster nutzt die Seitennavigation', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db, size: const Size(1400, 900));

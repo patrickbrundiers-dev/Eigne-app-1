@@ -4,6 +4,12 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Lebensmittel-Tabelle am PC (Aufgabe 2.5, Teil Lebensmittel)
+
+`features/foods/food_table.dart` (`FoodColumn`, `FoodTable`, Spaltenwahl im Setting `foodTableColumns`), ab 900 px
+in der Lebensmittelliste. Tests: `test/food_table_test.dart` (2), Widget-Test am PC. Offen: Tagebuch als Tabelle;
+bei sehr vielen Lebensmitteln (Phase 4) DataTable durch eine virtualisierte Tabelle ersetzen.
+
 ## 2026-11-22 – Datenschutzerklärung und Store-Texte (Aufgabe 7.3, Entwurf)
 
 `docs/DATENSCHUTZERKLAERUNG.md` und `docs/STORE-TEXTE.md` nach dem Stand des Codes. Offen: Verantwortlicher/

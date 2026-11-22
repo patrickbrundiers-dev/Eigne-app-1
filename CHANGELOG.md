@@ -23,6 +23,9 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- PC: Lebensmittel als Tabelle mit sortierbaren Spalten; „Spalten“ wählt aus Marke, kcal, Eiweiß,
+  Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe, Salz und Quelle
+
 - Profil: Karte „Vitamine und Mineralstoffe“ zeigt deine Tagesziele nach D-A-CH (passend zu Geschlecht und
   Alter), mit Sprung zur heutigen Übersicht
 
