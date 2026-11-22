@@ -43,6 +43,12 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
   dann speichern; Quelle und Datenqualität (W2) sichtbar
 - ⬜ Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen)
 
+### Online-Update ✅
+
+- ✅ Update-Prüfung über GitHub Releases (täglich, abschaltbar, manuell in den Einstellungen), Release-Notizen,
+  Überspringen; Windows: Setup laden, Größe/SHA-256 prüfen, still installieren, Neustart; Android: APK über den
+  Browser (siehe [UPDATES.md](UPDATES.md), fester Signaturschlüssel nötig)
+
 ## Phase 3 – KI
 
 - ⬜ KI-Texteingabe („200 g Hähnchen, 250 g Kartoffeln …“) mit Zuordnung zur Datenbank,

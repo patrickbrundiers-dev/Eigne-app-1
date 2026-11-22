@@ -10,6 +10,10 @@ import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
 import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
+import 'package:mydiet_ai/src/core/app_update.dart';
+import 'package:mydiet_ai/src/data/update_client.dart';
+import 'package:mydiet_ai/src/features/settings/app_update_ui.dart';
+import 'package:mydiet_ai/src/features/settings/settings_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -17,6 +21,9 @@ void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   setUpAll(() async {
     await initializeDateFormatting('de_DE');
+    // No network in tests: the daily update check sees no releases.
+    debugCurrentVersion = const AppVersion(0, 2, 0);
+    updateClientFactory = () => UpdateClient(client: MockClient((_) async => http.Response('[]', 200)));
     // Real font, so layout overflows in tests match the app.
     final loader = FontLoader('Inter');
     for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
@@ -240,6 +247,47 @@ void main() {
     final saved = (await tester.runAsync(() => db.findFoodByBarcode('4006381333931')))!;
     expect(saved.source, 'off');
     expect(saved.kcal, 380);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Update: Einstellungen finden neue Version', (tester) async {
+    final release =
+        '[{"tag_name":"mydiet-v9.9.0","draft":false,"prerelease":false,"body":"Neu: Testfunktion",'
+        '"html_url":"https://example.org/r","assets":[{"name":"MyDietAI-Android-9.9.0.apk",'
+        '"browser_download_url":"https://example.org/a.apk","size":10}]}]';
+    updateClientFactory = () => UpdateClient(client: MockClient((_) async => http.Response(release, 200)));
+    addTearDown(
+      () => updateClientFactory = () => UpdateClient(client: MockClient((_) async => http.Response('[]', 200))),
+    );
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    tester.view.physicalSize = const Size(420, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MyDietApp(db: db));
+    await tester.pumpAndSettle();
+    final ctx = tester.element(find.byType(Scaffold).first);
+    Navigator.of(ctx).push(MaterialPageRoute<void>(builder: (_) => const SettingsPage()));
+    for (var i = 0; i < 4; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('Installierte Version: 0.2.0'), findsOneWidget);
+    await tester.ensureVisible(find.text('Nach Updates suchen'));
+    await tester.tap(find.text('Nach Updates suchen'));
+    for (var i = 0; i < 6; i++) {
+      // Spinner while checking: no pumpAndSettle here.
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    await tester.pumpAndSettle();
+    expect(find.text('Version 9.9.0 ist da'), findsOneWidget);
+    expect(find.text('Neu: Testfunktion'), findsOneWidget);
+    await tester.tap(find.text('Überspringen'));
+    for (var i = 0; i < 3; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pumpAndSettle();
+    }
+    expect(await tester.runAsync(() => db.getSetting('updateSkippedTag')), 'mydiet-v9.9.0');
     await closeDb(tester, db);
   });
 

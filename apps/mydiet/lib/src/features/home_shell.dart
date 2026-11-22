@@ -4,6 +4,7 @@ import 'dashboard/dashboard_page.dart';
 import 'diary/diary_page.dart';
 import 'foods/food_hub_page.dart';
 import 'profile/profile_page.dart';
+import 'settings/app_update_ui.dart';
 import 'weight/weight_page.dart';
 
 /// Navigation: bottom bar on phones, navigation rail from 840 px width.
@@ -20,6 +21,14 @@ class HomeShellState extends State<HomeShell> {
   static HomeShellState? of(BuildContext context) => context.findAncestorStateOfType<HomeShellState>();
 
   void go(int i) => setState(() => _index = i);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) autoCheckForUpdate(context);
+    });
+  }
 
   static const _dest = [
     (Icons.space_dashboard_outlined, Icons.space_dashboard, 'Heute'),

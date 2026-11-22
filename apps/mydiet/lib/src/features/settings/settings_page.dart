@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../app.dart';
 import '../../core/dates.dart';
 import '../../ui/widgets.dart';
+import 'app_update_ui.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -79,7 +80,8 @@ class SettingsPage extends StatelessWidget {
                   children: [
                     Text(
                       'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
-                      'Es wird nichts ins Internet übertragen. Die Synchronisierung zwischen Handy und PC '
+                      'Ins Internet gehen nur ein gescannter Barcode (an Open Food Facts) und die Update-Prüfung '
+                      '(GitHub), beide ohne persönliche Daten. Die Synchronisierung zwischen Handy und PC '
                       'folgt in Phase 4. Bis dahin: regelmäßig exportieren.',
                       style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
                     ),
@@ -99,11 +101,13 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
+              const UpdateCard(),
+              const SizedBox(height: 12),
               SectionCard(
                 title: 'Über MyDiet AI',
                 icon: Icons.info_outline,
                 child: Text(
-                  'Version 0.1 · Phase 1 (Grundsystem).\n'
+                  'Daten zu Lebensmitteln mit Barcode: Open Food Facts (ODbL).\n'
                   'Berechnungen sind Schätzwerte und ersetzen keine ärztliche oder ernährungsmedizinische Beratung.',
                   style: t.textTheme.bodySmall,
                 ),

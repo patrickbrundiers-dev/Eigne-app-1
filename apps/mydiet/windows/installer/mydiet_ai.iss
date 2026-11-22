@@ -22,6 +22,8 @@ WizardStyle=modern
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 UninstallDisplayIcon={app}\mydiet_ai.exe
+CloseApplications=yes
+RestartApplications=no
 
 [Languages]
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
@@ -38,3 +40,5 @@ Name: "{autodesktop}\MyDiet AI"; Filename: "{app}\mydiet_ai.exe"; Tasks: desktop
 
 [Run]
 Filename: "{app}\mydiet_ai.exe"; Description: "{cm:LaunchProgram,MyDiet AI}"; Flags: nowait postinstall skipifsilent
+; After an in-app update (silent setup) start the app again.
+Filename: "{app}\mydiet_ai.exe"; Flags: nowait; Check: WizardSilent
