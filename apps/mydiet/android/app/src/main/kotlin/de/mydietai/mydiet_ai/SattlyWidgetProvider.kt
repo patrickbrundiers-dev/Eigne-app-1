@@ -37,6 +37,11 @@ class SattlyWidgetProvider : HomeWidgetProvider() {
                     R.id.widget_root,
                     HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java),
                 )
+                // Opens the app with the food search for the meal due now (home_shell.dart, addNow).
+                setOnClickPendingIntent(
+                    R.id.widget_add,
+                    HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java, Uri.parse("sattly://add")),
+                )
                 // Opens the app, which adds the water (data/home_widget_sync.dart, waterFromWidgetLink).
                 setOnClickPendingIntent(
                     R.id.widget_water,

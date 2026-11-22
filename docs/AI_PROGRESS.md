@@ -4,6 +4,17 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Impressum und Verantwortlicher (7.3)
+
+Patrick hat Name, Anschrift und E-Mail geliefert: eingetragen in `docs/DATENSCHUTZERKLAERUNG.md` (Abschnitt 1) und
+neues `docs/IMPRESSUM.md`. Offen bei 7.3: Store-Screenshots, rechtliche Prüfung vor Veröffentlichung.
+
+## 2026-11-22 – Widget: Schnell-Eintrag „+ Essen“ (W13 fertig)
+
+Phase-2-Thread. Knopf `widget_add` öffnet `sattly://add` (`isAddFoodWidgetLink`), `startHomeWidgetSync(onAddFood:)`
+ruft in `home_shell.dart` `addNow` auf (wie Strg+E: Suche für die fällige Mahlzeit heute). Kein Schema, keine
+Abhängigkeit. Tests: `home_widget_test.dart` (Link, Rückruf). Auf dem Gerät ungeprüft.
+
 ## 2026-11-22 – Basisdatenbank aus USDA erweitert (Aufgabe 3.6, Teil Daten)
 
 Patrick hat den Download von `fdc.nal.usda.gov` freigegeben (Entscheidungskarte), Host in der Cloud-Umgebung

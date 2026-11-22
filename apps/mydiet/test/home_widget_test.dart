@@ -58,6 +58,10 @@ void main() {
       expect(waterFromWidgetLink(Uri.parse('sattly://water')), isNull);
       expect(waterFromWidgetLink(Uri.parse('https://water?ml=250')), isNull);
       expect(waterFromWidgetLink(null), isNull);
+      expect(isAddFoodWidgetLink(Uri.parse(widgetAddFoodLink)), isTrue);
+      expect(isAddFoodWidgetLink(Uri.parse('https://add')), isFalse);
+      expect(isAddFoodWidgetLink(null), isFalse);
+      expect(waterFromWidgetLink(Uri.parse(widgetAddFoodLink)), isNull);
       final s = widgetSummary(day: 'd', budgetKcal: 2000, eatenKcal: 0, proteinG: 0, proteinTargetG: 1, waterMl: 500);
       expect(s.water, 'Wasser 500 ml');
     });
@@ -117,10 +121,22 @@ void main() {
 
       bridge.clicks.add(Uri.parse('sattly://water?ml=$widgetWaterMl'));
       bridge.clicks.add(Uri.parse('sattly://other'));
+      bridge.clicks.add(Uri.parse(widgetAddFoodLink)); // ohne onAddFood: nichts passiert
       bridge.clicks.add(null);
       await pumpEventQueue();
       expect(await db.watchWaterMl(today).first, widgetWaterMl);
       expect(bridge.pushed.last.water, 'Wasser 250 ml');
+      await sub.cancel();
+    });
+
+    test('Knopf „+ Essen“ ruft den Schnell-Eintrag auf', () async {
+      final bridge = FakeBridge();
+      var opened = 0;
+      final sub = startHomeWidgetSync(db, bridge: bridge, onAddFood: () => opened++);
+      bridge.clicks.add(Uri.parse(widgetAddFoodLink));
+      bridge.clicks.add(Uri.parse('sattly://water?ml=250'));
+      await pumpEventQueue();
+      expect(opened, 1);
       await sub.cancel();
     });
 

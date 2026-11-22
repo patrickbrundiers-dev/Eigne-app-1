@@ -1,12 +1,15 @@
 # Datenschutzerklärung Sattly (Entwurf)
 
-Stand: 22.11.2026. **Entwurf, keine Rechtsberatung.** Vor einer Veröffentlichung im Play Store müssen die Angaben
-in eckigen Klammern ergänzt und der Text geprüft werden. Der Text beschreibt den Stand des Codes; bei neuen
+Stand: 22.11.2026. **Entwurf, keine Rechtsberatung.** Vor einer Veröffentlichung im Play Store muss der Text geprüft
+werden. Der Text beschreibt den Stand des Codes; bei neuen
 Funktionen mit Datenübertragung (Sync, KI) muss er angepasst werden.
 
 ## 1. Verantwortlicher
 
-[Name, Anschrift, E-Mail des Anbieters]
+Patrick Brundiers  
+Boker Straße 114  
+33129 Delbrück  
+E-Mail: patrick.brundiers@gmail.com
 
 ## 2. Grundsatz
 

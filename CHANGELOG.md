@@ -2,6 +2,10 @@
 
 ## Nächste Version (in Arbeit)
 
+## 0.6.0 – Widget mit Wasser und Essen, 220 neue Lebensmittel, Tagebuch-Tabelle am PC (2026-11-22)
+
+- Homescreen-Widget: Knopf „+ Essen“ öffnet direkt die Suche für die Mahlzeit, die gerade dran ist
+
 - Basisdatenbank: rund 220 weitere Lebensmittel mit deutschen Namen (Obst, Gemüse, Fisch, Fleisch, Käse,
   Brot, Getreide, Hülsenfrüchte, Nüsse, Öle), Werte aus USDA FoodData Central (gemeinfrei), meist mit Vitaminen
   und Mineralstoffen. Kommt beim Update automatisch dazu; eigene und gelöschte Lebensmittel bleiben unberührt
