@@ -25,6 +25,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   List<Food> _results = [];
   List<Food> _recent = [];
   List<Food> _suggested = [];
+  List<MealTemplate> _templates = [];
   List<Food> _favorites = [];
   List<Recipe> _recipeResults = [];
   List<Recipe> _favRecipes = [];
@@ -40,12 +41,18 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     final db = context.db;
     final recent = await db.recentFoods();
     final suggested = await db.suggestedFoods(mealSlotId: widget.mealSlotId);
+    final templates = await db.watchTemplates().first;
     final favs = await db.watchFoods(onlyFavorites: true).first;
     final favRecipes = await db.watchRecipes(onlyFavorites: true).first;
     if (mounted) {
       setState(() {
         _recent = recent;
         _suggested = suggested;
+        // Templates saved from this meal first, the rest after (stable otherwise).
+        _templates = [
+          ...templates.where((t) => t.mealSlotId == widget.mealSlotId),
+          ...templates.where((t) => t.mealSlotId != widget.mealSlotId),
+        ];
         _favorites = favs;
         _favRecipes = favRecipes;
       });
@@ -111,6 +118,35 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     } catch (e) {
       if (mounted) showMessage(context, errorText(e));
     }
+  }
+
+  Future<void> _logTemplate(MealTemplate tpl) async {
+    try {
+      final n = await context.db.logTemplate(templateId: tpl.id, day: widget.day, mealSlotId: widget.mealSlotId);
+      if (!mounted) return;
+      setState(() => _added += n);
+      showMessage(context, '${tpl.name}: $n ${n == 1 ? 'Eintrag' : 'Einträge'} eingetragen');
+      _loadLists();
+    } catch (e) {
+      if (mounted) showMessage(context, errorText(e));
+    }
+  }
+
+  Future<void> _deleteTemplate(MealTemplate tpl) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: const Text('Vorlage löschen?'),
+        content: Text('„${tpl.name}“ wird gelöscht. Bereits eingetragene Mahlzeiten bleiben erhalten.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Abbrechen')),
+          FilledButton(onPressed: () => Navigator.pop(c, true), child: const Text('Löschen')),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    await context.db.deleteTemplate(tpl.id);
+    _loadLists();
   }
 
   Future<void> _quick() async {
@@ -196,6 +232,18 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                         ),
                       for (final f in _results) _FoodTile(food: f, onTap: () => _pick(f)),
                     ] else ...[
+                      if (_templates.isNotEmpty) ...[
+                        _header(context, 'Vorlagen'),
+                        for (final tpl in _templates)
+                          ListTile(
+                            leading: const Icon(Icons.bookmark_outline),
+                            title: Text(tpl.name),
+                            subtitle: const Text('Antippen trägt alles ein · lange drücken zum Löschen'),
+                            trailing: const Icon(Icons.add_circle_outline),
+                            onTap: () => _logTemplate(tpl),
+                            onLongPress: () => _deleteTemplate(tpl),
+                          ),
+                      ],
                       if (_suggested.isNotEmpty) ...[
                         _header(context, 'Oft zum $slotName'),
                         for (final f in _suggested) _FoodTile(food: f, onTap: () => _pick(f)),

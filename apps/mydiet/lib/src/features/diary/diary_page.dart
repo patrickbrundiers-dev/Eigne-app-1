@@ -271,6 +271,8 @@ class _MealCard extends StatelessWidget {
                         const PopupMenuItem(value: 'toToday', child: Text('Nach heute kopieren')),
                       if (entries.isNotEmpty)
                         const PopupMenuItem(value: 'toDate', child: Text('Auf anderes Datum kopieren …')),
+                      if (entries.isNotEmpty)
+                        const PopupMenuItem(value: 'template', child: Text('Als Vorlage speichern …')),
                     ],
                   ),
                 if (s != null)
@@ -363,6 +365,32 @@ class _MealCard extends StatelessWidget {
     await context.db.updateDiaryEntry(e.id, amount: res.amount, mealSlotId: res.mealSlotId);
   }
 
+  Future<String?> _askTemplateName(BuildContext context, String initial) async {
+    final c = TextEditingController(text: initial);
+    final r = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Als Vorlage speichern'),
+        content: TextField(
+          controller: c,
+          autofocus: true,
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            helperText: 'Gleicher Name ersetzt eine vorhandene Vorlage.',
+          ),
+          onSubmitted: (v) => Navigator.pop(ctx, v),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Abbrechen')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, c.text), child: const Text('Speichern')),
+        ],
+      ),
+    );
+    c.dispose();
+    final t = r?.trim();
+    return t == null || t.isEmpty ? null : t;
+  }
+
   Future<void> _menu(BuildContext context, String v) async {
     final db = context.db;
     final s = slot!;
@@ -373,6 +401,18 @@ class _MealCard extends StatelessWidget {
       if (context.mounted) {
         showMessage(context, n == 0 ? 'Am Vortag war ${s.name} leer.' : '$n Einträge vom Vortag übernommen');
       }
+    } else if (v == 'template') {
+      final name = await _askTemplateName(context, 'Mein ${s.name}');
+      if (name == null || !context.mounted) return;
+      try {
+        await db.saveTemplateFromMeal(name: name, day: day, mealSlotId: s.id);
+        if (context.mounted) {
+          showMessage(context, 'Vorlage „$name“ gespeichert. Du findest sie beim Hinzufügen ganz oben.');
+        }
+      } catch (e) {
+        if (context.mounted) showMessage(context, errorText(e));
+      }
+      return;
     } else if (v == 'toDate') {
       final from = parseDayKey(day);
       final picked = await showDatePicker(
