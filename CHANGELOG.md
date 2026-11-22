@@ -4,6 +4,7 @@
 
 - Homescreen-Widget (Android): zeigt, wie viele Kalorien heute noch offen sind, dazu gegessen / Budget, Protein
   und einen Fortschrittsbalken; Tippen öffnet die App. Beachtet Wochenmodus und „Zahlen ausblenden“
+
 - Intern: Datenbankzugriffe nach Bereichen in eigene Dateien aufgeteilt (keine Änderung an Daten oder Verhalten)
 
 ## 0.4.0 – Health Connect, Wochenbericht, schnelleres Eintragen (2026-11-22)
