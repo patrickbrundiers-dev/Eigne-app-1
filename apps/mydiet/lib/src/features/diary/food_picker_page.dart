@@ -5,7 +5,9 @@ import '../../data/database.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../../core/recipes.dart';
+import '../foods/barcode.dart';
 import '../foods/food_form_page.dart';
+import '../foods/foods_page.dart' show FoodSourceIcon;
 import 'amount_sheet.dart';
 import 'quick_entry_sheet.dart';
 
@@ -204,6 +206,14 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                   hintText: 'Lebensmittel oder Rezept suchen',
                   leading: const Icon(Icons.search),
                   trailing: [
+                    IconButton(
+                      tooltip: 'Barcode scannen',
+                      icon: const Icon(Icons.qr_code_scanner),
+                      onPressed: () async {
+                        final f = await scanFood(context);
+                        if (f != null && mounted) await _pick(f);
+                      },
+                    ),
                     if (searching)
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -325,11 +335,7 @@ class _FoodTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (food.isFavorite) Icon(Icons.star, size: 18, color: t.colorScheme.tertiary),
-          if (food.source == 'base')
-            Tooltip(
-              message: 'Richtwert aus der Basisdatenbank',
-              child: Icon(Icons.menu_book_outlined, size: 16, color: t.colorScheme.outline),
-            ),
+          FoodSourceIcon(food: food, size: 16),
           const SizedBox(width: 4),
           const Icon(Icons.add_circle_outline),
         ],

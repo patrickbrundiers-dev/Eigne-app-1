@@ -84,7 +84,8 @@ class SettingsPage extends StatelessWidget {
                   children: [
                     Text(
                       'Alle Daten liegen in einer lokalen Datenbank im geschützten App-Speicher dieses Geräts. '
-                      'Es wird nichts ins Internet übertragen. Die Synchronisierung zwischen Handy und PC '
+                      'Ins Internet gehen nur ein gescannter Barcode (an Open Food Facts) '
+                      '(ohne persönliche Daten). Die Synchronisierung zwischen Handy und PC '
                       'folgt in Phase 4. Bis dahin sichert die App täglich automatisch (siehe Sicherungen).',
                       style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
                     ),
@@ -159,7 +160,7 @@ class SettingsPage extends StatelessWidget {
                 title: 'Über $appName',
                 icon: Icons.info_outline,
                 child: Text(
-                  'Version 0.1 · Phase 1 (Grundsystem).\n'
+                  'Daten zu Lebensmitteln mit Barcode: Open Food Facts (ODbL).\n'
                   'Berechnungen sind Schätzwerte und ersetzen keine ärztliche oder ernährungsmedizinische Beratung.',
                   style: t.textTheme.bodySmall,
                 ),

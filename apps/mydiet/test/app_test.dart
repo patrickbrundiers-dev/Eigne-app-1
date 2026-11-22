@@ -9,6 +9,10 @@ import 'package:mydiet_ai/src/branding.dart';
 import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
+import 'package:mydiet_ai/src/data/off_client.dart';
+import 'package:mydiet_ai/src/features/foods/barcode.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -215,6 +219,46 @@ void main() {
     await pumpApp(tester, db);
     final diary = await tester.runAsync(() => db.diaryForDay(todayDayKey()));
     expect(diary!.map((e) => e.foodName), contains('Porridge'));
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Barcode: Open Food Facts füllt das Formular vor', (tester) async {
+    debugCameraScan = false;
+    offClientFactory = () => OffClient(
+      client: MockClient(
+        (_) async => http.Response(
+          '{"status":1,"product":{"product_name":"Testmüsli","brands":"Marke",'
+          '"nutriments":{"energy-kcal_100g":380,"proteins_100g":10,"carbohydrates_100g":60,'
+          '"sugars_100g":12,"fat_100g":10,"saturated-fat_100g":2,"fiber_100g":8,"salt_100g":0.1}}}',
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        ),
+      ),
+    );
+    addTearDown(() {
+      debugCameraScan = null;
+      offClientFactory = OffClient.new;
+    });
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Essen'));
+    await pumpApp(tester, db);
+    await tester.tap(find.byTooltip('Barcode scannen'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '4006381333931');
+    await tester.pump();
+    await tester.tap(find.byTooltip('Suchen'));
+    for (var i = 0; i < 4; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('Testmüsli'), findsWidgets);
+    expect(find.textContaining('Open Food Facts'), findsWidgets);
+    await tester.tap(find.text('Speichern').first);
+    await pumpApp(tester, db);
+    final saved = (await tester.runAsync(() => db.findFoodByBarcode('4006381333931')))!;
+    expect(saved.source, 'off');
+    expect(saved.kcal, 380);
     await closeDb(tester, db);
   });
 

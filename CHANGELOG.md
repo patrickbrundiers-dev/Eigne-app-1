@@ -2,6 +2,13 @@
 
 ## Nächste Version (in Arbeit)
 
+- Barcode-Scanner: Kamera auf Android, Eingabefeld oder USB-Scanner unter Windows; bekannte Produkte kommen
+  offline aus der eigenen Datenbank, neue von Open Food Facts (nur der Barcode wird gesendet) und werden vor
+  dem Speichern zur Prüfung vorausgefüllt; Prüfziffer wird kontrolliert
+- Datenqualität sichtbar: Quelle (Basis, eigen, Open Food Facts, KI) und Stufe (Richtwert, vom Etikett,
+  vollständig, prüfen, Schätzung) als Symbol in Liste und Suche; Open-Food-Facts-Werte mit Energie-Check
+- Android: Internet-Berechtigung ergänzt (nötig für Open Food Facts)
+
 ## 0.2.0 – Phase 2: Ernährung (2026-11-22)
 
 - Neuer Name: Die App heißt jetzt **Sattly**, mit neuem Logo (grünes „S“ im Teller-Fortschrittsring mit Blatt) als

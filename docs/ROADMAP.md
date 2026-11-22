@@ -38,8 +38,16 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 - ✅ Supplement-Verwaltung: Produkte mit Inhaltsstoffen je Portion, Herstellerempfehlung, Einnahmezeiten,
   Vorrat, Abhaken pro Uhrzeit, Summen über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit Hinweis ab
   80 % und Warnung über der tolerierbaren Höchstmenge (EFSA UL); keine eigenen Dosierungsempfehlungen
-- ⬜ Barcode-Scanner (Kamera) + Open Food Facts
+- ✅ Barcode-Scanner (Kamera auf Android, Eingabe oder USB-Scanner unter Windows) + Open Food Facts:
+  erst lokal suchen (offline), sonst Open Food Facts fragen (nur der Barcode wird gesendet), Werte prüfen,
+  dann speichern; Quelle und Datenqualität (W2) sichtbar
 - ⬜ Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen)
+
+### Online-Update (vorbereitet, folgt sobald die Android-Signatur-Secrets angelegt sind)
+
+- ⬜ Update-Prüfung über GitHub Releases (täglich, abschaltbar, manuell in den Einstellungen), Release-Notizen,
+  Überspringen; Windows: Setup laden, Größe/SHA-256 prüfen, still installieren, Neustart; Android: APK über den
+  Browser (fester Signaturschlüssel nötig; Code in Commit 1265bf6)
 
 ## Phase 3 – KI
 
@@ -53,6 +61,10 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 ## Phase 4 – Integrationen und Sync
 
 - ⬜ Konto + Sync über gehostetes PostgreSQL (EU), offline-first, Row-Level-Security
+- ⬜ Gemeinsamer Katalog für alle Nutzer (Wunsch Patrick, 2026-11-22): Lebensmittel und Rezepte, die jemand
+  freigibt, kann jeder finden und nutzen. Läuft auf derselben Datenbank im kostenlosen Tarif, also ohne
+  Mehrkosten, solange die Nutzerzahl klein bleibt. Tagebuch, Gewicht, Profil und Supplemente bleiben privat.
+  Einzelheiten in [DATENMODELL.md](DATENMODELL.md#gemeinsamer-katalog-phase-4)
 - ⬜ Google Health Connect (Schritte, Aktivitätskalorien, Training, Herzfrequenz, Schlaf)
 - ⬜ Garmin Connect, Apple Health (mit iOS-App)
 - ⬜ Erweiterte Auswertungen und eigene Diagramme
