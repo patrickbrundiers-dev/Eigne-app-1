@@ -40,6 +40,9 @@ class Profiles extends Table with SyncColumns {
   IntColumn get proteinOverrideG => integer().nullable()();
   RealColumn get proteinPerKg => real().withDefault(const Constant(1.8))();
   RealColumn get fatPercent => real().withDefault(const Constant(30))();
+
+  /// Upper limit for carbohydrates in g (schema 4), e.g. low carb.
+  RealColumn get carbCapG => real().nullable()();
   RealColumn get fiberTargetG => real().withDefault(const Constant(30))();
   IntColumn get waterOverrideMl => integer().nullable()();
 
@@ -233,6 +236,37 @@ class SupplementIntakes extends Table with SyncColumns {
   TextColumn get dayKey => text()();
   IntColumn get plannedMinute => integer()();
   RealColumn get servings => real()();
+}
+
+/// Planned meals (schema 4). Values per 100 g/ml are copied like in the diary, so the
+/// plan stays as planned when a food or recipe changes.
+@TableIndex(name: 'meal_plan_day', columns: {#dayKey})
+class MealPlanEntries extends Table with SyncColumns {
+  TextColumn get dayKey => text()();
+  TextColumn get mealSlotId => text()();
+  TextColumn get foodId => text().nullable()();
+  TextColumn get recipeId => text().nullable()();
+  TextColumn get name => text()();
+  TextColumn get unit => text()();
+  RealColumn get amount => real()();
+  RealColumn get kcal100 => real()();
+  RealColumn get protein100 => real()();
+  RealColumn get carbs100 => real()();
+  RealColumn get sugar100 => real()();
+  RealColumn get fat100 => real()();
+  RealColumn get saturatedFat100 => real()();
+  RealColumn get fiber100 => real()();
+  RealColumn get salt100 => real()();
+
+  /// Set when the planned entry was put into the diary.
+  TextColumn get diaryEntryId => text().nullable()();
+}
+
+/// Fasting periods (schema 4). An open fast has no end.
+class FastingSessions extends Table with SyncColumns {
+  DateTimeColumn get startAt => dateTime()();
+  DateTimeColumn get endAt => dateTime().nullable()();
+  RealColumn get targetHours => real()();
 }
 
 /// App settings (theme, colours, dashboard layout, ...).

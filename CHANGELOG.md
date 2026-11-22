@@ -18,6 +18,12 @@
 - Tagessumme je Inhaltsstoff über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit % der Referenzmenge
   und der tolerierbaren Höchstmenge (EFSA): Hinweis ab 80 %, Warnung darüber; keine Dosierungsempfehlungen
 - Datenbank Schema 3
+- Wochenplan (Essen → Wochenplan): Rezepte und Lebensmittel pro Tag und Mahlzeit planen, Woche mit Rezepten
+  automatisch füllen (passend zum Kalorienziel, Filter über Stichworte), kopieren, leeren, ins Tagebuch
+  übernehmen (ohne Doppelzählung), Einkaufsliste aus dem Plan
+- Makro-Vorlagen je Ernährungsweise und Kohlenhydrat-Obergrenze (Low Carb, Ketogen) im Profil
+- Intervallfasten mit Timer, nachträglichem Start und Verlauf als Dashboard-Kachel
+- Datenbank Schema 4; Migrationen laufen jetzt schrittweise über die gespeicherten Schemata
 - Wochen-Check auf der Gewichtsseite: echter Verbrauch aus Aufnahme und Gewichtsverlauf der letzten 28 Tage,
   unvollständige Tage werden ausgelassen, Vorschlag für das Kalorienziel mit Rechenweg (höchstens 300 kcal
   Änderung auf einmal, nie unter dem Mindestwert), gilt erst nach Bestätigung
@@ -28,6 +34,9 @@
   Tage verteilt (höchstens +20 %, nie unter dem Mindestwert, Tage ohne Einträge zählen als Tagesziel)
 - Zahlen ausblenden (Einstellungen): Dashboard und Tagebuch zeigen nur Fortschritt und freundliche Hinweise
   statt Kalorien und Gramm
+- Sicherungen: täglich automatisch eine lokale Sicherung (die letzten 14 bleiben), „Jetzt sichern“ und
+  Wiederherstellen in den Einstellungen; vor jeder Wiederherstellung wird der aktuelle Stand gesichert
+- CSV-Export für Tagebuch und Gewicht (Semikolon, Dezimalkomma, öffnet direkt in Excel)
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

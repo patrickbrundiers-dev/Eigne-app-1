@@ -12,6 +12,7 @@ const dietStyles = <String, String>{
   'balanced': 'Ausgewogen',
   'high_protein': 'High Protein',
   'low_carb': 'Low Carb',
+  'keto': 'Ketogen',
   'vegetarian': 'Vegetarisch',
   'vegan': 'Vegan',
   'pescetarian': 'Pescetarisch',
