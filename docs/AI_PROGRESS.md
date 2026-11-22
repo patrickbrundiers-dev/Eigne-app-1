@@ -20,6 +20,19 @@ noch nicht geprüft (kein Android-Gerät in der Cloud), der Android-Build läuft
 
 Nächster Schritt: Ernährung nach Health Connect schreiben (6.1 Teil 2), dann Phase 5 (App-Sperre, W13).
 
+## 2026-11-22 – Dashboard „Eintragen“ und Gewichtstempo (Aufgaben 2.1 + 2.2)
+
+Erledigt:
+- `features/dashboard/quick_log_sheet.dart`: Knopf „Eintragen“ auf dem Dashboard, Mahlzeit per Uhrzeit
+  vorausgewählt (`currentMealIndex`), Wege Suchen/Barcode/Text/Nur Kalorien/Gewicht.
+- `FoodPickerPage(start: PickerStart.…)` startet direkt mit Scanner, Text-Eintrag oder Schnell-Eintrag.
+- Gewichtskachel: „30 Tage: −x kg/Woche · Aussagekraft“ aus `trendWindow` (vorhandene Rechnung).
+- Bewusst nicht umgebaut: Kalorienring und Makros waren schon die Hauptzahlen; keine neue Kachel, kein
+  Eingriff in die Kachel-Reihenfolge (vermeidet Konflikte mit dem Wochenbericht des Phase-2-Threads).
+
+Tests: Widget-Test „Dashboard: Eintragen in drei Taps“, gesamte Suite grün.
+Nächster Schritt: 3.2 Portionen lernen.
+
 ## 2026-11-22 – Tippfehlertolerante Suche (Aufgabe 3.3)
 
 Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es` (nach PR #35).

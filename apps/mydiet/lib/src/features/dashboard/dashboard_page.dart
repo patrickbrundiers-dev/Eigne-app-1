@@ -10,6 +10,7 @@ import '../../core/day_budget.dart';
 import '../../core/energy.dart';
 import '../../core/nutrition.dart';
 import '../../core/week_budget.dart';
+import '../../core/weight_progress.dart';
 import '../../core/weight_trend.dart';
 import '../../data/database.dart';
 import '../../data/display_prefs.dart';
@@ -24,6 +25,7 @@ import '../supplements/supplements_view.dart';
 import '../weight/weight_chart.dart';
 import '../weight/weight_entry_sheet.dart';
 import 'activity_sheet.dart';
+import 'quick_log_sheet.dart';
 
 /// Everything the dashboard shows, recomputed whenever any source changes.
 class DashData {
@@ -122,6 +124,12 @@ class DashboardPage extends StatelessWidget {
             );
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'dashboard-log',
+        onPressed: () => showQuickLogSheet(context),
+        icon: const Icon(Icons.add),
+        label: const Text('Eintragen'),
+      ),
       body: SafeArea(
         child: StreamBuilder<DashData>(
           stream: stream,
@@ -501,6 +509,8 @@ class _WeightTile extends StatelessWidget {
     final remaining = cur - target;
     final b = bmi(cur, d.profile.heightCm);
     final today = d.analysis.latest != null && dayKey(d.analysis.latest!.date) == todayDayKey();
+    final month = trendWindow(weightPoints(d.weights));
+    final rate = month.weeklyRateKg;
     return SectionCard(
       title: 'Gewicht',
       icon: Icons.monitor_weight_outlined,
@@ -538,6 +548,13 @@ class _WeightTile extends StatelessWidget {
                 child: StatValue(label: 'BMI', value: n1(b), sub: bmiCategory(b)),
               ),
             ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            rate == null
+                ? '30 Tage: ${reliabilityText(month.reliability)}'
+                : '30 Tage: ${rate <= 0 ? '−' : '+'}${n1(rate.abs())} kg/Woche · ${reliabilityText(month.reliability)}',
+            style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
           ),
         ],
       ),
