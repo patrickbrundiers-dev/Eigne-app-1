@@ -14,6 +14,7 @@ import 'diary/diary_page.dart';
 import 'foods/food_hub_page.dart';
 import 'profile/profile_page.dart';
 import '../data/health_sync.dart';
+import '../data/home_widget_sync.dart';
 import 'settings/reminders_page.dart';
 import 'weight/weight_page.dart';
 
@@ -105,11 +106,15 @@ class HomeShellState extends State<HomeShell> {
     super.didChangeDependencies();
     if (_reminders == null) unawaited(autoImportHealth(context.db));
     _reminders ??= startReminderSync(context.db);
+    _widget ??= startHomeWidgetSync(context.db);
   }
+
+  StreamSubscription<void>? _widget;
 
   @override
   void dispose() {
     _reminders?.cancel();
+    _widget?.cancel();
     super.dispose();
   }
 
