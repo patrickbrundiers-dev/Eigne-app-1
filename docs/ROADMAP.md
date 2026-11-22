@@ -61,6 +61,10 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 ## Phase 4 – Integrationen und Sync
 
 - ⬜ Konto + Sync über gehostetes PostgreSQL (EU), offline-first, Row-Level-Security
+- ⬜ Gemeinsamer Katalog für alle Nutzer (Wunsch Patrick, 2026-11-22): Lebensmittel und Rezepte, die jemand
+  freigibt, kann jeder finden und nutzen. Läuft auf derselben Datenbank im kostenlosen Tarif, also ohne
+  Mehrkosten, solange die Nutzerzahl klein bleibt. Tagebuch, Gewicht, Profil und Supplemente bleiben privat.
+  Einzelheiten in [DATENMODELL.md](DATENMODELL.md#gemeinsamer-katalog-phase-4)
 - ⬜ Google Health Connect (Schritte, Aktivitätskalorien, Training, Herzfrequenz, Schlaf)
 - ⬜ Garmin Connect, Apple Health (mit iOS-App)
 - ⬜ Erweiterte Auswertungen und eigene Diagramme

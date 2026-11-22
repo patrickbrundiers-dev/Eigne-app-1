@@ -80,6 +80,40 @@ nie mehr als eine gleichzeitig.
 Kohlenhydrate ohne Ballaststoffe). Ein Test prüft jedes auf Plausibilität und Duplikate. Neue
 Versionen werden über `seedVersion` ergänzt, ohne eigene Lebensmittel anzufassen.
 
+## Gemeinsamer Katalog (Phase 4)
+
+Geplant, noch nicht gebaut. Auf dem gehosteten PostgreSQL (EU, siehe Phase 4) gibt es zwei getrennte Bereiche:
+
+- **Privat** (nur der eigene Nutzer, Row-Level-Security `owner = auth.uid()`): Tagebuch, Gewicht, Profil,
+  Ziele, Wasser, Aktivität, Fasten, Supplemente, Pläne, Einkaufsliste, Einstellungen. Diese Daten verlassen
+  das Konto nie und landen nie im Katalog.
+- **Gemeinsamer Katalog** (`catalog_foods`, `catalog_recipes`, `catalog_recipe_items`): für alle lesbar,
+  Schreiben nur über eine Freigabe.
+
+Regeln für den Katalog:
+
+- **Freigabe statt Automatik.** Ein eigenes Lebensmittel oder Rezept geht nur in den Katalog, wenn der Nutzer
+  „Mit allen teilen“ wählt. Geteilt werden Name, Marke, Barcode, Nährwerte, Portion und bei Rezepten Zutaten
+  und Zubereitung, aber kein Nutzername. Gespeichert wird nur eine anonyme Ersteller-ID für Missbrauch und Löschung.
+- **Herkunft und Qualität bleiben sichtbar** (wie W2): `source` (base, off, user, ai) und Stufe
+  (Richtwert, vom Etikett, vollständig, prüfen, Schätzung). Einträge aus dem Katalog bekommen in der App das
+  Symbol „Community“. Der Atwater-Check läuft vor der Freigabe; „prüfen“-Einträge werden nicht angenommen.
+- **Duplikate vermeiden:** eindeutig je Barcode (GTIN). Ohne Barcode ist der Schlüssel `food_key`
+  (normalisierter Name + Marke), den es lokal schon gibt. Bei einer Freigabe sucht der Server zuerst nach
+  einem passenden Eintrag und bietet „Werte ergänzen/korrigieren“ statt eines neuen Eintrags an.
+- **Korrekturen:** Vorschläge gehen als neue Version in den Katalog (`catalog_food_versions`). Die bisherige
+  Version bleibt erhalten, und die Anzahl der Bestätigungen erscheint als Vertrauenswert. Lokale eigene Werte
+  haben auf dem Gerät immer Vorrang.
+- **Offline:** Suche und Barcode fragen erst die lokale Datenbank, dann den Katalog, dann Open Food Facts.
+  Genutzte Katalogeinträge werden lokal als Kopie gespeichert (`foods.source = 'catalog'`, `catalog_id`),
+  so wie heute bei Open Food Facts. Diary-Zeilen speichern ihre Nährwerte wie bisher fest, spätere
+  Katalogänderungen ändern alte Tage also nicht.
+- **Lizenz:** Aus Open Food Facts übernommene Werte stehen unter ODbL. Der Katalog nennt die Quelle, und
+  OFF-Werte werden nicht als eigene ausgegeben.
+- **Kosten:** Supabase Free (500 MB Datenbank) reicht für Zehntausende Lebensmittel und Rezepte ohne Fotos.
+  Fotos kämen später in den Storage (1 GB frei). Wird es knapp, ist der nächste Schritt der Pro-Tarif, das
+  entscheidet Patrick dann.
+
 ## Export-Format
 
 JSON mit `format: "mydiet-export"`, `version`, `schema` und je Tabelle allen Zeilen inklusive
