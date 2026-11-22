@@ -32,6 +32,12 @@ noch nicht geprüft (kein Android-Gerät in der Cloud), der Android-Build läuft
 
 Nächster Schritt: Ernährung nach Health Connect schreiben (6.1 Teil 2), dann Phase 5 (App-Sperre, W13).
 
+## 2026-11-22 – Portionen lernen (Aufgabe 3.2)
+
+`core/portion_memory.dart` (`usualAmount`), `recentAmounts`/`usualLoggedAmount` in `data/meal_text_match.dart`.
+Mengendialog: Vorbelegung + Chip „Wie üblich“; Text-Eintrag nutzt die übliche statt der letzten Menge.
+Tests: `test/portion_memory_test.dart` (7), Suite grün. Nächster Schritt: 5.1 Gewohnheiten erkennen.
+
 ## 2026-11-22 – Dashboard „Eintragen“ und Gewichtstempo (Aufgaben 2.1 + 2.2)
 
 Erledigt:

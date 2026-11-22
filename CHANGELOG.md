@@ -15,6 +15,9 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Portionen lernen: Beim Eintragen ist die Menge vorausgefüllt, die du für dieses Lebensmittel meistens nimmst
+  (Chip „Wie üblich“), auch im Text-Eintrag
+
 - Dashboard: Knopf „Eintragen“ unten rechts. Mahlzeit ist nach Uhrzeit vorausgewählt, dann Suchen, Barcode,
   Als Text, Nur Kalorien oder Gewicht – jeder Eintrag in höchstens drei Taps. Die Gewichtskachel zeigt das
   Tempo der letzten 30 Tage mit Aussagekraft
