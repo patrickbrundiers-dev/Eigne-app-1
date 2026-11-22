@@ -33,12 +33,13 @@ den Anbieter findet nicht statt.
 
 ## 4. Verbindungen ins Internet
 
-Die App baut nur auf deine Aktion hin Verbindungen auf:
+Die App baut nur auf deine Aktion hin Verbindungen auf (Suchen, Scannen, Importieren):
 
 | Aktion | Empfänger | Gesendet |
 |---|---|---|
 | Unbekannten Barcode scannen | Open Food Facts (openfoodfacts.org, Frankreich) | nur die Barcode-Nummer |
 | „Bei Open Food Facts suchen“ | Open Food Facts | nur der Suchbegriff |
+| Lebensmittelsuche, wenn deine eigene Datenbank kaum etwas findet (abschaltbar unter Einstellungen → Lebensmittelsuche) | Open Food Facts | nur der Suchbegriff, nach einer kurzen Tipp-Pause |
 | Rezept von Webseite übernehmen | die von dir eingegebene Webseite | Abruf dieser einen Adresse |
 
 Dabei werden technisch bedingt deine IP-Adresse und ein allgemeiner App-Name (ohne Gerätekennung) übertragen.
