@@ -12,7 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 5.2 Stillstand erklären | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
+| 2.3 Barrierefreiheit | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
