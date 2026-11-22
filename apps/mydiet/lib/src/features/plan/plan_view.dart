@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
@@ -10,6 +11,10 @@ import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../diary/amount_sheet.dart';
 import '../foods/food_search_page.dart';
+import '../home_shell.dart';
+
+/// Columns for the week: one on phones, days side by side from about 550 px.
+int planColumns(double width) => ((width + 12) / (260 + 12)).floor().clamp(1, 7);
 
 /// Weekly meal plan: plan foods and recipes, fill automatically, copy, put into the
 /// diary or on the shopping list.
@@ -28,6 +33,31 @@ class _PlanViewState extends State<PlanView> {
   ];
 
   void _shift(int weeks) => setState(() => _monday = DateTime(_monday.year, _monday.month, _monday.day + 7 * weeks));
+
+  DateNav? _nav;
+  HomeShellState? _shell;
+  TabController? _tabs;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _tabs = DefaultTabController.maybeOf(context);
+    if (_nav != null) return;
+    _shell = HomeShellState.of(context);
+    _nav = DateNav(
+      // Active while the "Essen" tab shows the weekly plan.
+      isActive: () => mounted && _shell?.index == 3 && (_tabs == null || _tabs!.index == 2),
+      shift: _shift,
+      today: () => setState(() => _monday = weekStart(DateTime.now())),
+    );
+    _shell?.addDateNav(_nav!);
+  }
+
+  @override
+  void dispose() {
+    if (_nav != null) _shell?.removeDateNav(_nav!);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,52 +79,82 @@ class _PlanViewState extends State<PlanView> {
         final profile = v[2] as Profile?;
         final target = profile == null ? null : targetsFor(profile, v[3] as List<WeightEntry>).targetKcal;
         final weekKcal = Nutrients.sum(plan.map((e) => e.nutrients)).kcal;
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
-          children: [
-            Row(
+        Widget dayCard(String day) => _DayCard(
+          day: day,
+          weekDays: days,
+          entries: plan.where((e) => e.dayKey == day).toList(),
+          slots: slots,
+          targetKcal: target,
+        );
+        return LayoutBuilder(
+          builder: (context, box) {
+            final cols = planColumns(box.maxWidth - 24);
+            final cardWidth = (box.maxWidth - 24 - 12 * (cols - 1)) / cols;
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 32),
               children: [
-                IconButton(tooltip: 'Vorige Woche', icon: const Icon(Icons.chevron_left), onPressed: () => _shift(-1)),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        '${dateTiny(_monday)} – ${dateTiny(parseDayKey(days.last))}',
-                        style: t.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                Row(
+                  children: [
+                    IconButton(
+                      tooltip: 'Vorige Woche',
+                      icon: const Icon(Icons.chevron_left),
+                      onPressed: () => _shift(-1),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(
+                            '${dateTiny(_monday)} – ${dateTiny(parseDayKey(days.last))}',
+                            style: t.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            plan.isEmpty
+                                ? 'Noch nichts geplant'
+                                : '${plan.length} Einträge · Ø ${kcal(weekKcal / 7)} pro Tag',
+                            style: t.textTheme.bodySmall,
+                          ),
+                        ],
                       ),
-                      Text(
-                        plan.isEmpty
-                            ? 'Noch nichts geplant'
-                            : '${plan.length} Einträge · Ø ${kcal(weekKcal / 7)} pro Tag',
-                        style: t.textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(tooltip: 'Nächste Woche', icon: const Icon(Icons.chevron_right), onPressed: () => _shift(1)),
-                PopupMenuButton<String>(
-                  tooltip: 'Woche',
-                  onSelected: (a) => _weekAction(context, a, days, plan, target),
-                  itemBuilder: (_) => [
-                    const PopupMenuItem(value: 'auto', child: Text('Mit Rezepten füllen …')),
-                    if (plan.isNotEmpty) ...[
-                      const PopupMenuItem(value: 'diary', child: Text('Ganze Woche ins Tagebuch')),
-                      const PopupMenuItem(value: 'shopping', child: Text('Auf die Einkaufsliste')),
-                      const PopupMenuItem(value: 'copy', child: Text('In die nächste Woche kopieren')),
-                      const PopupMenuItem(value: 'clear', child: Text('Woche leeren')),
-                    ],
+                    ),
+                    IconButton(
+                      tooltip: 'Nächste Woche',
+                      icon: const Icon(Icons.chevron_right),
+                      onPressed: () => _shift(1),
+                    ),
+                    PopupMenuButton<String>(
+                      tooltip: 'Woche',
+                      onSelected: (a) => _weekAction(context, a, days, plan, target),
+                      itemBuilder: (_) => [
+                        const PopupMenuItem(value: 'auto', child: Text('Mit Rezepten füllen …')),
+                        if (plan.isNotEmpty) ...[
+                          const PopupMenuItem(value: 'diary', child: Text('Ganze Woche ins Tagebuch')),
+                          const PopupMenuItem(value: 'shopping', child: Text('Auf die Einkaufsliste')),
+                          const PopupMenuItem(value: 'copy', child: Text('In die nächste Woche kopieren')),
+                          const PopupMenuItem(value: 'clear', child: Text('Woche leeren')),
+                        ],
+                      ],
+                    ),
                   ],
                 ),
+                if (cols == 1)
+                  for (final day in days) dayCard(day)
+                else
+                  Wrap(
+                    spacing: 12,
+                    children: [for (final day in days) SizedBox(width: cardWidth, child: dayCard(day))],
+                  ),
+                if (cols > 1)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      'Tipp: Einträge mit der Maus auf einen anderen Tag ziehen, mit gedrückter Strg-Taste kopieren. '
+                      'Alt+← / → wechselt die Woche.',
+                      style: t.textTheme.bodySmall,
+                    ),
+                  ),
               ],
-            ),
-            for (final day in days)
-              _DayCard(
-                day: day,
-                entries: plan.where((e) => e.dayKey == day).toList(),
-                slots: slots,
-                targetKcal: target,
-              ),
-          ],
+            );
+          },
         );
       },
     );
@@ -118,18 +178,23 @@ class _PlanViewState extends State<PlanView> {
             builder: (_) => _AutoSheet(defaultKcal: target ?? 2000),
           );
           if (opts == null) return;
-          final n = await db.generatePlanFor(
+          final fill = await db.generatePlanFor(
             days: days,
             targetKcal: opts.kcal,
             tags: opts.tags,
             includeSnacks: opts.snacks,
           );
+          final n = fill.planned;
+          final skipped = fill.skippedText();
           if (context.mounted) {
             showMessage(
               context,
-              n == 0
-                  ? 'Keine passenden Rezepte oder alle Mahlzeiten schon geplant. Lege Rezepte unter „Rezepte“ an.'
-                  : '$n Mahlzeiten geplant. Bereits geplante Mahlzeiten blieben unverändert.',
+              [
+                n == 0
+                    ? 'Keine passenden Rezepte oder alle Mahlzeiten schon geplant. Lege Rezepte unter „Rezepte“ an.'
+                    : '$n Mahlzeiten geplant. Bereits geplante Mahlzeiten blieben unverändert.',
+                ?skipped,
+              ].join(' '),
             );
           }
         case 'diary':
@@ -169,8 +234,15 @@ class _PlanViewState extends State<PlanView> {
 }
 
 class _DayCard extends StatelessWidget {
-  const _DayCard({required this.day, required this.entries, required this.slots, required this.targetKcal});
+  const _DayCard({
+    required this.day,
+    required this.weekDays,
+    required this.entries,
+    required this.slots,
+    required this.targetKcal,
+  });
   final String day;
+  final List<String> weekDays;
   final List<MealPlanEntry> entries;
   final List<MealSlot> slots;
   final int? targetKcal;
@@ -187,80 +259,172 @@ class _DayCard extends StatelessWidget {
       for (final s in slots) (name: s.name, items: entries.where((e) => e.mealSlotId == s.id).toList()),
       (name: 'Weitere', items: entries.where((e) => !slotIds.contains(e.mealSlotId)).toList()),
     ].where((g) => g.items.isNotEmpty);
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: SectionCard(
-        title: '${weekdayShort(date)}${isToday ? ' · heute' : ''}',
-        icon: isToday ? Icons.today : Icons.calendar_today_outlined,
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (entries.isNotEmpty)
-              Text(
-                targetKcal == null ? kcal(total.kcal) : '${n0(total.kcal)} / ${kcal(targetKcal!)}',
-                style: t.textTheme.labelMedium?.copyWith(
-                  color: targetKcal != null && total.kcal > targetKcal! * 1.05 ? t.colorScheme.error : null,
-                ),
-              ),
-            IconButton(
-              visualDensity: VisualDensity.compact,
-              tooltip: 'Hinzufügen',
-              icon: const Icon(Icons.add),
-              onPressed: () => _add(context),
-            ),
-          ],
-        ),
-        child: entries.isEmpty
-            ? Text('Nichts geplant.', style: t.textTheme.bodySmall)
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final g in groups) ...[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(g.name, style: t.textTheme.labelLarge),
-                    ),
-                    for (final e in g.items)
-                      ListTile(
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(
-                          e.diaryEntryId != null
-                              ? Icons.check_circle
-                              : (e.recipeId != null ? Icons.menu_book : Icons.egg_alt_outlined),
-                          size: 20,
-                          color: e.diaryEntryId != null ? t.colorScheme.primary : t.colorScheme.outline,
-                        ),
-                        title: Text(e.name),
-                        subtitle: Text(
-                          '${amountWithUnit(e.amount, e.unit)} · ${kcal(e.nutrients.kcal)} · P ${grams(e.nutrients.protein)}',
-                        ),
-                        trailing: PopupMenuButton<String>(
-                          onSelected: (a) => _entryAction(context, a, e),
-                          itemBuilder: (_) => const [
-                            PopupMenuItem(value: 'diary', child: Text('Ins Tagebuch')),
-                            PopupMenuItem(value: 'edit', child: Text('Menge oder Mahlzeit ändern')),
-                            PopupMenuItem(value: 'delete', child: Text('Entfernen')),
-                          ],
-                        ),
-                      ),
-                  ],
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton.icon(
-                      onPressed: () async {
-                        final n = await db.planToDiary([for (final e in entries) e.id]);
-                        if (context.mounted) showMessage(context, '$n Einträge ins Tagebuch übernommen');
-                      },
-                      icon: const Icon(Icons.playlist_add_check),
-                      label: const Text('Tag ins Tagebuch'),
+    return DragTarget<MealPlanEntry>(
+      onWillAcceptWithDetails: (d) => d.data.dayKey != day,
+      onAcceptWithDetails: (d) => _drop(context, d.data, copy: HardwareKeyboard.instance.isControlPressed),
+      builder: (context, candidates, _) => Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: DecoratedBox(
+          position: DecorationPosition.foreground,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: candidates.isEmpty ? null : Border.all(color: t.colorScheme.primary, width: 2),
+          ),
+          child: SectionCard(
+            title: '${weekdayShort(date)}${isToday ? ' · heute' : ''}',
+            icon: isToday ? Icons.today : Icons.calendar_today_outlined,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (entries.isNotEmpty)
+                  Text(
+                    targetKcal == null ? kcal(total.kcal) : '${n0(total.kcal)} / ${kcal(targetKcal!)}',
+                    style: t.textTheme.labelMedium?.copyWith(
+                      color: targetKcal != null && total.kcal > targetKcal! * 1.05 ? t.colorScheme.error : null,
                     ),
                   ),
-                ],
-              ),
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  tooltip: 'Hinzufügen',
+                  icon: const Icon(Icons.add),
+                  onPressed: () => _add(context),
+                ),
+              ],
+            ),
+            child: entries.isEmpty
+                ? Text('Nichts geplant.', style: t.textTheme.bodySmall)
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (final g in groups) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(g.name, style: t.textTheme.labelLarge),
+                        ),
+                        for (final e in g.items)
+                          _draggable(
+                            context,
+                            e,
+                            ListTile(
+                              dense: true,
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(
+                                e.diaryEntryId != null
+                                    ? Icons.check_circle
+                                    : (e.recipeId != null ? Icons.menu_book : Icons.egg_alt_outlined),
+                                size: 20,
+                                color: e.diaryEntryId != null ? t.colorScheme.primary : t.colorScheme.outline,
+                              ),
+                              title: Text(e.name),
+                              subtitle: Text(
+                                '${amountWithUnit(e.amount, e.unit)} · ${kcal(e.nutrients.kcal)} · P ${grams(e.nutrients.protein)}',
+                              ),
+                              trailing: PopupMenuButton<String>(
+                                onSelected: (a) => _entryAction(context, a, e),
+                                itemBuilder: (_) => [
+                                  const PopupMenuItem(value: 'diary', child: Text('Ins Tagebuch')),
+                                  const PopupMenuItem(value: 'edit', child: Text('Menge oder Mahlzeit ändern')),
+                                  if (e.diaryEntryId == null)
+                                    const PopupMenuItem(value: 'move', child: Text('Auf anderen Tag verschieben …')),
+                                  const PopupMenuItem(value: 'copy', child: Text('Auf anderen Tag kopieren …')),
+                                  const PopupMenuItem(value: 'delete', child: Text('Entfernen')),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton.icon(
+                          onPressed: () async {
+                            final n = await db.planToDiary([for (final e in entries) e.id]);
+                            if (context.mounted) showMessage(context, '$n Einträge ins Tagebuch übernommen');
+                          },
+                          icon: const Icon(Icons.playlist_add_check),
+                          label: const Text('Tag ins Tagebuch'),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
       ),
     );
   }
+
+  /// Entries already in the diary stay put (they belong to that day); everything else can be dragged.
+  Widget _draggable(BuildContext context, MealPlanEntry e, Widget child) {
+    if (e.diaryEntryId != null) return child;
+    final t = Theme.of(context);
+    final feedback = Material(
+      elevation: 6,
+      borderRadius: BorderRadius.circular(12),
+      color: t.colorScheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        child: Text(e.name, style: t.textTheme.bodyLarge?.copyWith(color: t.colorScheme.onPrimaryContainer)),
+      ),
+    );
+    final dragging = Opacity(opacity: 0.4, child: child);
+    final desktop = switch (t.platform) {
+      TargetPlatform.windows || TargetPlatform.linux || TargetPlatform.macOS => true,
+      _ => false,
+    };
+    // Mouse: drag right away. Touch: long press, so scrolling still works.
+    return desktop
+        ? Draggable<MealPlanEntry>(data: e, feedback: feedback, childWhenDragging: dragging, child: child)
+        : LongPressDraggable<MealPlanEntry>(data: e, feedback: feedback, childWhenDragging: dragging, child: child);
+  }
+
+  Future<void> _drop(BuildContext context, MealPlanEntry e, {required bool copy, String? to}) async {
+    final db = context.db;
+    final target = to ?? day;
+    if (!copy && e.dayKey == target) return;
+    final label = weekdayShort(parseDayKey(target));
+    try {
+      if (copy) {
+        final id = await db.copyPlanEntry(e.id, day: target);
+        if (context.mounted) {
+          showMessage(
+            context,
+            '${e.name} auf $label kopiert',
+            action: SnackBarAction(label: 'Rückgängig', onPressed: () => db.deletePlanEntry(id)),
+          );
+        }
+      } else {
+        await db.updatePlanEntry(e.id, day: target);
+        if (context.mounted) {
+          showMessage(
+            context,
+            '${e.name} auf $label verschoben',
+            action: SnackBarAction(
+              label: 'Rückgängig',
+              onPressed: () => db.updatePlanEntry(e.id, day: e.dayKey),
+            ),
+          );
+        }
+      }
+    } catch (err) {
+      if (context.mounted) showMessage(context, errorText(err));
+    }
+  }
+
+  Future<String?> _pickDay(BuildContext context, String title) => showDialog<String>(
+    context: context,
+    builder: (c) => SimpleDialog(
+      title: Text(title),
+      children: [
+        for (final d in weekDays)
+          SimpleDialogOption(
+            onPressed: d == day ? null : () => Navigator.pop(c, d),
+            child: Text(
+              '${weekdayShort(parseDayKey(d))}${d == day ? ' (dieser Tag)' : ''}',
+              style: d == day ? TextStyle(color: Theme.of(c).disabledColor) : null,
+            ),
+          ),
+      ],
+    ),
+  );
 
   Future<void> _entryAction(BuildContext context, String a, MealPlanEntry e) async {
     final db = context.db;
@@ -281,6 +445,9 @@ class _DayCard extends StatelessWidget {
             confirmLabel: 'Speichern',
           );
           if (res != null) await db.updatePlanEntry(e.id, amount: res.amount, mealSlotId: res.mealSlotId);
+        case 'move' || 'copy':
+          final to = await _pickDay(context, a == 'move' ? '${e.name} verschieben auf' : '${e.name} kopieren auf');
+          if (to != null && context.mounted) await _drop(context, e, copy: a == 'copy', to: to);
         case 'delete':
           await db.deletePlanEntry(e.id);
           if (context.mounted) {
@@ -443,7 +610,9 @@ class _AutoSheetState extends State<_AutoSheet> {
           const SizedBox(height: 6),
           Text(
             'Leere Mahlzeiten werden mit deinen Rezepten gefüllt; die Portionsgröße richtet sich nach dem '
-            'Kalorienziel. Bereits Geplantes bleibt unverändert, alles ist danach änderbar.',
+            'Kalorienziel. Rezepte mit Unverträglichkeiten oder abgelehnten Lebensmitteln aus dem Profil '
+            'bleiben weg, bevorzugte kommen öfter vor. Bereits Geplantes bleibt unverändert, alles ist danach '
+            'änderbar.',
             style: t.textTheme.bodySmall,
           ),
           const SizedBox(height: 12),

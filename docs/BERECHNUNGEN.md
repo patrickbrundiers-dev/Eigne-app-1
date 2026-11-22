@@ -109,6 +109,16 @@ Die App empfiehlt keine Dosierungen. Sie addiert, was eingetragen ist, und vergl
 - Automatisch füllen: für jede leere Mahlzeit das nächste passende Rezept (rotierend, am selben Tag kein
   Rezept doppelt); Menge = Kalorienziel × Anteil ÷ kcal pro 100 g × 100, begrenzt auf 0,5–2,5 Portionen,
   auf 10 g gerundet.
+- Profil (`core/meal_plan.dart`: `excludedBy`, `preferenceScore`): Rezepte, deren Name oder eine Zutat einen
+  Eintrag aus „Unverträglichkeiten & Allergien“ oder „Abgelehnte Lebensmittel“ enthält, werden nicht
+  verwendet. Vergleich ohne Groß-/Kleinschreibung, Umlaute und ß vereinheitlicht; Begriffe ab 4 Buchstaben
+  auch in zusammengesetzten Wörtern („Vollmilch“), kürzere nur als ganzes Wort („Ei“, nicht „Weizen“).
+  Häufige Einträge stehen für Gruppen (Laktose → Milch, Joghurt, Käse, Quark, Sahne, Butter …; Gluten →
+  Weizen, Dinkel, Roggen, Gerste, Hafer, Nudeln, Brot, Mehl …; Nüsse, Erdnüsse, Ei, Fisch, Meeresfrüchte,
+  Soja, Sesam, Sellerie, Senf; Liste `avoidSynonyms`). Im Zweifel wird ausgelassen. Ausgelassene Rezepte
+  stehen mit Grund in der Meldung. Rezepte mit bevorzugten Lebensmitteln kommen in der Reihenfolge zuerst und
+  damit öfter vor. Das ist eine Planungshilfe, keine Allergen-Garantie: Zutaten fertiger Produkte prüft die
+  App nicht.
 - Übernehmen ins Tagebuch kopiert die geplanten Werte; ein schon übernommener Eintrag wird nicht noch einmal
   eingetragen (erst wieder, wenn er im Tagebuch gelöscht wurde).
 
@@ -147,6 +157,21 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
   Proteinziel gilt ab 90 % als erreicht.
 - Vergleich Bilanz ↔ Waage nur ab 4 gezählten Tagen und vorhandenem Trend; Abweichung < 0,3 kg/Woche
   gilt als passend. Bei größerer Abweichung nennt die App mögliche Ursachen, keine Diagnose.
+
+## Als Text eintragen (`core/meal_text.dart`, keine KI)
+
+- Zerlegen an Komma, Semikolon, Zeilenumbruch, „+“, „und“, „sowie“. Zahlen mit Komma oder Punkt, Brüche
+  (1/2, ½), Zahlwörter (ein … zehn, halbe, paar). Einheit darf am Wert kleben („200g“).
+- Umrechnung in die Einheit des Lebensmittels: kg × 1000, l × 1000, cl × 10; 1 EL = 15, 1 TL = 5 (immer als
+  Annahme markiert); g ↔ ml 1:1 nur als Annahme.
+- Stück/Scheibe/Becher …: Anzahl × hinterlegte Portion; passt das Wort nicht zur Portionsbezeichnung, ist es
+  eine Annahme. Ohne hinterlegte Portion bleibt die Menge offen (nie geraten).
+- Zahl ohne Einheit: ≤ 10 = Stück (Portion), > 10 = g bzw. ml. Ohne Zahl: 1 Portion bzw. die zuletzt
+  eingetragene Menge dieses Lebensmittels, jeweils als Annahme.
+- Suche nur in der eigenen Datenbank: Synonym (z. B. „Eier“ → Hühnerei), ganzer Text, Einzahl, längstes Wort.
+  Treffer gilt als sicher, wenn der Name mit dem Suchbegriff beginnt und kein Ausweichbegriff nötig war.
+- Vorausgewählt sind nur Zeilen ohne jede Annahme; alles andere braucht ein Häkchen. Nicht gefundene
+  Lebensmittel bekommen keine Werte.
 
 ## Tageshinweise (regelbasiert, keine KI)
 

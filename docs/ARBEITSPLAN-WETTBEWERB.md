@@ -121,7 +121,7 @@ geplant, wird **vorgezogen**, weil es kein KI-Modell braucht, sondern reine Rech
 - Fastenfenster frei (16:8, 18:6, 5:2, eigene), Timer, Verlauf; Fastenfenster aus den Tagebuchzeiten
   automatisch erkannt. Optionale Erinnerung.
 
-**W8 · PC als Planungs-Arbeitsplatz (M)** – Einordnung: Phase 2 Ernährungspläne
+**W8 · PC als Planungs-Arbeitsplatz (M)** – Einordnung: Phase 2 Ernährungspläne – ✅ Wochenplan nebeneinander, Ziehen, Tastenkürzel (Tabellen mit wählbaren Spalten noch offen)
 - Wochenplan per Tastatur und Ziehen, Tabellen mit Spalten nach Wahl, Auswertungen breiter darstellen,
   Tastenkürzel für Eintragen und Suche.
 

@@ -30,11 +30,15 @@ class FoodHubPage extends StatelessWidget {
             ],
           ),
         ),
-        body: const PageBody(
-          maxWidth: 900,
-          child: TabBarView(
-            children: [FoodsPage(embedded: true), RecipesView(), PlanView(), ShoppingView(), SupplementsView()],
-          ),
+        body: const TabBarView(
+          children: [
+            PageBody(maxWidth: 900, child: FoodsPage(embedded: true)),
+            PageBody(maxWidth: 900, child: RecipesView()),
+            // The weekly plan uses the full width on the PC: days side by side.
+            PageBody(maxWidth: 1800, child: PlanView()),
+            PageBody(maxWidth: 900, child: ShoppingView()),
+            PageBody(maxWidth: 900, child: SupplementsView()),
+          ],
         ),
       ),
     );

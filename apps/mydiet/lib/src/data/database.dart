@@ -1418,6 +1418,23 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deletePlanEntry(String id) => _tombstone(mealPlanEntries, id);
   Future<void> restorePlanEntry(String id) => _restore(mealPlanEntries, id);
 
+  /// Copies one planned entry to [day] (same meal, not yet in the diary). Returns the new id.
+  Future<String> copyPlanEntry(String id, {required String day, String? mealSlotId}) async {
+    final e = await (select(mealPlanEntries)..where((x) => x.id.equals(id) & x.deletedAt.isNull())).getSingleOrNull();
+    if (e == null) throw StateError('Eintrag nicht gefunden.');
+    final now = DateTime.now();
+    final copy = e.copyWith(
+      id: newId(),
+      dayKey: day,
+      mealSlotId: mealSlotId ?? e.mealSlotId,
+      diaryEntryId: const Value(null),
+      createdAt: now,
+      updatedAt: now,
+    );
+    await into(mealPlanEntries).insert(copy);
+    return copy.id;
+  }
+
   /// Copies planned entries from [fromDays] to [toDays] (same length, day by day).
   /// Returns the number of copied entries.
   Future<int> copyPlanDays(List<String> fromDays, List<String> toDays) async {
@@ -1498,24 +1515,39 @@ class AppDatabase extends _$AppDatabase {
 
   /// Fills [days] with recipes (see [generatePlan]). Existing entries stay; slots that
   /// already have something planned are skipped. Returns the number of new entries.
-  Future<int> generatePlanFor({
+  /// Recipes that contain something from the profile's intolerances or dislikes are left out
+  /// ([PlanFill.skipped] says why); recipes with preferred foods come first.
+  Future<PlanFill> generatePlanFor({
     required List<String> days,
     required double targetKcal,
     Set<String> tags = const {},
     bool includeSnacks = false,
+    bool useProfile = true,
   }) async {
     final slots = await watchMealSlots().first;
     final recipesList = await watchRecipes().first;
+    final profile = useProfile ? await watchProfile().first : null;
+    final avoid = [...?profile?.allergies, ...?profile?.dislikedFoods];
+    final preferred = profile?.preferredFoods ?? const <String>[];
     final pool = <PlanRecipe>[];
     final byId = <String, Recipe>{};
+    final skipped = <String, String>{};
+    final scores = <String, int>{};
     for (final r in recipesList) {
       final n = await recipeNutritionOf(r);
       if (!(n.finalWeight > 0)) continue;
+      final names = [r.name, for (final i in await recipeItemsOf(r.id)) i.foodName];
+      final why = excludedBy(names, avoid: avoid);
+      if (why != null) {
+        skipped[r.name] = why.found == r.name ? why.entry : '${why.entry} (${why.found})';
+        continue;
+      }
+      scores[r.id] = preferenceScore(names, preferred);
       byId[r.id] = r;
       pool.add(PlanRecipe(id: r.id, kcalPer100: n.per100.kcal, servingWeight: n.servingWeight, tags: r.tags));
     }
-    final filtered = filterByTags(pool, tags);
-    if (filtered.isEmpty) return 0;
+    final filtered = preferFirst(filterByTags(pool, tags), scores);
+    if (filtered.isEmpty) return PlanFill(planned: 0, skipped: skipped);
     final shares = slotShares([for (final s in slots) (id: s.id, name: s.name)]);
     final snackIds = {
       for (final s in slots)
@@ -1538,7 +1570,7 @@ class AppDatabase extends _$AppDatabase {
         await planRecipe(day: day, mealSlotId: m.slotId, recipe: byId[m.recipeId]!, grams: m.grams);
         n++;
       }
-      return n;
+      return PlanFill(planned: n, skipped: skipped);
     });
   }
 

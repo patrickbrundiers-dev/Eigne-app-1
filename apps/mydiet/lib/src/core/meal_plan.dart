@@ -83,3 +83,202 @@ List<PlanRecipe> filterByTags(List<PlanRecipe> pool, Set<String> wanted) {
   final w = wanted.map((t) => t.toLowerCase()).toSet();
   return pool.where((r) => w.every((t) => r.tags.any((x) => x.toLowerCase() == t))).toList();
 }
+
+// ---------------------------------------------------------------------------
+// Profile filters (AI_TASK_QUEUE 4.1): intolerances, dislikes, preferences.
+
+/// Lower case, umlauts and ß folded, so "Käse", "kaese" and "KÄSE" compare equal.
+String foldText(String s) => s
+    .toLowerCase()
+    .replaceAll('ä', 'ae')
+    .replaceAll('ö', 'oe')
+    .replaceAll('ü', 'ue')
+    .replaceAll('ß', 'ss')
+    .replaceAll(RegExp(r'[^a-z0-9 ]'), ' ')
+    .trim();
+
+/// What an intolerance or allergy entry stands for. Entries not listed here match themselves.
+/// Deliberately broad: a recipe wrongly left out is harmless, one wrongly planned is not.
+const avoidSynonyms = <String, List<String>>{
+  'laktose': [
+    'milch',
+    'joghurt',
+    'jogurt',
+    'kaese',
+    'quark',
+    'sahne',
+    'butter',
+    'skyr',
+    'kefir',
+    'mozzarella',
+    'feta',
+    'parmesan',
+    'frischkaese',
+    'molke',
+    'schmand',
+    'creme fraiche',
+  ],
+  'lactose': [
+    'milch',
+    'joghurt',
+    'kaese',
+    'quark',
+    'sahne',
+    'butter',
+    'skyr',
+    'kefir',
+    'mozzarella',
+    'feta',
+    'parmesan',
+  ],
+  'milch': ['milch', 'joghurt', 'kaese', 'quark', 'sahne', 'butter', 'skyr', 'kefir', 'mozzarella', 'feta', 'parmesan'],
+  'gluten': [
+    'weizen',
+    'dinkel',
+    'roggen',
+    'gerste',
+    'hafer',
+    'nudel',
+    'pasta',
+    'spaghetti',
+    'brot',
+    'broetchen',
+    'mehl',
+    'couscous',
+    'bulgur',
+    'seitan',
+    'graupen',
+    'gruenkern',
+    'toast',
+    'semmel',
+    'paniermehl',
+  ],
+  'zoeliakie': [
+    'weizen',
+    'dinkel',
+    'roggen',
+    'gerste',
+    'hafer',
+    'nudel',
+    'pasta',
+    'brot',
+    'mehl',
+    'couscous',
+    'bulgur',
+  ],
+  'nuesse': [
+    'nuss',
+    'nuesse',
+    'mandel',
+    'haselnuss',
+    'walnuss',
+    'cashew',
+    'pistazie',
+    'pekannuss',
+    'macadamia',
+    'paranuss',
+  ],
+  'nuss': [
+    'nuss',
+    'nuesse',
+    'mandel',
+    'haselnuss',
+    'walnuss',
+    'cashew',
+    'pistazie',
+    'pekannuss',
+    'macadamia',
+    'paranuss',
+  ],
+  'erdnuss': ['erdnuss', 'erdnuesse', 'erdnussbutter'],
+  'erdnuesse': ['erdnuss', 'erdnuesse', 'erdnussbutter'],
+  'ei': ['ei', 'eier', 'eigelb', 'eiweiss', 'eiklar', 'ruehrei', 'spiegelei', 'huehnerei', 'mayonnaise'],
+  'eier': ['ei', 'eier', 'eigelb', 'eiweiss', 'eiklar', 'ruehrei', 'spiegelei', 'huehnerei', 'mayonnaise'],
+  'fisch': [
+    'fisch',
+    'lachs',
+    'thunfisch',
+    'kabeljau',
+    'seelachs',
+    'forelle',
+    'hering',
+    'makrele',
+    'sardine',
+    'dorsch',
+    'alaska',
+  ],
+  'meeresfruechte': ['garnele', 'shrimp', 'krabbe', 'muschel', 'tintenfisch', 'hummer', 'scampi'],
+  'krebstiere': ['garnele', 'shrimp', 'krabbe', 'hummer', 'scampi', 'krebs'],
+  'soja': ['soja', 'tofu', 'tempeh', 'edamame', 'miso'],
+  'sellerie': ['sellerie'],
+  'senf': ['senf'],
+  'sesam': ['sesam', 'tahin', 'tahini'],
+  'fruktose': ['honig', 'apfel', 'birne', 'mango', 'trauben', 'agave'],
+  'histamin': ['salami', 'rotwein', 'sauerkraut', 'parmesan', 'thunfisch', 'tomate'],
+};
+
+/// Folded search terms for one profile entry ("Laktose" → milk products, "Nüsse" → nuts …).
+Set<String> avoidTermsFor(String entry) {
+  final e = foldText(entry);
+  if (e.isEmpty) return const {};
+  return {e, ...?avoidSynonyms[e]};
+}
+
+/// Whether [term] occurs in [text] (both folded): short terms (up to three letters, e.g. "ei") only as a
+/// whole word, longer ones anywhere, also inside compound words ("Vollmilchschokolade", "Haselnussmus").
+/// Errs on the side of a match: leaving out a recipe too many is harmless, planning a wrong one is not.
+bool mentions(String text, String term) {
+  if (term.isEmpty) return false;
+  if (term.length >= 4) return text.contains(term);
+  return text.split(' ').contains(term);
+}
+
+/// Why a recipe is left out, or null. [names] are the recipe's name and its ingredient names.
+/// Returns the profile entry and the word that matched, e.g. ("Laktose", "Joghurt").
+({String entry, String found})? excludedBy(List<String> names, {List<String> avoid = const []}) {
+  final folded = [for (final n in names) (raw: n, f: foldText(n))];
+  for (final a in avoid) {
+    for (final term in avoidTermsFor(a)) {
+      for (final n in folded) {
+        if (mentions(n.f, term)) return (entry: a.trim(), found: n.raw);
+      }
+    }
+  }
+  return null;
+}
+
+/// How many of the [preferred] entries a recipe contains (for ordering, not filtering).
+int preferenceScore(List<String> names, List<String> preferred) {
+  final folded = [for (final n in names) foldText(n)];
+  var score = 0;
+  for (final p in preferred) {
+    final term = foldText(p);
+    if (term.isNotEmpty && folded.any((n) => mentions(n, term))) score++;
+  }
+  return score;
+}
+
+/// Order for the generator: recipes with preferred foods first, the rest keep their order.
+List<PlanRecipe> preferFirst(List<PlanRecipe> pool, Map<String, int> scores) {
+  final indexed = [for (var i = 0; i < pool.length; i++) (i, pool[i])];
+  indexed.sort((a, b) {
+    final s = (scores[b.$2.id] ?? 0).compareTo(scores[a.$2.id] ?? 0);
+    return s != 0 ? s : a.$1.compareTo(b.$1);
+  });
+  return [for (final e in indexed) e.$2];
+}
+
+/// Result of filling a plan: planned meals, and recipes left out (recipe name → reason).
+class PlanFill {
+  const PlanFill({required this.planned, this.skipped = const {}});
+  final int planned;
+  final Map<String, String> skipped;
+
+  /// "Ausgelassen: Porridge (Gluten (Haferflocken)), Shake (Laktose (Milch))", at most [max] names.
+  String? skippedText({int max = 3}) {
+    if (skipped.isEmpty) return null;
+    final shown = skipped.entries.take(max).map((e) => '${e.key} (${e.value})').join(', ');
+    final more = skipped.length > max ? ' und ${skipped.length - max} weitere' : '';
+    return 'Wegen Unverträglichkeiten oder Abneigungen im Profil ausgelassen: $shown$more.';
+  }
+}
