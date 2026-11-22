@@ -272,6 +272,17 @@ Aussagekraft: reine Sortierhilfe, keine Nährwertberechnung. In „Als Text eint
 - Die App aktualisiert das Widget bei jeder Änderung, solange sie läuft. Ist der gespeicherte Tag nicht heute
   (z. B. nach Mitternacht), zeigt das Widget „Heute noch nichts eingetragen“ statt alter Zahlen.
 
+## App-Sperre (`core/app_lock.dart`)
+
+- PIN 4–8 Ziffern; abgelehnt werden gleiche Ziffern (0000) und einfache Folgen (1234, 9876).
+- Gespeichert wird nur ein Prüfwert: PBKDF2-HMAC-SHA256, 20.000 Runden, 16 Byte Zufalls-Salz, Vergleich in
+  konstanter Zeit. Die Datei `applock.json` liegt im privaten App-Ordner, nicht in der Datenbank, also nicht in
+  Sicherungen oder Exporten.
+- Fehlversuche: die ersten 4 ohne Wartezeit, ab dem 5. 30 s, danach jeweils doppelt so lang, höchstens 15 min.
+  Während der Wartezeit zählt auch die richtige PIN nicht. Ein Erfolg setzt den Zähler zurück.
+- Sperren beim Start und nach der Rückkehr, wenn die App mindestens die gewählte Zeit (sofort, 1, 5 oder
+  30 Minuten) im Hintergrund war.
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

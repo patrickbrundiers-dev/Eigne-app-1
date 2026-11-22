@@ -3,6 +3,7 @@ import 'branding.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'data/database.dart';
+import 'features/lock/lock_gate.dart';
 import 'features/home_shell.dart';
 import 'features/profile/onboarding_page.dart';
 
@@ -90,6 +91,8 @@ class MyDietApp extends StatelessWidget {
               locale: const Locale('de', 'DE'),
               supportedLocales: const [Locale('de', 'DE'), Locale('en')],
               localizationsDelegates: GlobalMaterialLocalizations.delegates,
+              // Above the navigator, so the lock also covers pages and dialogs.
+              builder: (context, child) => LockGate(child: child ?? const SizedBox()),
               home: const _ProfileGate(),
             );
           },
