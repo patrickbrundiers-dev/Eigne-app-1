@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../app.dart';
 import '../../core/dates.dart';
 import '../../core/nutrition.dart';
+import '../../core/stall.dart';
 import '../../core/weight_progress.dart';
 import '../../data/database.dart';
 import '../../data/display_prefs.dart';
@@ -38,7 +39,10 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
       final t = _today;
       final db = context.db;
       _stream = combineLatest([
-        db.watchDailyTotals(dayKey(DateTime(t.year, t.month, t.day - 7)), dayKey(DateTime(t.year, t.month, t.day - 1))),
+        db.watchDailyTotals(
+          dayKey(DateTime(t.year, t.month, t.day - 21)),
+          dayKey(DateTime(t.year, t.month, t.day - 1)),
+        ),
         db.watchSetting(hideNumbersKey),
       ]);
     }
@@ -53,14 +57,24 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
         final hide = snap.data?[1] == 'true';
         final p = widget.profile;
         final r = targetsFor(p, widget.weights, today: _today);
+        final logs = [
+          for (final e in totals.entries) DayLog(parseDayKey(e.key), kcal: e.value.kcal, protein: e.value.protein),
+        ];
+        final stall = analyzeStall(
+          points: weightPoints(widget.weights),
+          logs: logs,
+          today: _today,
+          startKg: p.startWeightKg,
+          targetKg: p.targetWeightKg,
+          targetKcal: r.targetKcal,
+          tdeeKcal: r.tdee,
+        );
         final prog = computeWeightProgress(
           points: weightPoints(widget.weights),
           startKg: p.startWeightKg,
           targetKg: p.targetWeightKg,
           today: _today,
-          logs: [
-            for (final e in totals.entries) DayLog(parseDayKey(e.key), kcal: e.value.kcal, protein: e.value.protein),
-          ],
+          logs: logs,
           targetKcal: r.targetKcal,
           proteinTargetG: r.proteinG.toDouble(),
           tdeeKcal: r.tdee,
@@ -73,13 +87,13 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
             icon: Icon(_explain ? Icons.expand_less : Icons.info_outline),
             onPressed: () => setState(() => _explain = !_explain),
           ),
-          child: _content(context, prog, hide),
+          child: _content(context, prog, hide, stall),
         );
       },
     );
   }
 
-  Widget _content(BuildContext context, WeightProgress g, bool hide) {
+  Widget _content(BuildContext context, WeightProgress g, bool hide, StallAnalysis? stall) {
     final t = Theme.of(context);
     final muted = t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant);
     final wide = MediaQuery.sizeOf(context).width >= 640;
@@ -155,7 +169,35 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
           ),
         ],
         if (g.nutrition != null) ...[const Divider(height: 24), _nutrition(context, g.nutrition!, tr, hide)],
+        if (stall != null && !hide) ...[const Divider(height: 24), _stall(context, stall)],
         if (_explain) ...[const Divider(height: 24), _explanation(context)],
+      ],
+    );
+  }
+
+  Widget _stall(BuildContext context, StallAnalysis s) {
+    final t = Theme.of(context);
+    final muted = t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Stillstand: woran es liegen kann', style: t.textTheme.titleSmall),
+        const SizedBox(height: 2),
+        Text(
+          'Letzte ${s.days} Tage: ${s.weeklyRateKg <= 0 ? '−' : '+'}${n1(s.weeklyRateKg.abs())} kg/Woche. '
+          '${s.causes.isEmpty ? 'In deinen Daten fällt nichts Bestimmtes auf.' : 'Auffällig in deinen Daten:'}',
+          style: muted,
+        ),
+        for (final c in s.causes)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: const Icon(Icons.search_outlined),
+            title: Text(c.title),
+            subtitle: Text(c.detail),
+          ),
+        const SizedBox(height: 4),
+        Text(StallAnalysis.waterNote, style: muted),
       ],
     );
   }
