@@ -22,9 +22,15 @@ Future<void> main() async {
   final db = opened.db;
   runApp(MyDietApp(db: db, protection: opened.protection, notice: opened.notice));
   // Daily local backup in the background; a failure never blocks the app.
-  BackupService.forApp(db).then((b) => b.runIfDue()).catchError((Object e) {
-    debugPrint('Backup fehlgeschlagen: $e');
-    ErrorLog.instance?.record(e, StackTrace.current);
-    return null;
-  });
+  // Older plain backups are encrypted first (7.2b), then today's backup is written.
+  BackupService.forApp(db)
+      .then((b) async {
+        await b.encryptLegacy();
+        await b.runIfDue();
+      })
+      .catchError((Object e) {
+        debugPrint('Backup fehlgeschlagen: $e');
+        ErrorLog.instance?.record(e, StackTrace.current);
+        return null;
+      });
 }

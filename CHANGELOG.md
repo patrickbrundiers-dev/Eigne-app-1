@@ -2,6 +2,9 @@
 
 ## Nächste Version (in Arbeit)
 
+- Datenschutz: Auch die täglichen automatischen Sicherungen werden jetzt verschlüsselt gespeichert, mit demselben
+  Schlüssel wie die Datenbank. Ältere Sicherungen werden beim Start umgewandelt; Exporte bleiben lesbare Dateien
+
 - Intern: Tests laufen jetzt auch auf einem Android-Emulator (Datenbank, App-Sperre, Widget, App-Start)
 - Datenschutz: Die Datenbank auf dem Gerät ist jetzt verschlüsselt. Der Schlüssel liegt im sicheren Speicher von
   Android bzw. Windows. Vorhandene Daten werden beim ersten Start automatisch umgestellt; das Original bleibt

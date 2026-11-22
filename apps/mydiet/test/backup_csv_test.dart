@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mydiet_ai/src/data/backup.dart';
 import 'package:mydiet_ai/src/data/csv_export.dart';
 import 'package:mydiet_ai/src/data/database.dart';
+import 'package:mydiet_ai/src/data/db_encryption.dart' show newDbKey;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -43,6 +44,57 @@ void main() {
     expect((await db.allWeights()).single.weightKg, 98.4);
     final names = (await s.list()).map((f) => f.uri.pathSegments.last);
     expect(names.any((n) => n.contains('vor-wiederherstellung')), isTrue);
+  });
+
+  test('Verschlüsselte Sicherung (7.2b): kein Klartext in der Datei, Wiederherstellen klappt', () async {
+    final key = newDbKey();
+    final s = BackupService(db, tmp, key: key);
+    await db.saveWeight(day: '2026-03-01', weightKg: 98.4);
+    await db.setSetting('notiz', 'Geheimer Klartext');
+    final backup = (await s.runIfDue(now: DateTime(2026, 3, 1)))!;
+    expect(backup.path, endsWith('.sbak'));
+    expect(BackupService.isEncrypted(backup), isTrue);
+    expect(String.fromCharCodes(backup.readAsBytesSync()).contains('Geheimer Klartext'), isFalse);
+    expect(await s.runIfDue(now: DateTime(2026, 3, 1, 20)), isNull);
+
+    await db.saveWeight(day: '2026-03-02', weightKg: 97.9);
+    await s.restore(backup);
+    expect((await db.allWeights()).single.weightKg, 98.4);
+    expect(await db.getSetting('notiz'), 'Geheimer Klartext');
+
+    // Another key (e.g. after the key was lost) cannot read it, and says so.
+    final other = BackupService(db, tmp, key: newDbKey());
+    await expectLater(other.read(backup), throwsA(isA<StateError>()));
+    await expectLater(BackupService(db, tmp).read(backup), throwsA(isA<StateError>()));
+  });
+
+  test('Alte Klartext-Sicherungen werden verschlüsselt, Inhalt bleibt gleich (7.2b)', () async {
+    await db.saveWeight(day: '2026-03-01', weightKg: 98.4);
+    final plain = BackupService(db, tmp, keep: 5);
+    await plain.runIfDue(now: DateTime(2026, 3, 1));
+    await plain.runIfDue(now: DateTime(2026, 3, 2));
+    final before = {for (final f in await plain.list()) BackupService.dayOf(f): await f.readAsString()};
+
+    final enc = BackupService(db, tmp, keep: 5, key: newDbKey());
+    expect(await enc.encryptLegacy(), 2);
+    final after = await enc.list();
+    expect(after.map(BackupService.dayOf), ['2026-03-02', '2026-03-01']);
+    expect(after.every(BackupService.isEncrypted), isTrue);
+    for (final f in after) {
+      expect(await enc.read(f), before[BackupService.dayOf(f)]);
+    }
+    expect(tmp.listSync().where((e) => e.path.endsWith('.json') || e.path.endsWith('.tmp')), isEmpty);
+    expect(await enc.encryptLegacy(), 0);
+    // A plain backup for a day that already has one is not written again.
+    expect(await enc.runIfDue(now: DateTime(2026, 3, 2, 12)), isNull);
+  });
+
+  test('Ohne Schlüssel bleibt alles wie bisher (Klartext-JSON)', () async {
+    final s = BackupService(db, tmp);
+    final f = (await s.runIfDue(now: DateTime(2026, 3, 1)))!;
+    expect(f.path, endsWith('.json'));
+    expect(await s.encryptLegacy(), 0);
+    expect(f.existsSync(), isTrue);
   });
 
   test('CSV: Semikolon, Dezimalkomma, Anführungszeichen, BOM', () async {

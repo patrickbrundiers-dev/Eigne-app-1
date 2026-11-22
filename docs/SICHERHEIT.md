@@ -35,9 +35,12 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
   Speicher nur vorübergehend nicht lesbar, ändert die App nichts und zeigt eine Fehlerseite.
 - Android-Gerätesicherung ist deshalb abgeschaltet (`allowBackup="false"`): Der Keystore-Schlüssel wandert nicht
   mit, eine zurückgespielte Datenbank wäre unlesbar. Umzug auf ein neues Gerät über Export/Import.
-- Bekannte Lücke: Die täglichen Sicherungen (`backups/*.json`) und Exporte sind noch unverschlüsselt; sie liegen
-  im privaten App-Ordner bzw. dort, wo der Nutzer sie speichert. Nächster Schritt: Sicherungen mit demselben
-  Schlüssel verschlüsseln (7.2b).
+- Tägliche Sicherungen (7.2b): Mit verschlüsselter Datenbank schreibt die App jede Sicherung als kleine
+  SQLite-Datei `backups/mydiet-backup-<Tag>.sbak`, verschlüsselt mit demselben Schlüssel und derselben Bibliothek
+  (eine Zeile mit dem JSON-Export). Ältere `.json`-Sicherungen werden beim Start umgewandelt; die Klartext-Datei
+  wird erst gelöscht, wenn die verschlüsselte Kopie gelesen und als gleich geprüft ist. Ohne Schlüssel (Web oder
+  Fallback) bleibt es bei JSON. Geht der Schlüssel verloren, sind auch diese Sicherungen nicht mehr lesbar.
+- Bewusst unverschlüsselt: Exporte, die der Nutzer selbst speichert (zum Umzug und für andere Programme).
 
 ## Ab Phase 4 (Sync über gehostetes PostgreSQL in der EU)
 
