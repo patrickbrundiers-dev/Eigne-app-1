@@ -7,6 +7,7 @@ import '../../core/dates.dart';
 import '../../core/weight_trend.dart';
 import '../../data/database.dart';
 import '../../data/targets.dart';
+import '../../ui/design/tokens.dart';
 import '../../ui/format.dart';
 
 /// Weigh-ins as dots, the 7-day average as a line, the target as a dashed line.
@@ -113,13 +114,13 @@ class WeightChart extends StatelessWidget {
             horizontalLines: [
               HorizontalLine(
                 y: targetKg,
-                color: t.colorScheme.tertiary,
+                color: context.tokens.warn,
                 strokeWidth: 1.5,
                 dashArray: [6, 4],
                 label: HorizontalLineLabel(
                   show: true,
                   alignment: Alignment.topRight,
-                  style: labelStyle?.copyWith(color: t.colorScheme.tertiary, fontWeight: FontWeight.w700),
+                  style: labelStyle?.copyWith(color: context.tokens.warn, fontWeight: FontWeight.w700),
                   labelResolver: (_) => 'Ziel ${n1(targetKg)}',
                 ),
               ),

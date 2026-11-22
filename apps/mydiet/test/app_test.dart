@@ -827,7 +827,6 @@ void main() {
     await pumpApp(tester, db);
     final more = find.textContaining('Ältere anzeigen (noch 11)');
     await tester.scrollUntilVisible(more, 2000, scrollable: find.byType(Scrollable).last);
-    await tester.drag(find.byType(Scrollable).last, const Offset(0, -300)); // nicht hinter dem Knopf „Eintragen“
     await tester.pumpAndSettle();
     await tester.tap(more);
     await pumpApp(tester, db);
@@ -855,7 +854,7 @@ void main() {
       await pumpApp(tester, db, size: size);
       await tester.tap(find.text('Fortschritt').last);
       await pumpApp(tester, db, size: size);
-      expect(find.widgetWithText(Card, 'Fortschritt'), findsOneWidget);
+      expect(find.widgetWithText(Card, 'Zielfortschritt'), findsOneWidget);
       expect(find.text('Bisher abgenommen'), findsOneWidget);
       expect(find.text('Noch bis Ziel'), findsOneWidget);
       expect(find.text('30-Tage-Trend'), findsOneWidget);

@@ -6,6 +6,8 @@ import '../../core/energy.dart';
 import '../../core/weight_trend.dart';
 import '../../data/database.dart';
 import '../../data/targets.dart';
+import '../../ui/design/components.dart';
+import '../../ui/design/tokens.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../home_shell.dart';
@@ -35,12 +37,7 @@ class _WeightPageState extends State<WeightPage> {
   Widget build(BuildContext context) {
     final db = context.db;
     return Scaffold(
-      appBar: AppBar(title: const Text('Gewicht')),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => showWeightEntrySheet(context),
-        icon: const Icon(Icons.add),
-        label: const Text('Eintragen'),
-      ),
+      appBar: AppBar(title: const Text('Fortschritt')),
       body: StreamBuilder<List<Object?>>(
         stream: combineLatest([db.watchProfile(), db.watchWeights()]),
         builder: (context, snap) {
@@ -53,7 +50,7 @@ class _WeightPageState extends State<WeightPage> {
           final cur = currentWeight(p, a);
           return PageBody(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 96),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
               children: [
                 _stats(context, p, a, cur),
                 const SizedBox(height: 12),
@@ -110,59 +107,110 @@ class _WeightPageState extends State<WeightPage> {
 
   Widget _stats(BuildContext context, Profile p, WeightAnalysis a, double cur) {
     final t = Theme.of(context);
+    final tk = context.tokens;
     final b = bmi(cur, p.heightCm);
     final rate = a.weeklyRateKg;
-    final wide = MediaQuery.sizeOf(context).width >= 640;
-    final items = [
-      StatValue(label: 'Trend (7 Tage)', value: kg(cur), sub: a.latest == null ? null : 'zuletzt ${kg(a.latest!.kg)}'),
-      StatValue(
-        label: 'Pro Woche',
-        value: rate == null ? '–' : '${rate <= 0 ? '−' : '+'}${n1(rate.abs())} kg',
-        sub: rate == null ? 'mind. 4 Messungen über 10 Tage' : 'über ${a.rateBasisDays} Tage',
-      ),
-      StatValue(label: 'BMI', value: n1(b), sub: bmiCategory(b)),
-      StatValue(
-        label: 'Ziel ${kg(p.targetWeightKg)}',
-        value: a.forecastDate == null ? '–' : dateShort(a.forecastDate!),
-        sub: a.forecastDate == null ? 'noch keine Prognose' : 'Prognose aus Trend',
-      ),
-    ];
+    final label = TextStyle(
+      fontFamily: SattlyFonts.numbers,
+      fontSize: 13,
+      fontWeight: FontWeight.w600,
+      letterSpacing: 0.8,
+      color: tk.muted,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: wide
-                ? Row(children: [for (final i in items) Expanded(child: i)])
-                : Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(child: items[0]),
-                          Expanded(child: items[1]),
-                        ],
+            padding: const EdgeInsets.all(SattlySpace.l),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Semantics(
+                        label: 'Trendgewicht ${kg(cur)}',
+                        excludeSemantics: true,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('TREND (7 TAGE)', style: label),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: n1(cur),
+                                      style: numberStyle(52, color: tk.ink),
+                                    ),
+                                    TextSpan(
+                                      text: ' kg',
+                                      style: numberStyle(22, color: tk.muted, weight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            if (a.latest != null)
+                              Text(
+                                'zuletzt ${kg(a.latest!.kg)}',
+                                style: t.textTheme.bodySmall?.copyWith(color: tk.muted),
+                              ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(child: items[2]),
-                          Expanded(child: items[3]),
-                        ],
+                    ),
+                    IconButton.filled(
+                      tooltip: 'Gewicht eintragen',
+                      icon: const Icon(Icons.add),
+                      style: IconButton.styleFrom(
+                        minimumSize: const Size.square(minTouchTarget),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(SattlyRadius.control)),
+                        ),
                       ),
-                    ],
-                  ),
+                      onPressed: () => showWeightEntrySheet(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: SattlySpace.l),
+                StatStrip(
+                  items: [
+                    (
+                      'Pro Woche',
+                      rate == null ? '–' : '${rate <= 0 ? '−' : '+'}${n1(rate.abs())} kg',
+                      rate == null || rate.abs() < 0.05 ? tk.muted : (rate < 0 ? tk.good : tk.warn),
+                    ),
+                    ('BMI', n1(b), tk.water),
+                    (
+                      'Ziel ${kg(p.targetWeightKg)}',
+                      a.forecastDate == null ? '–' : dateShort(a.forecastDate!),
+                      tk.primary,
+                    ),
+                  ],
+                  notes: [
+                    rate == null ? 'mind. 4 Messungen über 10 Tage' : 'über ${a.rateBasisDays} Tage',
+                    bmiCategory(b),
+                    a.forecastDate == null ? 'noch keine Prognose' : 'Prognose aus Trend',
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         if (a.isPlateau) ...[
           const SizedBox(height: 12),
           Card(
-            color: t.colorScheme.tertiaryContainer,
+            color: Color.alphaBlend(tk.warn.withValues(alpha: 0.12), tk.surface),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(Icons.hourglass_bottom, color: t.colorScheme.onTertiaryContainer),
+                  Icon(Icons.hourglass_bottom, color: tk.warn),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -170,7 +218,7 @@ class _WeightPageState extends State<WeightPage> {
                       '0,1 kg pro Woche verändert. Das ist häufig und oft Wassereinlagerung. Prüfe, ob die '
                       'Einträge im Tagebuch vollständig sind. Eine Anpassung des Kalorienziels schlägt der '
                       'Wochen-Check unten vor; du entscheidest selbst.',
-                      style: TextStyle(color: t.colorScheme.onTertiaryContainer),
+                      style: TextStyle(color: tk.ink),
                     ),
                   ),
                 ],
@@ -193,7 +241,7 @@ class _WeightPageState extends State<WeightPage> {
         children: [
           for (var i = 0; i < rev.length && i < _shown; i++)
             ListTile(
-              title: Text(kg(rev[i].weightKg), style: const TextStyle(fontWeight: FontWeight.w700)),
+              title: Text(kg(rev[i].weightKg), style: numberStyle(19, color: t.colorScheme.onSurface)),
               subtitle: Text(
                 [
                   weekdayShort(parseDayKey(rev[i].dayKey)),
@@ -229,7 +277,7 @@ class _WeightPageState extends State<WeightPage> {
                   : '${_months[groups[i].start.month - 1]} ${groups[i].start.year}',
             ),
             subtitle: Text('Ø aus ${groups[i].count} ${groups[i].count == 1 ? 'Messung' : 'Messungen'}'),
-            leading: Text(kg(groups[i].averageKg), style: const TextStyle(fontWeight: FontWeight.w700)),
+            leading: Text(kg(groups[i].averageKg), style: numberStyle(19, color: t.colorScheme.onSurface)),
             trailing: i + 1 < groups.length ? _delta(t, groups[i].averageKg - groups[i + 1].averageKg) : null,
           ),
       ],
@@ -238,9 +286,10 @@ class _WeightPageState extends State<WeightPage> {
 
   Widget _delta(ThemeData t, double d) => Text(
     '${d <= 0 ? '−' : '+'}${n1(d.abs())}',
-    style: TextStyle(
+    style: numberStyle(
+      17,
       color: d < 0 ? t.colorScheme.primary : (d > 0 ? t.colorScheme.error : t.colorScheme.onSurfaceVariant),
-      fontWeight: FontWeight.w600,
+      weight: FontWeight.w600,
     ),
   );
 

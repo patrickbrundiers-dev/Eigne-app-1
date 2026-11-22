@@ -80,7 +80,7 @@ class _WeightProgressCardState extends State<WeightProgressCard> {
           tdeeKcal: r.tdee,
         );
         return SectionCard(
-          title: 'Fortschritt',
+          title: 'Zielfortschritt',
           icon: Icons.flag_outlined,
           trailing: IconButton(
             tooltip: _explain ? 'Erklärung ausblenden' : 'Wie wird gerechnet?',
