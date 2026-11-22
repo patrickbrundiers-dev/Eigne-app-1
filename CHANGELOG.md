@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+## 0.3.0 – Barcode, Erinnerungen, Vitamine und Mineralstoffe (2026-11-22)
+
 - Vitamine und Mineralstoffe: Tagessumme aus Essen und Supplementen zusammen (Vitamin D, B12, Folat, C,
   Calcium, Magnesium, Eisen, Zink, Jod, Kalium, Omega-3) mit Ziel nach D-A-CH, Ampel und EFSA-Höchstmengen;
   Richtwerte für 100 Basis-Lebensmittel, eigene Werte im Lebensmittel-Formular, Werte aus Open Food Facts;
