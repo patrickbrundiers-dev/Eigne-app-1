@@ -4,6 +4,10 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Mikronährstoffziele im Profil (Aufgabe 4.2)
+
+`features/profile/micro_targets_card.dart` nutzt `dachTargets` + `forPerson` (W5). Prüfung im Profil-Widget-Test.
+
 ## 2026-11-22 – Protein über den Tag (Aufgabe 4.3)
 
 `core/protein_split.dart`, Anzeige „Protein x / y g“ je Mahlzeit im Tagebuch. Tests: `test/protein_split_test.dart`

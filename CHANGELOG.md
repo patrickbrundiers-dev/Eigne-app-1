@@ -23,6 +23,9 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Profil: Karte „Vitamine und Mineralstoffe“ zeigt deine Tagesziele nach D-A-CH (passend zu Geschlecht und
+  Alter), mit Sprung zur heutigen Übersicht
+
 - Tagebuch: Jede Mahlzeit zeigt „Protein x / y g“, also ihren Anteil am Tagesziel (Hauptmahlzeiten zählen voll,
   Mahlzeiten ohne Uhrzeit wie Snacks halb)
 
