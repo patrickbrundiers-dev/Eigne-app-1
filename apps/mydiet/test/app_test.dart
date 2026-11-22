@@ -114,6 +114,7 @@ void main() {
     await pumpApp(tester, db);
     expect(find.text('Frühstück'), findsWidgets);
     expect(find.text('Skyr natur'), findsOneWidget);
+    expect(find.textContaining(RegExp(r'Protein \d+ / \d+ g')), findsWidgets); // Anteil am Tagesziel je Mahlzeit
 
     await tester.tap(find.text('Profil'));
     await pumpApp(tester, db);

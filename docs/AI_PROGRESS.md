@@ -14,6 +14,11 @@ Neue Abhängigkeiten `local_auth`, `crypto`; Android AppCompat-Theme beim Start 
 Tests: `test/app_lock_test.dart` (5, u. a. RFC-Testvektor), Widget-Test „App-Sperre“. Fingerabdruck auf dem Gerät
 ungeprüft.
 
+## 2026-11-22 – Protein über den Tag (Aufgabe 4.3)
+
+`core/protein_split.dart`, Anzeige „Protein x / y g“ je Mahlzeit im Tagebuch. Tests: `test/protein_split_test.dart`
+(3) und Prüfung im Tagebuch-Widget-Test.
+
 ## 2026-11-22 – Gewichtsliste nachladen (Aufgabe 1.3)
 
 `weight_page.dart`: Knopf „Ältere anzeigen (noch n)“ lädt jeweils 120 weitere. Widget-Test mit 131 Einträgen.
