@@ -106,7 +106,7 @@ class HomeShellState extends State<HomeShell> {
     super.didChangeDependencies();
     if (_reminders == null) unawaited(autoImportHealth(context.db));
     _reminders ??= startReminderSync(context.db);
-    _widget ??= startHomeWidgetSync(context.db);
+    _widget ??= startHomeWidgetSync(context.db, onAddFood: () => mounted ? addNow() : null);
   }
 
   StreamSubscription<void>? _widget;

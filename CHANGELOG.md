@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+- Homescreen-Widget: Knopf „+ Essen“ öffnet direkt die Suche für die Mahlzeit, die gerade dran ist
+
 - Basisdatenbank: rund 220 weitere Lebensmittel mit deutschen Namen (Obst, Gemüse, Fisch, Fleisch, Käse,
   Brot, Getreide, Hülsenfrüchte, Nüsse, Öle), Werte aus USDA FoodData Central (gemeinfrei), meist mit Vitaminen
   und Mineralstoffen. Kommt beim Update automatisch dazu; eigene und gelöschte Lebensmittel bleiben unberührt
