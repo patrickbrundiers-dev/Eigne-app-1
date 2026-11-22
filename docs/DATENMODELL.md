@@ -1,4 +1,4 @@
-# Datenmodell (Schema-Version 2)
+# Datenmodell (Schema-Version 3)
 
 Lokale SQLite-Datenbank über drift. Definition: `apps/mydiet/lib/src/data/tables.dart`.
 
@@ -55,6 +55,15 @@ Einheit: Eine offene Zeile wird beim erneuten Hinzufügen erweitert statt verdop
 `diary_entries.recipe_id` (ab Schema 2) markiert Einträge aus einem Rezept; die Werte pro 100 g des fertigen
 Gerichts werden wie bei Lebensmitteln kopiert.
 
+**supplements** (ab Schema 3) – Produkt, Marke (`name_key` **eindeutig**), Form, was eine Portion ist,
+Verzehrempfehlung des Herstellers (Freitext), eigene Portionen pro Tag, Uhrzeiten (JSON), aktiv/pausiert, Vorrat.
+
+**supplement_ingredients** (ab Schema 3) – Inhaltsstoffe pro Portion: Katalog-ID (`core/supplements.dart`)
+oder `custom:Name`, Menge, Einheit (µg/mg/g).
+
+**supplement_intakes** (ab Schema 3) – eingenommene Portionen; **eindeutig** pro Produkt, Tag und geplanter
+Uhrzeit (−1 = ohne Uhrzeit). Zweimal Abhaken zählt einmal; Abhaken/Rücknehmen verändert den Vorrat.
+
 **settings** – Schlüssel/Wert: `themeMode`, `colorScheme`, `dashboardLayout` (JSON), `seedVersion`.
 
 ## Basis-Lebensmittel
@@ -79,3 +88,4 @@ Datenbank und dass vorhandene Daten erhalten bleiben.
 |---|---|
 | 1 | Grundsystem (Phase 1) |
 | 2 | `recipes`, `recipe_items`, `shopping_items`, `diary_entries.recipe_id` |
+| 3 | `supplements`, `supplement_ingredients`, `supplement_intakes` |
