@@ -8,6 +8,7 @@
 
 - Homescreen-Widget (Android): zeigt, wie viele Kalorien heute noch offen sind, dazu gegessen / Budget, Protein
   und einen Fortschrittsbalken; Tippen öffnet die App. Beachtet Wochenmodus und „Zahlen ausblenden“
+
 - Intern: Datenbankzugriffe nach Bereichen in eigene Dateien aufgeteilt (keine Änderung an Daten oder Verhalten)
 
 ## 0.4.0 – Health Connect, Wochenbericht, schnelleres Eintragen (2026-11-22)
@@ -25,6 +26,12 @@
   Protein gegen das Ziel, Tage im Zielbereich, Wochenend-Muster, Ballaststoffe, eher niedrige Vitamine und
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
+
+- Gewicht → Einträge: Nach 120 Messungen zeigt „Ältere anzeigen“ die übrigen an, statt sie still wegzulassen
+
+- Open Food Facts auch ohne Barcode: In der Suche beim Eintragen „Bei Open Food Facts suchen“ findet Produkte
+  nach Name oder Marke. Es wird nur der Suchbegriff gesendet und nur auf Knopfdruck; jedes Produkt wird vor dem
+  Speichern im Formular geprüft
 
 - Barrierefreiheit: Kalorien- und Proteinring, Makro-Balken und Gewichtskurve haben Screenreader-Texte mit den
   Zahlen; bei 200 % Schriftgröße läuft auf den Hauptseiten nichts mehr über

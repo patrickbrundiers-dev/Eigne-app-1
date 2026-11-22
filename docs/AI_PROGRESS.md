@@ -9,10 +9,21 @@ weiterarbeiten.
 Phase-2-Thread, nach Patricks Entscheidung „Nur App-Sperre“. `core/app_lock.dart` (PIN-Regeln, PBKDF2, Wartezeiten,
 Sperrzeitpunkt, `LockConfig`), `data/app_lock_store.dart` (Datei `applock.json`, `local_auth`), `features/lock/`
 (Sperrbildschirm mit Ziffernblock und Tastatur, `LockGate` über dem Navigator in `app.dart`, Einstellungsseite).
-Neue Abhängigkeiten `local_auth`, `crypto`; Android AppCompat-Theme beim Start (D-17). Windows: `_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS` für das local_auth-Plugin in `windows/CMakeLists.txt`, weil der neue MSVC dessen `<experimental/coroutine>` sonst ablehnt. Kein Schema.
+Neue Abhängigkeiten `local_auth`, `crypto`; Android AppCompat-Theme beim Start (D-18). Windows: `_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS` für das local_auth-Plugin in `windows/CMakeLists.txt`, weil der neue MSVC dessen `<experimental/coroutine>` sonst ablehnt. Kein Schema.
 
 Tests: `test/app_lock_test.dart` (5, u. a. RFC-Testvektor), Widget-Test „App-Sperre“. Fingerabdruck auf dem Gerät
 ungeprüft.
+
+## 2026-11-22 – Gewichtsliste nachladen (Aufgabe 1.3)
+
+`weight_page.dart`: Knopf „Ältere anzeigen (noch n)“ lädt jeweils 120 weitere. Widget-Test mit 131 Einträgen.
+
+## 2026-11-22 – Open-Food-Facts-Textsuche (Aufgabe 3.4)
+
+`OffClient.search()` (nur Suchbegriff, Produkte ohne Namen oder Energie fallen weg, nur gültige Barcodes),
+`features/foods/off_search_page.dart`, Eintrag „Bei Open Food Facts suchen“ in der Auswahl beim Eintragen.
+Entscheidung D-17. Tests: `test/off_search_test.dart` (3, Mock-Client), Widget-Test Suche → Formular → Eintrag.
+Nächster Schritt: 6.1 Health Connect (mit Phase-2-Thread abstimmen), sonst 1.4/1.5.
 
 ## 2026-11-22 – Barrierefreiheit (Aufgabe 2.3)
 
