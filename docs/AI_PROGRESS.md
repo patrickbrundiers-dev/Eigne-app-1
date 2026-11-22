@@ -4,6 +4,13 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign: Analyse und drei Designvorlagen (Phase 1+2, wartet auf Freigabe)
+
+Thread „Sattly-Design mit drei Vorlagen erneuern“. `docs/design/REDESIGN.md` (Analyse, Vergleich, Empfehlung
+Design 1 „Premium Wellness“) und `docs/design/vorschau.html` (interaktive Vorschau, nur Beispieldaten,
+getrennt vom App-Code). Screenshots in den Projektdateien `sattly/redesign/`. **Kein produktiver Code
+geändert.** Phase 4 (Designsystem als ThemeExtension, dann Bereiche einzeln) erst nach Patricks Freigabe.
+
 ## 2026-11-22 – Impressum und Verantwortlicher (7.3)
 
 Patrick hat Name, Anschrift und E-Mail geliefert: eingetragen in `docs/DATENSCHUTZERKLAERUNG.md` (Abschnitt 1) und

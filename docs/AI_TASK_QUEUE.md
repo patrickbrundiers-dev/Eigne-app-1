@@ -12,6 +12,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
+| Redesign Phase 1+2 (docs/design/), Umsetzung wartet auf Patricks Freigabe | Thread „Sattly-Design mit drei Vorlagen erneuern“ | nein | folgt |
 | 3.6 USDA-Lebensmittel | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
