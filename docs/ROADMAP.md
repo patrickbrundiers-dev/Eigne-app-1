@@ -50,6 +50,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 - ✅ Erinnerungen (Einstellungen → Erinnerungen): Mahlzeiten zu ihren Uhrzeiten (optional früher), Wasser in
   festem Abstand, Supplemente zu ihren Einnahmezeiten (gleiche Uhrzeit = eine Meldung), Wiegen an gewählten
   Tagen; nur lokal geplant, passen sich automatisch an geänderte Mahlzeiten und Supplemente an
+- ✅ PC als Planungs-Arbeitsplatz (W8): Wochenplan mit Tagen nebeneinander, Ziehen auf andere Tage (Strg =
+  kopieren), Verschieben/Kopieren über das Menü, Tastenkürzel (F1 zeigt alle)
 
 ### Online-Update (vorbereitet, folgt sobald die Android-Signatur-Secrets angelegt sind)
 

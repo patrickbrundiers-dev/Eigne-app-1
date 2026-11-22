@@ -8,12 +8,15 @@ import 'package:mydiet_ai/src/app.dart';
 import 'package:mydiet_ai/src/branding.dart';
 import 'package:mydiet_ai/src/core/dates.dart';
 import 'package:mydiet_ai/src/core/supplements.dart';
+import 'package:mydiet_ai/src/core/weight_trend.dart' show weekStart;
+import 'package:mydiet_ai/src/ui/format.dart' show weekdayShort;
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
 import 'package:mydiet_ai/src/data/reminder_scheduler.dart';
 import 'package:mydiet_ai/src/core/reminders.dart';
 import 'package:mydiet_ai/src/features/settings/reminders_page.dart';
 import 'package:mydiet_ai/src/features/micros/micros_view.dart';
+import 'package:mydiet_ai/src/features/diary/food_picker_page.dart';
 import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
@@ -304,6 +307,93 @@ void main() {
     expect(find.textContaining('Werte für den Eintrag'), findsOneWidget); // Skyr from openDb
     expect(find.text('Magnesium'), findsOneWidget);
     expect(find.textContaining('Höchstmenge 250 mg (nur Supplemente)'), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('PC: Wochenplan nebeneinander, Ziehen auf anderen Tag, Tastenkürzel', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    final mon = weekStart(DateTime.now());
+    final tue = DateTime(mon.year, mon.month, mon.day + 1);
+    await tester.runAsync(() async {
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      final slot = (await db.watchMealSlots().first).first;
+      await db.planFood(day: dayKey(mon), mealSlotId: slot.id, food: oats, amount: 80);
+    });
+    await pumpApp(tester, db, size: const Size(1700, 1000));
+
+    Future<void> keys(List<LogicalKeyboardKey> mods, LogicalKeyboardKey key) async {
+      for (final m in mods) {
+        await tester.sendKeyDownEvent(m);
+      }
+      await tester.sendKeyEvent(key);
+      for (final m in mods.reversed) {
+        await tester.sendKeyUpEvent(m);
+      }
+      await tester.pumpAndSettle();
+    }
+
+    // Strg+4 → Essen, then the weekly plan tab.
+    await keys([LogicalKeyboardKey.controlLeft], LogicalKeyboardKey.digit4);
+    expect(find.text('Wochenplan'), findsOneWidget);
+    await tester.tap(find.text('Wochenplan'));
+    await tester.pumpAndSettle();
+    await pumpApp(tester, db, size: const Size(1700, 1000));
+    final entry = find.textContaining('Haferflocken');
+    expect(entry, findsOneWidget);
+    expect(find.textContaining('Tipp: Einträge mit der Maus'), findsOneWidget);
+    // Days side by side: Monday and Tuesday on the same row.
+    final monTitle = find.textContaining(weekdayShort(mon));
+    final tueTitle = find.textContaining(weekdayShort(tue));
+    expect(tester.getTopLeft(monTitle.first).dy, tester.getTopLeft(tueTitle.first).dy);
+
+    // Long press and drag the entry onto Tuesday.
+    final g = await tester.startGesture(tester.getCenter(entry));
+    await tester.pump(const Duration(milliseconds: 700));
+    await g.moveTo(tester.getCenter(tueTitle.first) + const Offset(0, 40));
+    await tester.pump();
+    await g.moveTo(tester.getCenter(tueTitle.first) + const Offset(0, 50));
+    await tester.pump();
+    await g.up();
+    await tester.pump();
+    for (var i = 0; i < 5; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    final moved = (await tester.runAsync(() => db.planEntries(dayKey(mon), dayKey(tue))))!;
+    expect(moved.single.dayKey, dayKey(tue));
+    expect(find.textContaining('verschoben'), findsOneWidget);
+
+    // Alt+→ next week: nothing planned there.
+    await keys([LogicalKeyboardKey.altLeft], LogicalKeyboardKey.arrowRight);
+    await pumpApp(tester, db, size: const Size(1700, 1000));
+    final planned = find.descendant(of: find.byType(ListTile), matching: find.textContaining('Haferflocken'));
+    expect(planned, findsNothing);
+    await keys([LogicalKeyboardKey.altLeft], LogicalKeyboardKey.home);
+    await pumpApp(tester, db, size: const Size(1700, 1000));
+    expect(planned, findsOneWidget);
+
+    // Diary: Strg+2, Alt+← one day back, Alt+Pos1 back to today.
+    await keys([LogicalKeyboardKey.controlLeft], LogicalKeyboardKey.digit2);
+    expect(find.widgetWithText(TextButton, 'Heute'), findsOneWidget);
+    await keys([LogicalKeyboardKey.altLeft], LogicalKeyboardKey.arrowLeft);
+    expect(find.widgetWithText(TextButton, 'Heute'), findsNothing);
+    await keys([LogicalKeyboardKey.altLeft], LogicalKeyboardKey.home);
+    expect(find.widgetWithText(TextButton, 'Heute'), findsOneWidget);
+
+    // F1: overview.
+    await keys([], LogicalKeyboardKey.f1);
+    expect(find.text('Tastenkürzel'), findsOneWidget);
+    expect(find.text('Strg+E'), findsOneWidget);
+    await tester.tap(find.text('Schließen'));
+    await tester.pumpAndSettle();
+
+    // Strg+E opens the food search for today.
+    await keys([LogicalKeyboardKey.controlLeft], LogicalKeyboardKey.keyE);
+    for (var i = 0; i < 5; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.byType(FoodPickerPage), findsOneWidget);
     await closeDb(tester, db);
   });
 

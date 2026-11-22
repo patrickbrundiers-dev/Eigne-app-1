@@ -1431,6 +1431,23 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deletePlanEntry(String id) => _tombstone(mealPlanEntries, id);
   Future<void> restorePlanEntry(String id) => _restore(mealPlanEntries, id);
 
+  /// Copies one planned entry to [day] (same meal, not yet in the diary). Returns the new id.
+  Future<String> copyPlanEntry(String id, {required String day, String? mealSlotId}) async {
+    final e = await (select(mealPlanEntries)..where((x) => x.id.equals(id) & x.deletedAt.isNull())).getSingleOrNull();
+    if (e == null) throw StateError('Eintrag nicht gefunden.');
+    final now = DateTime.now();
+    final copy = e.copyWith(
+      id: newId(),
+      dayKey: day,
+      mealSlotId: mealSlotId ?? e.mealSlotId,
+      diaryEntryId: const Value(null),
+      createdAt: now,
+      updatedAt: now,
+    );
+    await into(mealPlanEntries).insert(copy);
+    return copy.id;
+  }
+
   /// Copies planned entries from [fromDays] to [toDays] (same length, day by day).
   /// Returns the number of copied entries.
   Future<int> copyPlanDays(List<String> fromDays, List<String> toDays) async {
