@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../core/food_quality.dart';
+import '../../data/database.dart';
 import '../../data/off_client.dart';
 import '../../ui/format.dart';
 import 'barcode.dart' show offClientFactory;
