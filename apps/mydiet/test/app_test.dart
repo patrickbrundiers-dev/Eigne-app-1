@@ -13,6 +13,7 @@ import 'package:mydiet_ai/src/data/targets.dart';
 import 'package:mydiet_ai/src/data/reminder_scheduler.dart';
 import 'package:mydiet_ai/src/core/reminders.dart';
 import 'package:mydiet_ai/src/features/settings/reminders_page.dart';
+import 'package:mydiet_ai/src/features/micros/micros_view.dart';
 import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
@@ -282,6 +283,27 @@ void main() {
     await pumpApp(tester, db);
     expect(find.textContaining('6× am Tag, 09:00–20:00'), findsOneWidget);
     expect(sched.applied.last.where((r) => r.kind == ReminderKind.water), hasLength(6));
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Mikronährstoffe: Essen und Supplemente zusammen', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      final sid = await db.saveSupplement(
+        name: 'Magnesium 400',
+        times: const [1260],
+        doses: const [SupplementDose(nutrientId: 'magnesium', amount: 400, unit: 'mg')],
+      );
+      await db.setIntake(supplementId: sid, day: todayDayKey(), plannedMinute: 1260, servings: 1, taken: true);
+    });
+    await pumpApp(tester, db);
+    final ctx = tester.element(find.byType(Scaffold).first);
+    Navigator.of(ctx).push(MaterialPageRoute<void>(builder: (_) => const MicrosPage()));
+    await pumpApp(tester, db);
+    expect(find.text('Vitamine und Mineralstoffe'), findsOneWidget);
+    expect(find.textContaining('Werte für den Eintrag'), findsOneWidget); // Skyr from openDb
+    expect(find.text('Magnesium'), findsOneWidget);
+    expect(find.textContaining('Höchstmenge 250 mg (nur Supplemente)'), findsOneWidget);
     await closeDb(tester, db);
   });
 

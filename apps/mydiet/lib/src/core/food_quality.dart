@@ -3,6 +3,7 @@
 library;
 
 import 'nutrition.dart';
+import 'supplements.dart' show convertUnit, nutrientById;
 
 /// Where a food's values come from. Stored in `foods.source`.
 enum FoodSource {
@@ -66,6 +67,7 @@ class OffProduct {
     this.servingLabel,
     this.missing = const [],
     this.category,
+    this.micros = const {},
   });
 
   final String barcode;
@@ -80,8 +82,26 @@ class OffProduct {
   final List<String> missing;
   final String? category;
 
+  /// Vitamins and minerals per 100 in the catalogue unit (only those Open Food Facts lists).
+  final Map<String, double> micros;
+
   FoodQuality get quality => assessQuality(FoodSource.off, per100, missingValues: missing.isNotEmpty);
 }
+
+/// Open Food Facts nutriment keys → catalogue ids. OFF stores `_100g` values in grams.
+const offMicroKeys = {
+  'vitamin-d': 'vit_d',
+  'vitamin-b12': 'vit_b12',
+  'vitamin-c': 'vit_c',
+  'folates': 'folate',
+  'vitamin-b9': 'folate',
+  'calcium': 'calcium',
+  'magnesium': 'magnesium',
+  'iron': 'iron',
+  'zinc': 'zinc',
+  'potassium': 'potassium',
+  'iodine': 'iodine',
+};
 
 /// Fields requested from the Open Food Facts API (v2).
 const offFields =
@@ -148,7 +168,16 @@ OffProduct? parseOffProduct(Map<String, dynamic> json, String barcode) {
   final servingAmount = serving is num
       ? serving.toDouble()
       : (serving is String ? double.tryParse(serving.replaceAll(',', '.')) : null);
+  final micros = <String, double>{};
+  offMicroKeys.forEach((key, id) {
+    if (micros.containsKey(id)) return;
+    final v = num100(key);
+    final info = nutrientById(id);
+    if (v == null || info == null || !(v >= 0) || v > 100) return;
+    micros[id] = convertUnit(v, from: 'g', to: info.unit);
+  });
   return OffProduct(
+    micros: micros,
     barcode: barcode,
     name: name.length > 120 ? name.substring(0, 120) : name,
     brand: brand,

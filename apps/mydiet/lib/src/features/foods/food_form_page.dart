@@ -2,7 +2,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../core/food_quality.dart';
+import '../../core/micronutrients.dart' show microOverviewIds;
 import '../../core/nutrition.dart';
+import '../../core/supplements.dart' show nutrientById;
 import '../../data/database.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
@@ -59,6 +61,32 @@ class _FoodFormPageState extends State<FoodFormPage> {
   String? _error;
   Food? _duplicate;
 
+  /// Vitamins and minerals per 100 (optional), in the catalogue unit.
+  late final Map<String, TextEditingController> _micro = {
+    for (final id in microOverviewIds) id: TextEditingController(text: _num(_off?.micros[id])),
+  };
+  bool _microTouched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final src = _src;
+    if (src != null && _off == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final m = (await context.db.microsOf([src.id]))[src.id];
+        if (m == null || !mounted) return;
+        setState(() {
+          m.forEach((id, v) => _micro[id]?.text = _num(v));
+        });
+      });
+    }
+  }
+
+  Map<String, double> get _microValues => {
+    for (final e in _micro.entries)
+      if (parseNum(e.value.text) != null) e.key: parseNum(e.value.text)!,
+  };
+
   List<TextEditingController> get _all => [
     _name,
     _brand,
@@ -78,7 +106,7 @@ class _FoodFormPageState extends State<FoodFormPage> {
 
   @override
   void dispose() {
-    for (final c in _all) {
+    for (final c in [..._all, ..._micro.values]) {
       c.dispose();
     }
     super.dispose();
@@ -113,6 +141,8 @@ class _FoodFormPageState extends State<FoodFormPage> {
         servingAmount: parseNum(_serving.text),
         servingLabel: _servingLabel.text,
         source: _off != null && _n == _off!.per100 ? 'off' : 'user',
+        // Copies and imports always take the shown values; edits only when changed.
+        micros: widget.food == null || _microTouched ? _microValues : null,
       );
       if (mounted) Navigator.pop(context, id);
     } on DuplicateFoodException catch (e) {
@@ -245,6 +275,29 @@ class _FoodFormPageState extends State<FoodFormPage> {
                       controller: _servingLabel,
                       decoration: const InputDecoration(labelText: 'Bezeichnung', hintText: 'z. B. Scheibe, Becher'),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: ExpansionTile(
+                    title: const Text('Vitamine und Mineralstoffe (optional)'),
+                    subtitle: Text('pro 100 $u, wie auf dem Etikett'),
+                    initiallyExpanded: _microValues.isNotEmpty,
+                    childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    children: [
+                      for (final id in microOverviewIds)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: NumberField(
+                            controller: _micro[id]!,
+                            label: nutrientById(id)!.name,
+                            suffix: nutrientById(id)!.unit,
+                            validator: numRange(0, 100000, required: false),
+                            onChanged: (_) => _microTouched = true,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 if (_error != null) ...[

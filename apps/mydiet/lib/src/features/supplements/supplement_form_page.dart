@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
+import '../../core/micronutrients.dart';
 import '../../core/supplements.dart';
 import '../../data/database.dart';
 import '../../ui/format.dart';
@@ -83,6 +84,55 @@ class _SupplementFormPageState extends State<SupplementFormPage> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  /// "Enthält ebenfalls Zink (Multi A), zusammen 38 mg pro Tag" for other active products.
+  Widget _overlaps(BuildContext context) {
+    final t = Theme.of(context);
+    return StreamBuilder<List<SupplementWithDoses>>(
+      stream: context.db.watchSupplements(activeOnly: true),
+      builder: (context, snap) {
+        final others = [
+          for (final o in snap.data ?? const <SupplementWithDoses>[])
+            if (o.supplement.id != _s?.id)
+              SupplementUse(product: o.label, servings: o.supplement.servingsPerDay, doses: o.doses),
+        ];
+        return ValueListenableBuilder<TextEditingValue>(
+          valueListenable: _perDay,
+          builder: (context, _, _) {
+            final list = supplementOverlaps(
+              newDoses: _doses,
+              newServingsPerDay: parseNum(_perDay.text) ?? 1,
+              others: others,
+            );
+            if (list.isEmpty) return const SizedBox.shrink();
+            final over = list.any((o) => o.overLimit);
+            return Container(
+              margin: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: over ? t.colorScheme.errorContainer : t.colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final o in list)
+                    Text(
+                      'Enthält ebenfalls ${o.info.name} (${o.others.join(', ')}): zusammen '
+                      '${n1opt(o.combined)} ${o.info.unit} pro Tag'
+                      '${o.overLimit ? ' – über der Höchstmenge von ${n1opt(o.info.ul!)} ${o.info.unit}' : ''}.',
+                      style: TextStyle(
+                        color: over ? t.colorScheme.onErrorContainer : t.colorScheme.onSecondaryContainer,
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -175,6 +225,7 @@ class _SupplementFormPageState extends State<SupplementFormPage> {
                     ),
                     onTap: () => _editDose(i),
                   ),
+                if (_doses.isNotEmpty) _overlaps(context),
                 const SizedBox(height: 20),
                 Text('Einnahme', style: t.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
