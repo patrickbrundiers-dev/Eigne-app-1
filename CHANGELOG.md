@@ -2,6 +2,8 @@
 
 ## Nächste Version (in Arbeit)
 
+## 0.5.0 – App-Sperre, Homescreen-Widget, Barrierefreiheit, Open-Food-Facts-Suche (2026-11-22)
+
 - Intern: Dashboard-Kacheln in eigene Dateien aufgeteilt (keine Änderung am Verhalten)
 
 - App-Sperre (Einstellungen → App-Sperre): PIN mit 4–8 Ziffern, auf Wunsch Fingerabdruck oder Windows Hello.
@@ -12,22 +14,6 @@
   und einen Fortschrittsbalken; Tippen öffnet die App. Beachtet Wochenmodus und „Zahlen ausblenden“
 
 - Intern: Datenbankzugriffe nach Bereichen in eigene Dateien aufgeteilt (keine Änderung an Daten oder Verhalten)
-
-## 0.4.0 – Health Connect, Wochenbericht, schnelleres Eintragen (2026-11-22)
-
-- Health Connect (Android, Einstellungen → Health Connect): Schritte, aktive Kalorien, Trainings und Gewicht
-  aus Health Connect übernehmen, also auch von Garmin Connect, Samsung Health oder Google Fit. Jedes Training
-  wird ein Aktivitätseintrag, dazu ein Eintrag „Alltag“ pro Tag ohne Doppelzählung; erneutes Übernehmen
-  aktualisiert statt zu verdoppeln, eigene Gewichtseinträge haben Vorrang. Auf Wunsch automatisch beim Öffnen.
-  Die App braucht jetzt mindestens Android 8
-
-- Health Connect: Mahlzeiten schreiben (eigener Schalter). Kalorien und Nährwerte je Mahlzeit der letzten 7 Tage
-  gehen nach Health Connect; Änderungen im Tagebuch werden beim nächsten Abgleich übernommen, nichts doppelt
-
-- Wochenbericht (neue Dashboard-Kachel, Seite mit Wochenwechsel): wie viele Tage eingetragen, Ø Kalorien und
-  Protein gegen das Ziel, Tage im Zielbereich, Wochenend-Muster, Ballaststoffe, eher niedrige Vitamine und
-  Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
-  Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
 - PC: Lebensmittel als Tabelle mit sortierbaren Spalten; „Spalten“ wählt aus Marke, kcal, Eiweiß,
   Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe, Salz und Quelle
@@ -46,9 +32,27 @@
 
 - Barrierefreiheit: Kalorien- und Proteinring, Makro-Balken und Gewichtskurve haben Screenreader-Texte mit den
   Zahlen; bei 200 % Schriftgröße läuft auf den Hauptseiten nichts mehr über
+
 - Gewicht → Fortschritt: Steht das Gewicht drei Wochen still, nennt die App, was deine Daten dazu zeigen
   (Lücken im Tagebuch, über dem Ziel, Wochenende, Bilanz passt nicht zur Waage, wenige Messungen), jeweils mit
   den Zahlen dahinter. Keine Diagnose, kein niedrigeres Ziel ohne Wochen-Check
+
+## 0.4.0 – Health Connect, Wochenbericht, schnelleres Eintragen (2026-11-22)
+
+- Health Connect (Android, Einstellungen → Health Connect): Schritte, aktive Kalorien, Trainings und Gewicht
+  aus Health Connect übernehmen, also auch von Garmin Connect, Samsung Health oder Google Fit. Jedes Training
+  wird ein Aktivitätseintrag, dazu ein Eintrag „Alltag“ pro Tag ohne Doppelzählung; erneutes Übernehmen
+  aktualisiert statt zu verdoppeln, eigene Gewichtseinträge haben Vorrang. Auf Wunsch automatisch beim Öffnen.
+  Die App braucht jetzt mindestens Android 8
+
+- Health Connect: Mahlzeiten schreiben (eigener Schalter). Kalorien und Nährwerte je Mahlzeit der letzten 7 Tage
+  gehen nach Health Connect; Änderungen im Tagebuch werden beim nächsten Abgleich übernommen, nichts doppelt
+
+- Wochenbericht (neue Dashboard-Kachel, Seite mit Wochenwechsel): wie viele Tage eingetragen, Ø Kalorien und
+  Protein gegen das Ziel, Tage im Zielbereich, Wochenend-Muster, Ballaststoffe, eher niedrige Vitamine und
+  Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
+  Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
+
 - Gewohnheiten: Isst du dieselbe Kombination mindestens dreimal in vier Wochen zur selben Mahlzeit, schlägt die
   App beim Eintragen vor, sie als Vorlage zu speichern (ablehnen möglich, dann nicht wieder)
 
