@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../core/dates.dart';
+import '../../data/app_database_open.dart' show DbProtection;
 import '../../data/csv_export.dart';
 import '../../data/database.dart';
 import '../../data/display_prefs.dart';
@@ -123,7 +124,13 @@ class SettingsPage extends StatelessWidget {
                       ListTile(
                         leading: const Icon(Icons.lock_outline),
                         title: const Text('App-Sperre'),
-                        subtitle: const Text('PIN oder Fingerabdruck beim Öffnen'),
+                        subtitle: Text(switch (AppScope.protectionOf(context)) {
+                          DbProtection.encrypted =>
+                            'PIN oder Fingerabdruck beim Öffnen · Daten verschlüsselt gespeichert',
+                          DbProtection.plain =>
+                            'PIN oder Fingerabdruck beim Öffnen · Verschlüsselung beim nächsten Start',
+                          DbProtection.unsupported => 'PIN oder Fingerabdruck beim Öffnen',
+                        }),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () =>
                             Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const AppLockPage())),

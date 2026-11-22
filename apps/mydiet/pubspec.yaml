@@ -51,6 +51,8 @@ dependencies:
   home_widget: ^0.10.0
   local_auth: ^3.0.2
   crypto: ^3.0.8
+  flutter_secure_storage: ^11.2.0
+  sqlite3: ^3.9.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -127,3 +129,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# Datenbank-Verschlüsselung (7.2, D-24): package:sqlite3 bindet statt SQLite den Build von
+# SQLite3 Multiple Ciphers ein (MIT-Lizenz, ohne OpenSSL). Ohne Schlüssel verhält er sich wie SQLite.
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3mc

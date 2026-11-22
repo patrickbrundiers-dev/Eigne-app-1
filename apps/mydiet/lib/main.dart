@@ -2,8 +2,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'src/app.dart';
+import 'src/data/app_database_open.dart';
 import 'src/data/backup.dart';
-import 'src/data/database.dart';
 import 'src/data/error_log.dart';
 
 Future<void> main() async {
@@ -11,8 +11,16 @@ Future<void> main() async {
   await initializeDateFormatting('de_DE');
   // Local error log without personal data; never blocks the start.
   await ErrorLog.install().catchError((Object e) => debugPrint('Fehlerprotokoll nicht verfügbar: $e'));
-  final db = AppDatabase();
-  runApp(MyDietApp(db: db));
+  final OpenedDatabase opened;
+  try {
+    opened = await openAppDatabase();
+  } catch (e) {
+    // Only when the database is encrypted and its key cannot be read right now; nothing was changed.
+    runApp(StartupErrorApp(error: e));
+    return;
+  }
+  final db = opened.db;
+  runApp(MyDietApp(db: db, protection: opened.protection, notice: opened.notice));
   // Daily local backup in the background; a failure never blocks the app.
   BackupService.forApp(db).then((b) => b.runIfDue()).catchError((Object e) {
     debugPrint('Backup fehlgeschlagen: $e');

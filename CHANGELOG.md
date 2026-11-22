@@ -2,6 +2,11 @@
 
 ## Nächste Version (in Arbeit)
 
+- Datenschutz: Die Datenbank auf dem Gerät ist jetzt verschlüsselt. Der Schlüssel liegt im sicheren Speicher von
+  Android bzw. Windows. Vorhandene Daten werden beim ersten Start automatisch umgestellt; das Original bleibt
+  erhalten, bis die verschlüsselte Kopie vollständig geprüft ist. Die Android-Gerätesicherung ist dafür
+  abgeschaltet, den Umzug auf ein neues Gerät bitte über Einstellungen → Daten → Export
+
 ## 0.7.0 – Neues Design „Fitness & Performance“, 470 weitere Lebensmittel, Online-Suche beim Tippen (2026-11-22)
 
 - Neues Design „Fitness & Performance“, Schritt 1: neue Farben (hell mit Grün, dunkel mit Limette), neue Schrift
