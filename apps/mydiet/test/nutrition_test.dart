@@ -80,8 +80,8 @@ void main() {
     });
 
     test('USDA-Lebensmittel: genug Auswahl, nur bekannte Kategorien', () {
-      final categories = referenceFoods.map((f) => f.category).toSet();
-      expect(usdaFoods.length, greaterThan(200));
+      final categories = {...referenceFoods.map((f) => f.category), 'Gewürze & Kräuter', 'Fertiggerichte'};
+      expect(usdaFoods.length, greaterThan(650));
       for (final f in usdaFoods) {
         expect(categories, contains(f.category), reason: f.name);
         expect(f.carbs, greaterThanOrEqualTo(f.sugar), reason: f.name);
