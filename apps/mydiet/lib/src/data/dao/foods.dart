@@ -50,6 +50,33 @@ extension FoodsDao on AppDatabase {
   Future<Food?> findFoodByBarcode(String code) =>
       (select(foods)..where((f) => f.barcode.equals(code) & f.deletedAt.isNull())).getSingleOrNull();
 
+  /// Which of these barcodes and food keys the user already has as live foods
+  /// (used to hide online results that are already in the own database).
+  Future<({Set<String> barcodes, Set<String> keys})> knownFoods({
+    Iterable<String> barcodes = const [],
+    Iterable<String> keys = const [],
+  }) async {
+    final codes = {
+      for (final c in barcodes)
+        if (c.trim().isNotEmpty) c.trim(),
+    };
+    final fks = keys.toSet();
+    if (codes.isEmpty && fks.isEmpty) return (barcodes: <String>{}, keys: <String>{});
+    final rows = await (select(
+      foods,
+    )..where((f) => f.deletedAt.isNull() & (f.barcode.isIn(codes) | f.foodKey.isIn(fks)))).get();
+    return (
+      barcodes: {
+        for (final f in rows)
+          if (f.barcode != null && codes.contains(f.barcode)) f.barcode!,
+      },
+      keys: {
+        for (final f in rows)
+          if (fks.contains(f.foodKey)) f.foodKey,
+      },
+    );
+  }
+
   /// Creates or updates a food after validation and duplicate checks.
   /// Returns the id.
   Future<String> saveFood({

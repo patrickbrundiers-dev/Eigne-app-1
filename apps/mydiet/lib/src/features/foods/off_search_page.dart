@@ -8,6 +8,25 @@ import '../../ui/format.dart';
 import 'barcode.dart' show offClientFactory;
 import 'food_form_page.dart';
 
+/// Opens an Open Food Facts product: the own food with the same barcode if there is
+/// one, otherwise the food form prefilled to check and save. Returns the food id, or
+/// null if the user cancelled. Nothing is saved unseen.
+Future<String?> openOffProduct(BuildContext context, OffProduct p) async {
+  final db = context.db;
+  final code = p.barcode.trim();
+  if (code.isNotEmpty) {
+    final local = await db.findFoodByBarcode(code);
+    if (local != null) return local.id;
+  }
+  if (!context.mounted) return null;
+  return Navigator.push<String>(
+    context,
+    MaterialPageRoute(
+      builder: (_) => FoodFormPage(prefill: p, initialBarcode: code.isEmpty ? null : code),
+    ),
+  );
+}
+
 /// Text search at Open Food Facts. Runs only when the user presses "Suchen"; only the
 /// search term is sent. A result opens the food form to check and save it, nothing is
 /// saved unseen. Pops with the id of the saved food.
@@ -49,22 +68,7 @@ class _OffSearchPageState extends State<OffSearchPage> {
   }
 
   Future<void> _open(OffProduct p) async {
-    final db = context.db;
-    final code = p.barcode.trim();
-    if (code.isNotEmpty) {
-      final local = await db.findFoodByBarcode(code);
-      if (local != null) {
-        if (mounted) Navigator.pop(context, local.id);
-        return;
-      }
-    }
-    if (!mounted) return;
-    final id = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => FoodFormPage(prefill: p, initialBarcode: code.isEmpty ? null : code),
-      ),
-    );
+    final id = await openOffProduct(context, p);
     if (id != null && mounted) Navigator.pop(context, id);
   }
 

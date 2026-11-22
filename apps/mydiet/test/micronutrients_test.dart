@@ -132,6 +132,11 @@ void main() {
 
   test('USDA micros: every key is a USDA food, values plausible', () {
     final names = {for (final f in usdaFoods) f.name};
+    // Gewürze und Getrocknetes sind konzentriert: dort sind höhere Werte je 100 g echt.
+    final concentrated = {
+      for (final f in usdaFoods)
+        if (f.category == 'Gewürze & Kräuter' || f.name.toLowerCase().contains('getrocknet')) f.name,
+    };
     for (final e in usdaMicros.entries) {
       expect(names, contains(e.key));
       expect(referenceMicros.containsKey(e.key), isFalse, reason: e.key);
@@ -139,8 +144,9 @@ void main() {
         expect(nutrientById(v.key), isNotNull, reason: v.key);
         expect(v.value, greaterThanOrEqualTo(0));
       }
-      expect(e.value['potassium'] ?? 0, lessThan(2000), reason: e.key);
-      expect(e.value['calcium'] ?? 0, lessThan(1500), reason: e.key);
+      final limit = concentrated.contains(e.key) ? 4 : 1;
+      expect(e.value['potassium'] ?? 0, lessThan(2000 * limit), reason: e.key);
+      expect(e.value['calcium'] ?? 0, lessThan(1500 * limit), reason: e.key);
     }
     expect(usdaMicros.length, greaterThan(150));
   });

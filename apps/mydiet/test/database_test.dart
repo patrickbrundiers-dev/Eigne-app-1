@@ -33,7 +33,23 @@ void main() {
       final after = await db.watchFoods().first;
       expect(after.where((f) => f.name == 'Himbeeren'), hasLength(1));
       expect(after.where((f) => f.name == 'Apfel'), isEmpty);
-      expect(await db.getSetting('seedVersion'), '2');
+      expect(await db.getSetting('seedVersion'), '$seedVersion');
+    });
+
+    test('Update von Version 2: neue USDA-Lebensmittel samt Mikronährstoffen kommen dazu', () async {
+      // Stand nach Version 2: die zweite USDA-Lieferung fehlt noch.
+      await db.customStatement("DELETE FROM food_micronutrients");
+      await db.customStatement("DELETE FROM foods WHERE name IN ('Laugenbrezel', 'Grünkohl, gekocht')");
+      await db.setSetting('seedVersion', '2');
+      await db.setSetting('microSeedVersion', '2');
+      await db.seedReferenceFoods();
+      await db.seedReferenceMicros();
+      final after = await db.watchFoods().first;
+      expect(after.where((f) => f.name == 'Laugenbrezel'), hasLength(1));
+      final kale = after.singleWhere((f) => f.name == 'Grünkohl, gekocht');
+      expect(kale.source, 'base');
+      expect((await db.microsOf([kale.id]))[kale.id], isNotEmpty);
+      expect(after.length, baseFoods.length);
     });
 
     test('Vier Standard-Mahlzeiten', () async {
