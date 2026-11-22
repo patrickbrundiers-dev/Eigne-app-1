@@ -271,23 +271,32 @@ class _CaloriesTile extends StatelessWidget {
             size: ringSize,
             color: t.colorScheme.primary,
             stroke: 13,
+            semanticLabel: d.hideNumbers
+                ? 'Kalorien heute: ${gentleStatus(b.progress)}'
+                : 'Kalorien heute: ${n0(remaining.abs())} ${remaining < 0 ? 'kcal zu viel' : 'kcal übrig'}',
             child: d.hideNumbers
                 ? Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(gentleStatus(b.progress), textAlign: TextAlign.center, style: t.textTheme.bodyMedium),
                   )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        n0(remaining.abs()),
-                        style: t.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: remaining < 0 ? t.colorScheme.error : null,
-                        ),
+                : Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            n0(remaining.abs()),
+                            style: t.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: remaining < 0 ? t.colorScheme.error : null,
+                            ),
+                          ),
+                          Text(remaining < 0 ? 'kcal zu viel' : 'kcal übrig', style: t.textTheme.bodySmall),
+                        ],
                       ),
-                      Text(remaining < 0 ? 'kcal zu viel' : 'kcal übrig', style: t.textTheme.bodySmall),
-                    ],
+                    ),
                   ),
           );
           final w = d.week;
@@ -411,6 +420,7 @@ class _ProteinTile extends StatelessWidget {
             size: 84,
             stroke: 9,
             color: MacroColors.protein(context),
+            semanticLabel: 'Protein: ${n0(v)} von $target g',
             child: Text(
               '${(target == 0 ? 0 : v / target * 100).round()} %',
               style: t.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
