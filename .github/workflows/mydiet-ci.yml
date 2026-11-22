@@ -1,0 +1,41 @@
+name: MyDiet CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/mydiet/**"
+      - ".github/workflows/mydiet-ci.yml"
+  pull_request:
+    paths:
+      - "apps/mydiet/**"
+      - ".github/workflows/mydiet-ci.yml"
+
+concurrency:
+  group: mydiet-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mydiet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Dependencies
+        run: flutter pub get
+      - name: Generated database code is up to date
+        run: |
+          dart run build_runner build
+          git diff --exit-code -- lib
+      - name: Format
+        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Analyze
+        run: flutter analyze
+      - name: Test
+        run: flutter test

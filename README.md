@@ -1,65 +1,58 @@
-# Paperless AI
+# MyDiet AI
 
-Local-first document management for Android and Windows, with optional self-hosted sync and local AI.
+Persönliche Ernährungs-, Kalorien- und Abnehm-App für Android und Windows (iOS später).
+Eine Codebasis in Flutter, Daten offline-first in einer lokalen SQLite-Datenbank.
 
-## Status
-**Phase 1, in progress.** Done: backend baseline (`/api/v1`, settings, redacting JSON logs),
-data model with migrations, authorization policy, authentication with device sessions,
-document import with safe preview and a documents API, responsive Flutter shell.
-Not implemented yet: encrypted storage, OCR, AI and synchronization. See `CHANGELOG.md`.
+> Dieses Repository enthielt bis November 2026 die App „Paperless AI“. Der letzte Stand ist über die
+> Git-Historie (Commit `a262499`) und die Releases `v0.7.0`/`v0.8.0` erreichbar.
 
-## Stack
-- Flutter/Dart: Android + Windows clients
-- Python/FastAPI: optional backend
-- PostgreSQL: server metadata
-- SQLite: local device metadata (planned)
-- Docker Compose: local backend development
-- GitHub Actions: CI
+## Stand
 
-## Quick start
+**Phase 1 (Grundsystem) ist fertig:** Profil mit automatischer Kalorien- und Makroberechnung,
+anpassbares Dashboard, Lebensmitteldatenbank mit 100 Basis-Lebensmitteln und eigenen Produkten,
+Ernährungstagebuch, Gewichtstracking mit Trend, Prognose und Plateau-Erkennung, Wasser, Aktivität,
+Export/Import, Hell/Dunkel-Modus. Alles läuft lokal ohne Internet.
 
-### Backend
-1. Install Python 3.12+.
-2. Copy `backend/.env.example` to `backend/.env`.
-3. From the repository root:
-   ```bash
-   python -m venv .venv
-   # Windows: .venv\\Scripts\\activate
-   # Linux/macOS: source .venv/bin/activate
-   pip install -e ./backend[dev]
-   cd backend
-   alembic upgrade head        # creates the schema (SQLite file by default)
-   paperless-admin create-user --email you@example.org --name You   # see docs/AUTHENTICATION.md
-   uvicorn paperless_api.main:app --reload --app-dir src
-   ```
-4. Open `http://127.0.0.1:8000/docs` (health: `/api/v1/health`).
-5. Tests and lint: `pytest` and `ruff check . && ruff format --check .` in `backend/`.
-   Set `TEST_POSTGRES_URL` to an empty, disposable database to also test migrations on PostgreSQL.
+Noch nicht enthalten (siehe [Roadmap](docs/ROADMAP.md)): Barcode, Rezepte, Ernährungspläne,
+Supplemente (Phase 2), KI (Phase 3), Sync und Smartwatch (Phase 4).
 
-### Docker services
+## Dokumentation
+
+| Dokument | Inhalt |
+|---|---|
+| [docs/ANALYSE.md](docs/ANALYSE.md) | Technische Analyse und Technologievergleich |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | Phasen und Fortschritt |
+| [docs/ARCHITEKTUR.md](docs/ARCHITEKTUR.md) | Aufbau der App |
+| [docs/DATENMODELL.md](docs/DATENMODELL.md) | Tabellen, Sync-Vorbereitung, Export |
+| [docs/BERECHNUNGEN.md](docs/BERECHNUNGEN.md) | Alle Formeln und Annahmen |
+| [docs/SICHERHEIT.md](docs/SICHERHEIT.md) | Sicherheits- und Datenschutzkonzept |
+| [CHANGELOG.md](CHANGELOG.md) | Änderungen je Version |
+
+## Installation
+
+Fertige Dateien entstehen in GitHub Actions („Build apps“): Windows-Installer (`MyDietAI-Setup-*.exe`),
+portable ZIP und Android-APK (`MyDietAI-Android-*.apk`). Ein Release entsteht über
+Actions → Build apps → Run workflow mit `release_tag`, z. B. `mydiet-v0.1.0`.
+
+## Entwicklung
+
+Voraussetzung: Flutter stable (getestet mit 3.50.1, Dart 3.14).
+
 ```bash
-docker compose up -d db
-```
-The database is for development only. Do not expose it to the internet.
-
-### Flutter
-Install Flutter and enable the Windows desktop target if developing on Windows:
-```bash
-flutter doctor
-cd apps/client
+cd apps/mydiet
 flutter pub get
-flutter test
-flutter run -d windows
+flutter test                 # alle Tests
+flutter run -d windows       # oder: -d <android-gerät>
 ```
-Android and Windows platform folders are already generated.
 
-## Development rules
-- Never commit `.env`, credentials, real personal documents or encryption keys.
-- Keep private family spaces private by default.
-- Enforce authorization in the backend, not only in the UI.
-- Do not claim production-ready encryption until key lifecycle, recovery, threat model and tests are reviewed.
-- All schema changes require migrations.
-- Every feature needs tests and documentation.
+Nach Änderungen an `lib/src/data/tables.dart` oder `database.dart` den Datenbankcode neu erzeugen:
 
-## Roadmap
-See `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, `docs/AUTHENTICATION.md`, `docs/DOCUMENT_IMPORT.md`, `docs/DATA_MODEL.md`, `docs/AUTHORIZATION.md` and `docs/SECURITY.md`.
+```bash
+dart run build_runner build
+```
+
+Die CI prüft generierten Code, Formatierung (`dart format`, Zeilenlänge 120), `flutter analyze` und alle Tests.
+
+Web-Vorschau (nur für Entwicklung und Oberflächentests): `flutter build web --no-web-resources-cdn`.
+`web/sqlite3.wasm` und `web/drift_worker.js` müssen zu den Versionen von `sqlite3` und `drift` in
+`pubspec.lock` passen (GitHub-Releases von simolus3/sqlite3.dart und simolus3/drift).
