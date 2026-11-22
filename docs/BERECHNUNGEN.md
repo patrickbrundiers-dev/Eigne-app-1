@@ -196,6 +196,20 @@ Dauer = jetzt − Beginn; verbleibend = Ziel − Dauer; Durchschnitt über abges
 - Gewicht: 7-Tage-Mittel am Sonntag gegen das 7-Tage-Mittel eine Woche davor.
 - Höchstens drei Vorschläge; ohne Auffälligkeiten „So weitermachen“ mit Verweis auf das adaptive Ziel.
 
+## Health Connect (`core/health_import.dart`)
+
+- Gelesen werden Schritte (Tagessumme von Health Connect, ohne Doppelzählung mehrerer Quellen), aktive
+  Kalorien, Trainings und Gewicht. Garmin Connect, Samsung Health, Google Fit u. a. schreiben dorthin.
+- Jedes Training wird ein Aktivitätseintrag „<Art> (Health Connect)“ mit Dauer (Ende − Beginn, höchstens 24 h)
+  und den Kalorien des Trainings (0, wenn die Quelle keine liefert).
+- Pro Tag ein Eintrag „Alltag (Health Connect)“: Schritte und aktive Kalorien minus Trainingskalorien des Tages
+  (nicht unter 0), damit nichts doppelt zählt. Ein Wert, der über Mitternacht reicht, zählt für den Starttag.
+- Gewicht: der letzte Wert des Tages, nur 25–400 kg, auf 0,1 kg gerundet, und nur für Tage ohne eigenen Eintrag.
+- Erneutes Übernehmen aktualisiert Einträge über ihre Kennung (`hc:<id>`, `hc-day:<Tag>`); selbst gelöschte
+  Einträge kommen nicht wieder. Wie stark Aktivität das Tagesbudget erhöht, regelt weiterhin das Profil.
+- Automatisch beim Öffnen nur wenn eingeschaltet, höchstens alle 3 Stunden, die letzten 7 Tage (beim ersten
+  Verbinden 30 Tage).
+
 ## Tageshinweise (regelbasiert, keine KI)
 
 - Proteinlücke > 15 g ab 12 Uhr, mit Vorschlägen passend zu Ernährungsweise, Unverträglichkeiten

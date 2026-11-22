@@ -21,6 +21,9 @@ import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/data/recipe_import_client.dart';
 import 'package:mydiet_ai/src/data/weekly_report_data.dart';
 import 'package:mydiet_ai/src/features/report/weekly_report_page.dart';
+import 'package:mydiet_ai/src/core/health_import.dart';
+import 'package:mydiet_ai/src/data/health_source.dart';
+import 'package:mydiet_ai/src/features/settings/health_page.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -244,6 +247,48 @@ void main() {
     expect(find.text('Protein oft unter dem Ziel'), findsOneWidget);
     expect(find.text('Vorschläge für nächste Woche'), findsOneWidget);
     expect(find.textContaining('1. '), findsWidgets);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Health Connect: verbinden übernimmt Training, Schritte und Gewicht', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    final now = DateTime.now();
+    final src = _FakeHealthSource(
+      HealthRead(
+        stepsByDay: {dayKey(now): 7200},
+        workouts: [
+          HealthWorkout(
+            id: 'g1',
+            type: 'RUNNING',
+            start: DateTime(now.year, now.month, now.day, 0, 5),
+            end: DateTime(now.year, now.month, now.day, 0, 35),
+            kcal: 320,
+          ),
+        ],
+      ),
+    );
+    healthSourceFactory = () => src;
+    addTearDown(() => healthSourceFactory = HealthConnectSource.new);
+    await pumpApp(tester, db);
+    tester
+        .state<NavigatorState>(find.byType(Navigator).first)
+        .push(MaterialPageRoute<void>(builder: (_) => const HealthPage()));
+    Future<void> settle() async {
+      for (var i = 0; i < 20; i++) {
+        await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+    }
+
+    await settle();
+    expect(find.textContaining('Garmin Connect'), findsOneWidget);
+    await tester.tap(find.text('Verbinden und Freigaben erteilen'));
+    await settle();
+    expect(src.requested, isTrue);
+    expect(find.textContaining('2 Aktivitätseinträge'), findsOneWidget);
+    expect(find.text('Beim Öffnen automatisch übernehmen'), findsOneWidget);
+    final acts = (await tester.runAsync(() => db.watchActivities(dayKey(now)).first))!;
+    expect(acts.map((a) => a.label).toSet(), {'Laufen (Health Connect)', dailyActivityLabel});
     await closeDb(tester, db);
   });
 
@@ -546,4 +591,20 @@ void main() {
     expect(tester.takeException(), isNull);
     await closeDb(tester, db);
   });
+}
+
+class _FakeHealthSource implements HealthSource {
+  _FakeHealthSource(this.data);
+  final HealthRead data;
+  bool requested = false;
+  @override
+  Future<HealthAvailability> availability() async => HealthAvailability.available;
+  @override
+  Future<bool> hasPermissions() async => requested;
+  @override
+  Future<void> install() async {}
+  @override
+  Future<bool> requestPermissions() async => requested = true;
+  @override
+  Future<HealthRead> read(DateTime from, DateTime to) async => data;
 }

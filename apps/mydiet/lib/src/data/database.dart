@@ -885,6 +885,57 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> deleteActivity(String id) => _tombstone(activityEntries, id);
 
+  /// Creates or updates an imported activity (Health Connect, later Garmin) by its external id.
+  /// An entry the user deleted stays deleted; importing again does not bring it back.
+  Future<void> upsertExternalActivity({
+    required String externalId,
+    required String day,
+    required String label,
+    required int minutes,
+    required double kcal,
+    int? steps,
+    required String source,
+  }) async {
+    if (minutes < 0 || minutes > 1440 || kcal < 0 || kcal > 10000 || (steps != null && steps < 0)) {
+      throw ArgumentError('Ungültige Aktivitätswerte.');
+    }
+    await transaction(() async {
+      final existing = await (select(activityEntries)..where((a) => a.externalId.equals(externalId))).getSingleOrNull();
+      if (existing == null) {
+        await into(activityEntries).insert(
+          ActivityEntriesCompanion.insert(
+            dayKey: day,
+            label: label,
+            minutes: Value(minutes),
+            kcal: Value(kcal),
+            steps: Value(steps),
+            source: Value(source),
+            externalId: Value(externalId),
+          ),
+        );
+        return;
+      }
+      if (existing.deletedAt != null) return;
+      if (existing.dayKey == day &&
+          existing.label == label &&
+          existing.minutes == minutes &&
+          existing.kcal == kcal &&
+          existing.steps == steps) {
+        return;
+      }
+      await (update(activityEntries)..where((a) => a.id.equals(existing.id))).write(
+        ActivityEntriesCompanion(
+          dayKey: Value(day),
+          label: Value(label),
+          minutes: Value(minutes),
+          kcal: Value(kcal),
+          steps: Value(steps),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+    });
+  }
+
   // ---------------------------------------------------------------- recipes
 
   Stream<List<Recipe>> watchRecipes({String query = '', bool onlyFavorites = false}) {

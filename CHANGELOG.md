@@ -2,6 +2,12 @@
 
 ## Nächste Version (in Arbeit)
 
+- Health Connect (Android, Einstellungen → Health Connect): Schritte, aktive Kalorien, Trainings und Gewicht
+  aus Health Connect übernehmen, also auch von Garmin Connect, Samsung Health oder Google Fit. Jedes Training
+  wird ein Aktivitätseintrag, dazu ein Eintrag „Alltag“ pro Tag ohne Doppelzählung; erneutes Übernehmen
+  aktualisiert statt zu verdoppeln, eigene Gewichtseinträge haben Vorrang. Auf Wunsch automatisch beim Öffnen.
+  Die App braucht jetzt mindestens Android 8
+
 - Wochenbericht (neue Dashboard-Kachel, Seite mit Wochenwechsel): wie viele Tage eingetragen, Ø Kalorien und
   Protein gegen das Ziel, Tage im Zielbereich, Wochenend-Muster, Ballaststoffe, eher niedrige Vitamine und
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste

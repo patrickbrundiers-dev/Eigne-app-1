@@ -4,6 +4,22 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Health Connect lesen (Aufgabe 6.1, Teil 1)
+
+Phase-2-Thread, Branch `claude/project-thread-k8k628`.
+
+Erledigt:
+- `core/health_import.dart` (Zuordnung, ohne Flutter), `data/health_source.dart` (Paket `health`, austauschbar über
+  `healthSourceFactory`), `data/health_sync.dart` (Übernehmen, Automatik alle 3 h), `AppDatabase.upsertExternalActivity`
+  (Kennung, Tombstones respektiert, kein Schema)
+- `features/settings/health_page.dart` + Kachel in den Einstellungen; Automatik beim Start in `home_shell.dart`
+- Android: Health-Berechtigungen, Rationale-Intent, `FlutterFragmentActivity`, minSdk 26 (D-15)
+
+Tests: `test/health_import_test.dart` (5) und Widget-Test „Health Connect“ in `app_test.dart`. Auf echtem Gerät
+noch nicht geprüft (kein Android-Gerät in der Cloud), der Android-Build läuft im CI.
+
+Nächster Schritt: Ernährung nach Health Connect schreiben (6.1 Teil 2), dann Phase 5 (App-Sperre, W13).
+
 ## 2026-11-22 – Als Text eintragen (Aufgabe 3.1)
 
 Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es` (neu von `main` nach #28).

@@ -12,6 +12,7 @@ import '../../data/csv_export.dart';
 import '../../data/display_prefs.dart';
 import 'backup_card.dart';
 import '../../ui/widgets.dart';
+import 'health_page.dart';
 import 'reminders_page.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -84,6 +85,16 @@ class SettingsPage extends StatelessWidget {
                   subtitle: const Text('Mahlzeiten, Wasser, Supplemente, Wiegen'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const RemindersPage())),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.favorite_outline),
+                  title: const Text('Health Connect'),
+                  subtitle: const Text('Schritte, Training und Gewicht übernehmen (z. B. von Garmin)'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const HealthPage())),
                 ),
               ),
               const SizedBox(height: 12),
