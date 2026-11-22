@@ -33,6 +33,11 @@ jobs:
         run: |
           dart run build_runner build
           git diff --exit-code -- lib
+      - name: Schema snapshots are up to date
+        run: |
+          dart run drift_dev make-migrations
+          git diff --exit-code -- drift_schemas test/drift
+          test -z "$(git status --porcelain -- drift_schemas test/drift)"
       - name: Format
         # Generated *.g.dart files keep build_runner's own formatting.
         run: dart format --output=none --set-exit-if-changed $(git ls-files 'lib/*.dart' 'test/*.dart' | grep -v '\.g\.dart$')

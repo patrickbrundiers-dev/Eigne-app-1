@@ -7,7 +7,10 @@ import '../home_shell.dart';
 import 'food_form_page.dart';
 
 class FoodsPage extends StatefulWidget {
-  const FoodsPage({super.key});
+  const FoodsPage({super.key, this.embedded = false});
+
+  /// Inside the "Essen" tabs: no own app bar.
+  final bool embedded;
 
   @override
   State<FoodsPage> createState() => _FoodsPageState();
@@ -28,8 +31,9 @@ class _FoodsPageState extends State<FoodsPage> {
     final db = context.db;
     final t = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Lebensmittel')),
+      appBar: widget.embedded ? null : AppBar(title: const Text('Lebensmittel')),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'food-new',
         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FoodFormPage())),
         icon: const Icon(Icons.add),
         label: const Text('Neu'),
@@ -39,7 +43,7 @@ class _FoodsPageState extends State<FoodsPage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: EdgeInsets.fromLTRB(16, widget.embedded ? 8 : 0, 16, 8),
               child: SearchBar(
                 controller: _q,
                 hintText: 'Suchen',

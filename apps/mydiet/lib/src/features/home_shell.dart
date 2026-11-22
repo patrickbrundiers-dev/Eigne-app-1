@@ -2,7 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'dashboard/dashboard_page.dart';
 import 'diary/diary_page.dart';
-import 'foods/foods_page.dart';
+import 'foods/food_hub_page.dart';
 import 'profile/profile_page.dart';
 import 'weight/weight_page.dart';
 
@@ -25,13 +25,13 @@ class HomeShellState extends State<HomeShell> {
     (Icons.space_dashboard_outlined, Icons.space_dashboard, 'Heute'),
     (Icons.restaurant_menu_outlined, Icons.restaurant_menu, 'Tagebuch'),
     (Icons.monitor_weight_outlined, Icons.monitor_weight, 'Gewicht'),
-    (Icons.egg_alt_outlined, Icons.egg_alt, 'Lebensmittel'),
+    (Icons.egg_alt_outlined, Icons.egg_alt, 'Essen'),
     (Icons.person_outline, Icons.person, 'Profil'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final pages = const [DashboardPage(), DiaryPage(), WeightPage(), FoodsPage(), ProfilePage()];
+    final pages = const [DashboardPage(), DiaryPage(), WeightPage(), FoodHubPage(), ProfilePage()];
     final wide = MediaQuery.sizeOf(context).width >= 840;
     final body = IndexedStack(index: _index, children: pages);
     if (wide) {

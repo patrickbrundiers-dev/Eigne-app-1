@@ -94,6 +94,39 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Essen: Rezepte und Einkaufsliste', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      final id = await db.saveRecipe(name: 'Overnight Oats', servings: 2, items: [IngredientInput.fromFood(oats, 120)]);
+      await db.addRecipeToShopping(id);
+    });
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Essen'));
+    await pumpApp(tester, db);
+    expect(find.text('Lebensmittel'), findsOneWidget); // Tab
+    await tester.tap(find.text('Rezepte'));
+    await tester.pumpAndSettle(); // tab animation
+    await pumpApp(tester, db);
+    expect(find.text('Overnight Oats'), findsOneWidget);
+    expect(find.textContaining('pro Portion'), findsOneWidget);
+
+    await tester.tap(find.text('Overnight Oats'));
+    await pumpApp(tester, db);
+    expect(find.text('Pro Portion'), findsOneWidget);
+    expect(find.text('Heute eintragen'), findsOneWidget);
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await pumpApp(tester, db);
+
+    await tester.tap(find.text('Einkauf'));
+    await tester.pumpAndSettle();
+    await pumpApp(tester, db);
+    expect(find.textContaining('120 g Haferflocken'), findsOneWidget);
+    expect(find.text('für Overnight Oats'), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Breites Fenster nutzt die Seitennavigation', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db, size: const Size(1400, 900));

@@ -4,6 +4,7 @@ import '../../app.dart';
 import '../../data/database.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
+import '../../core/recipes.dart';
 import '../foods/food_form_page.dart';
 import 'amount_sheet.dart';
 
@@ -23,6 +24,8 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   List<Food> _results = [];
   List<Food> _recent = [];
   List<Food> _favorites = [];
+  List<Recipe> _recipeResults = [];
+  List<Recipe> _favRecipes = [];
   int _added = 0;
 
   @override
@@ -35,17 +38,50 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     final db = context.db;
     final recent = await db.recentFoods();
     final favs = await db.watchFoods(onlyFavorites: true).first;
+    final favRecipes = await db.watchRecipes(onlyFavorites: true).first;
     if (mounted) {
       setState(() {
         _recent = recent;
         _favorites = favs;
+        _favRecipes = favRecipes;
       });
     }
   }
 
   Future<void> _search(String q) async {
-    final r = q.trim().isEmpty ? <Food>[] : await context.db.searchFoods(q);
-    if (mounted && q == _q.text) setState(() => _results = r);
+    final db = context.db;
+    final r = q.trim().isEmpty ? <Food>[] : await db.searchFoods(q);
+    final rr = q.trim().isEmpty ? <Recipe>[] : await db.searchRecipes(q, limit: 5);
+    if (mounted && q == _q.text) {
+      setState(() {
+        _results = r;
+        _recipeResults = rr;
+      });
+    }
+  }
+
+  Future<void> _pickRecipe(Recipe r) async {
+    final db = context.db;
+    final RecipeNutrition n = await db.recipeNutritionOf(r);
+    if (!mounted) return;
+    final res = await showAmountSheet(
+      context,
+      name: r.name,
+      unit: 'g',
+      per100: n.per100,
+      servingAmount: n.servingWeight,
+      servingLabel: 'Portion',
+      slots: widget.slots,
+      mealSlotId: widget.mealSlotId,
+    );
+    if (res == null || !mounted) return;
+    try {
+      await db.logRecipe(day: widget.day, mealSlotId: res.mealSlotId, recipe: r, grams: res.amount);
+      setState(() => _added++);
+      if (mounted) showMessage(context, '${r.name} (${amountWithUnit(res.amount, 'g')}) eingetragen');
+    } catch (e) {
+      if (mounted) showMessage(context, errorText(e));
+    }
   }
 
   Future<void> _pick(Food f) async {
@@ -115,7 +151,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                 child: SearchBar(
                   controller: _q,
                   autoFocus: true,
-                  hintText: 'Lebensmittel suchen, z. B. Skyr',
+                  hintText: 'Lebensmittel oder Rezept suchen',
                   leading: const Icon(Icons.search),
                   trailing: [
                     if (searching)
@@ -138,13 +174,18 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                 child: ListView(
                   children: [
                     if (searching) ...[
-                      if (_results.isEmpty)
+                      for (final r in _recipeResults) _RecipeTile(recipe: r, onTap: () => _pickRecipe(r)),
+                      if (_results.isEmpty && _recipeResults.isEmpty)
                         Padding(
                           padding: const EdgeInsets.all(20),
                           child: Text('Nichts gefunden für „${_q.text.trim()}“.', style: t.textTheme.bodyLarge),
                         ),
                       for (final f in _results) _FoodTile(food: f, onTap: () => _pick(f)),
                     ] else ...[
+                      if (_favRecipes.isNotEmpty) ...[
+                        _header(context, 'Lieblingsrezepte'),
+                        for (final r in _favRecipes) _RecipeTile(recipe: r, onTap: () => _pickRecipe(r)),
+                      ],
                       if (_favorites.isNotEmpty) ...[
                         _header(context, 'Favoriten'),
                         for (final f in _favorites) _FoodTile(food: f, onTap: () => _pick(f)),
@@ -220,4 +261,19 @@ class _FoodTile extends StatelessWidget {
       ),
     );
   }
+}
+
+class _RecipeTile extends StatelessWidget {
+  const _RecipeTile({required this.recipe, required this.onTap});
+  final Recipe recipe;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    onTap: onTap,
+    leading: const Icon(Icons.menu_book),
+    title: Text(recipe.name),
+    subtitle: Text('Rezept · ${n1opt(recipe.servings)} Portionen'),
+    trailing: const Icon(Icons.add_circle_outline),
+  );
 }

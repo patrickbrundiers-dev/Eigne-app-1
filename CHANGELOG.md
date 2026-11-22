@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 – Phase 2: Ernährung (in Arbeit)
+
+- Rezepte: Zutaten aus der Lebensmitteldatenbank, Portionen, optional Gewicht nach dem Kochen,
+  Nährwerte pro Portion und pro 100 g mit Rechenweg, Stichworte, Zubereitung, Favoriten
+- Rezepte im Tagebuch: über die Suche oder „Heute eintragen“, als Portion oder in Gramm; die Werte werden
+  wie bei Lebensmitteln eingefroren
+- Einkaufsliste: Zutaten eines Rezepts für beliebig viele Portionen, gleiche Zutaten werden zusammengefasst,
+  eigene Einträge („500 g Hackfleisch“), abhaken, erledigte entfernen, Wischen zum Löschen mit Rückgängig
+- Navigation: „Lebensmittel“ heißt jetzt „Essen“ mit den Reitern Lebensmittel, Rezepte, Einkauf
+- Datenbank Schema 2 mit getesteter Migration; Export/Import enthält Rezepte und Einkaufsliste
+
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 
 Neuentwicklung als MyDiet AI. Die vorherige App „Paperless AI“ wurde aus dem Repository entfernt

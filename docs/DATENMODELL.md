@@ -1,4 +1,4 @@
-# Datenmodell (Schema-Version 1)
+# Datenmodell (Schema-Version 2)
 
 Lokale SQLite-Datenbank über drift. Definition: `apps/mydiet/lib/src/data/tables.dart`.
 
@@ -42,6 +42,19 @@ von Name und Nährwerten pro 100. Spätere Änderungen an einem Lebensmittel ver
 **activity_entries** – Bezeichnung, Minuten, kcal, Schritte, `source` + `external_id`
 (**eindeutig** pro Quelle) → eine importierte Aktivität kann nie doppelt gezählt werden.
 
+**recipes** (ab Schema 2) – Name (`name_key` normalisiert, **eindeutig**), Portionen, optional Gewicht nach
+dem Kochen, Zubereitungszeit, Zubereitung, Stichworte (JSON), Favorit.
+
+**recipe_items** (ab Schema 2) – Zutaten eines Rezepts mit Menge und einer **Kopie** der Nährwerte pro 100.
+Ein später geändertes oder gelöschtes Lebensmittel verändert das Rezept nicht. Beim Bearbeiten werden die
+alten Zeilen als gelöscht markiert und neu geschrieben.
+
+**shopping_items** (ab Schema 2) – Einkaufsliste. `item_key` (Lebensmittel-ID oder normalisierter Name) +
+Einheit: Eine offene Zeile wird beim erneuten Hinzufügen erweitert statt verdoppelt.
+
+`diary_entries.recipe_id` (ab Schema 2) markiert Einträge aus einem Rezept; die Werte pro 100 g des fertigen
+Gerichts werden wie bei Lebensmitteln kopiert.
+
 **settings** – Schlüssel/Wert: `themeMode`, `colorScheme`, `dashboardLayout` (JSON), `seedVersion`.
 
 ## Basis-Lebensmittel
@@ -58,4 +71,11 @@ Tombstones. Import ersetzt alle Daten in einer Transaktion; bei einem Fehler ble
 ## Migrationen
 
 `schemaVersion` in `database.dart`. Jede Änderung bekommt einen Migrationsschritt in
-`MigrationStrategy.onUpgrade` und einen Test mit einer Datenbank der Vorversion.
+`MigrationStrategy.onUpgrade`. Der Stand jeder Version liegt in `drift_schemas/` (erzeugt mit
+`dart run drift_dev make-migrations`); `test/drift/` prüft jede Migration gegen eine neu angelegte
+Datenbank und dass vorhandene Daten erhalten bleiben.
+
+| Version | Änderung |
+|---|---|
+| 1 | Grundsystem (Phase 1) |
+| 2 | `recipes`, `recipe_items`, `shopping_items`, `diary_entries.recipe_id` |

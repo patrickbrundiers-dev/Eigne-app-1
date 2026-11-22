@@ -50,6 +50,16 @@ Die Werte liegen am unteren Rand der DGE-Spannen, weil Formeln den Bedarf bei h�
   Ballaststoffe + Salz ≤ 100 g, Zucker ≤ Kohlenhydrate, gesättigt ≤ Fett (Fehler); Abweichung der kcal von
   4 × E + 4 × KH + 9 × F + 2 × Ballaststoffe um mehr als 15 % + 20 kcal (Warnung).
 
+## Rezepte
+
+- Gesamtwerte = Summe aller Zutaten (Wert pro 100 × Menge ÷ 100)
+- Pro Portion = Gesamt ÷ Portionen
+- Gewicht des Gerichts = gewogenes Endgewicht nach dem Kochen, sonst Summe der Zutatenmengen (ml wie g)
+- Pro 100 g = Gesamt × 100 ÷ Gewicht des Gerichts. Kochen verändert das Gewicht (Wasser), nicht die Nährwerte.
+- Ins Tagebuch wird eine Menge in Gramm eingetragen; 1 Portion = Gewicht ÷ Portionen. So ergeben
+  „1 Portion“ und „Gramm einer Portion“ genau dieselben Werte (getestet).
+- Einkaufsliste: Menge × gewünschte Portionen ÷ Rezeptportionen; gleiche Zutat mit gleicher Einheit wird addiert.
+
 ## Aktivität
 
 - Tagesbudget = Kalorienziel + Aktivitätskalorien × Anrechnung (0/25/50/100 %, Standard 0 %).
