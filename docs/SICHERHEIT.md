@@ -9,7 +9,7 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
 |---|---|
 | Speicherort | SQLite-Datei im privaten App-Speicher (Android: App-Sandbox, nur die App hat Zugriff; Windows: Benutzerprofil) |
 | Health Connect (Android) | Lese-Berechtigungen (Schritte, aktive/gesamte Kalorien, Training, Gewicht), erst nach Tippen auf „Verbinden“ angefragt; Schreiben nur für Ernährung (Summen je Mahlzeit, keine Lebensmittelnamen), mit eigenem Schalter und eigener Freigabe. Sattly löscht dort nur selbst Geschriebenes und jederzeit in Health Connect widerrufbar. Werte werden lokal in die eigene Datenbank übernommen, nichts verlässt das Gerät. Berechtigungs-Erklärung über die von Health Connect verlangte Aktivität. |
-| App-Sperre | Optional PIN (nur PBKDF2-Prüfwert, eigene Datei außerhalb der Datenbank) und Fingerabdruck/Windows Hello über das Betriebssystem; Wartezeit nach Fehlversuchen; die Sperre liegt über der ganzen App inklusive geöffneter Seiten. Keine Wiederherstellung der PIN; Ausweg ist das Löschen der App-Daten. Die Datenbank selbst wird nicht zusätzlich verschlüsselt (Entscheidung Patrick 2026-11-22). |
+| App-Sperre | Optional PIN (nur PBKDF2-Prüfwert, eigene Datei außerhalb der Datenbank) und Fingerabdruck/Windows Hello über das Betriebssystem; Wartezeit nach Fehlversuchen; die Sperre liegt über der ganzen App inklusive geöffneter Seiten. Keine Wiederherstellung der PIN; Ausweg ist das Löschen der App-Daten. Zusätzlich ist die Datenbank verschlüsselt (siehe unten). |
 | Netzwerk | Nur auf Anforderung: Open Food Facts beim Scannen eines unbekannten Barcodes (nur der Barcode), bei der Textsuche „Bei Open Food Facts suchen“ (nur der Suchbegriff) und – abschaltbar – beim Tippen in der Lebensmittelsuche, wenn die eigene Datenbank kaum etwas findet (nur der Suchbegriff, nach 600 ms Tipp-Pause) und beim Rezept-Import die eingegebene Webadresse (eine Abfrage, ohne Cookies und Nutzerdaten); jeweils generischer User-Agent. Keine Analyse- oder Werbe-SDKs. |
 | Export | Nur auf ausdrücklichen Wunsch, Speicherort wählt der Benutzer. Export-Dateien sind per `.gitignore` ausgeschlossen. Hinweis: Export ist unverschlüsselt. |
 | Import | Formatprüfung, eine Transaktion, bei Fehlern keine Änderung |
@@ -18,10 +18,26 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
 | Eingaben | Wertebereiche für Gewicht, Mengen, Nährwerte; Plausibilitätsprüfung von Nährwerten; SQL nur über Platzhalter |
 | Medizinische Aussagen | Hinweise sind regelbasiert und ausdrücklich keine Beratung; Sicherheitsgrenzen beim Kalorienziel (max. 1 % Gewichtsverlust/Woche, min. 1500/1200 kcal) |
 
-Bekannte Lücke in Phase 1: Die Datenbank auf dem Gerät ist nicht zusätzlich verschlüsselt. Schutz
-besteht über die Geräteverschlüsselung (Android ab Version 10 standardmäßig, Windows mit BitLocker)
-und die App-Sandbox. Geplant für Phase 5: SQLCipher mit Schlüssel im Android Keystore bzw. Windows DPAPI
-und optionale App-Sperre.
+### Verschlüsselte Datenbank (7.2, D-24)
+
+- Die Datenbankdatei `mydiet.sqlite` ist mit SQLite3 Multiple Ciphers verschlüsselt (Standardverfahren
+  ChaCha20-Poly1305, Schlüsselableitung mit PBKDF2). Die Bibliothek kommt über `package:sqlite3`
+  (`hooks: user_defines: sqlite3: source: sqlite3mc` in `pubspec.yaml`), MIT-Lizenz, ohne OpenSSL.
+- Schlüssel: 32 Zufallsbytes aus `Random.secure()`, gespeichert mit `flutter_secure_storage` (Android: Keystore,
+  RSA-OAEP + AES-GCM; Windows: Anmeldeinformationsverwaltung + AES-GCM). Er steht nie in der Datenbank, in
+  Exporten, Sicherungen oder Protokollen.
+- Umstellung bestehender Daten beim ersten Start (`lib/src/data/db_encryption.dart`): WAL einarbeiten,
+  `VACUUM INTO` in eine Kopie, Kopie verschlüsseln, mit `integrity_check`, Schemaversion und Zeilenzahl jeder
+  Tabelle prüfen, erst dann das Original in einem Schritt ersetzen. Bei jedem Fehler bleibt das Original
+  unverändert, die App öffnet es wie bisher und versucht es beim nächsten Start erneut.
+- Schlüssel verloren oder falsch (z. B. Datei von einem anderen Gerät): Die Datei wird nicht gelöscht, sondern
+  als `mydiet.sqlite.unlesbar-<Zeit>` beiseitegelegt; die App startet leer und erklärt das. Ist der sichere
+  Speicher nur vorübergehend nicht lesbar, ändert die App nichts und zeigt eine Fehlerseite.
+- Android-Gerätesicherung ist deshalb abgeschaltet (`allowBackup="false"`): Der Keystore-Schlüssel wandert nicht
+  mit, eine zurückgespielte Datenbank wäre unlesbar. Umzug auf ein neues Gerät über Export/Import.
+- Bekannte Lücke: Die täglichen Sicherungen (`backups/*.json`) und Exporte sind noch unverschlüsselt; sie liegen
+  im privaten App-Ordner bzw. dort, wo der Nutzer sie speichert. Nächster Schritt: Sicherungen mit demselben
+  Schlüssel verschlüsseln (7.2b).
 
 ## Ab Phase 4 (Sync über gehostetes PostgreSQL in der EU)
 

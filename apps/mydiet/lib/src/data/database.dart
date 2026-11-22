@@ -12,6 +12,7 @@ import '../core/meal_plan.dart';
 import '../core/micronutrients.dart';
 import '../core/recipes.dart';
 import '../core/supplements.dart';
+import 'db_encryption.dart' show keyPragma;
 import 'database.steps.dart';
 import 'seed_foods.dart';
 import 'seed_micros.dart';
@@ -155,6 +156,22 @@ class AppDatabase extends _$AppDatabase {
   static QueryExecutor _open() => driftDatabase(
     name: 'mydiet',
     web: DriftWebOptions(sqlite3Wasm: Uri.parse('sqlite3.wasm'), driftWorker: Uri.parse('drift_worker.js')),
+  );
+
+  /// The app's database file, encrypted with [key] (7.2, see data/db_encryption.dart).
+  /// `PRAGMA key` is the first statement on the connection.
+  static QueryExecutor openEncrypted(String path, String key) {
+    final pragma = keyPragma(key);
+    return driftDatabase(
+      name: 'mydiet',
+      native: DriftNativeOptions(databasePath: () async => path, setup: (db) => db.execute(pragma)),
+    );
+  }
+
+  /// Fallback when encryption is not possible on this start (see openAppDatabase).
+  static QueryExecutor openPlain(String path) => driftDatabase(
+    name: 'mydiet',
+    native: DriftNativeOptions(databasePath: () async => path),
   );
 
   @override

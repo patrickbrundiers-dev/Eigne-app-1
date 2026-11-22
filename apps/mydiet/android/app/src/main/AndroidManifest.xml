@@ -10,10 +10,15 @@
     <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
     <uses-permission android:name="android.permission.health.READ_WEIGHT" />
     <uses-permission android:name="android.permission.health.WRITE_NUTRITION" />
+    <!-- Keine Android-Gerätesicherung: Die Datenbank ist verschlüsselt (7.2), ihr Schlüssel liegt im Android-Keystore
+         und wird nicht mitgesichert. Eine zurückgespielte Datenbank wäre auf dem neuen Gerät unlesbar.
+         Daten umziehen: Einstellungen → Daten → Export. -->
     <application
         android:label="Sattly"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:fullBackupContent="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"
