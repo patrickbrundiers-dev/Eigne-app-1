@@ -20,6 +20,25 @@ noch nicht geprüft (kein Android-Gerät in der Cloud), der Android-Build läuft
 
 Nächster Schritt: Ernährung nach Health Connect schreiben (6.1 Teil 2), dann Phase 5 (App-Sperre, W13).
 
+## 2026-11-22 – Alle Daten löschen und Fehlerprotokoll (Aufgaben 1.1 + 1.2)
+
+Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es`.
+
+Erledigt:
+- `AppDatabase.deleteAllData()`: löscht alle Tabellen (`allTables`, also auch künftige) in einer Transaktion
+  endgültig, danach Standard-Mahlzeiten, Basis-Lebensmittel und Mikronährstoff-Richtwerte wie bei Neuinstallation.
+  `BackupService.deleteAll()`. UI `features/settings/delete_all.dart`: Dialog mit Eingabe „LÖSCHEN“, Wahl ob
+  Sicherungen mitgelöscht werden, Erinnerungen werden abgemeldet, Fehlerprotokoll geleert
+- Fehlerprotokoll: `core/error_report.dart` (Bereinigung: Zahlen, Zitate, Pfade, E-Mails raus; nur eigene
+  Stack-Frames), `data/error_log.dart` (JSON-Zeilen im App-Speicher, letzte 50, Installation in `main.dart` für
+  `FlutterError.onError` und `PlatformDispatcher.onError`), Seite `features/settings/error_log_page.dart`
+- Doku: CHANGELOG, SICHERHEIT, AI_TASK_QUEUE
+
+Tests: `flutter analyze` ohne Befund, `dart format` sauber, `flutter test` 235 grün; neu
+`test/delete_all_test.dart` (3), `test/error_log_test.dart` (5), Widget-Test „Alle Daten löschen“.
+
+Nächster Schritt: 3.3 tippfehlertolerante Suche.
+
 ## 2026-11-22 – Als Text eintragen (Aufgabe 3.1)
 
 Thread „Sattly auf Niveau führender Apps bringen“, Branch `claude/project-thread-58v9es` (neu von `main` nach #28).

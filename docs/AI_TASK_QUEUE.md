@@ -12,14 +12,13 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 5.4 Wochenbericht (Phase 3) | Phase-2-Thread | nein | folgt |
+| 5.4 Wochenbericht (Phase 3) | Phase-2-Thread | nein | #36 |
+| 1.1 Alle Daten löschen + 1.2 Fehlerprotokoll | Thread „Sattly auf Niveau führender Apps“ | nein | #35 |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 1.1 | „Alle Daten löschen“ in den Einstellungen (mit Bestätigung + vorherigem Backup), DSGVO Art. 17 | H | S | M (destruktiv → Freigabe nur für das Design, nicht nötig für Daten) | – | Datenbanktest: danach leer, Backup vorhanden |
-| 1.2 | Lokales Fehlerprotokoll ohne Gesundheitsdaten (`FlutterError.onError`, `PlatformDispatcher.onError`), in Einstellungen ansehen/teilen | M | S | N | – | Unit-Test: keine Werte aus Tagebuch/Gewicht im Text |
 | 1.3 | Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
 | 1.4 | `AppDatabase` in DatabaseAccessors je Bereich aufteilen (rein strukturell) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
 | 1.5 | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
@@ -84,6 +83,5 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 
 ## Nächster konkreter Schritt
 
-Nach dem Texteingabe-PR: **1.1 „Alle Daten löschen“** (Tabelle `food_micronutrients` aus Schema 6 mitlöschen,
-danach `seedReferenceMicros()` über Setting `microSeedVersion`), dann **1.2 Fehlerprotokoll**, dann **3.3
-tippfehlertolerante Suche**.
+Nach dem Datenschutz-PR (1.1 + 1.2): **3.3 tippfehlertolerante Suche** (Umlaute, Trigramme, Sortierung nach
+eigener Nutzung; hilft Suche und Texteingabe gleichermaßen), danach **2.3 Barrierefreiheit**.

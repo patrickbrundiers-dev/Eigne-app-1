@@ -84,6 +84,16 @@ class BackupService {
     }
   }
 
+  /// Deletes all backups (used by "Alle Daten löschen"). Returns how many were removed.
+  Future<int> deleteAll() async {
+    var n = 0;
+    for (final f in await list()) {
+      await f.delete();
+      n++;
+    }
+    return n;
+  }
+
   /// Date part of a backup file name, e.g. "2026-03-01".
   static String dayOf(File f) => f.uri.pathSegments.last.substring(_prefix.length, _prefix.length + 10);
 }

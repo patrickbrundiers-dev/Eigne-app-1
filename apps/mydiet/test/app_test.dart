@@ -591,6 +591,32 @@ void main() {
     expect(tester.takeException(), isNull);
     await closeDb(tester, db);
   });
+
+  testWidgets('Alle Daten löschen: erst nach Bestätigungswort, danach Neustart der Einrichtung', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db, size: const Size(420, 1400));
+    await tester.tap(find.text('Profil'));
+    await pumpApp(tester, db, size: const Size(420, 1400));
+    await tester.tap(find.byTooltip('Einstellungen'));
+    await pumpApp(tester, db, size: const Size(420, 1400));
+    await tester.scrollUntilVisible(find.text('Alle Daten löschen'), 200, scrollable: find.byType(Scrollable).last);
+    await tester.tap(find.text('Alle Daten löschen'));
+    await pumpApp(tester, db, size: const Size(420, 1400));
+    final button = find.widgetWithText(FilledButton, 'Endgültig löschen');
+    expect(tester.widget<FilledButton>(button).onPressed, isNull);
+    await tester.enterText(find.byType(TextField).last, 'löschen');
+    await tester.pump();
+    expect(tester.widget<FilledButton>(button).onPressed, isNotNull);
+    // Sicherungen behalten, damit der Test keine Dateien anfasst.
+    await tester.tap(find.byType(Checkbox).last);
+    await tester.pump();
+    await tester.tap(button);
+    await pumpApp(tester, db, size: const Size(420, 1400));
+    expect((await tester.runAsync(db.getProfile)), isNull);
+    expect((await tester.runAsync(() => db.diaryForDay(todayDayKey())))!, isEmpty);
+    expect(find.textContaining('Alle Daten gelöscht'), findsOneWidget);
+    await closeDb(tester, db);
+  });
 }
 
 class _FakeHealthSource implements HealthSource {

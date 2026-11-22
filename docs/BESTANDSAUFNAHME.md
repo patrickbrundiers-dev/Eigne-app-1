@@ -91,7 +91,7 @@ Details und Priorität: [AI_TASK_QUEUE.md](AI_TASK_QUEUE.md).
 | Speicherung | SQLite im privaten App-Speicher | Datei nicht zusätzlich verschlüsselt (Phase 5: SQLCipher) |
 | Backups | JSON im App-Speicher, 14 Stände | unverschlüsselt, aber nur für die App lesbar; Export-Dateien liegen dort, wo der Nutzer sie speichert |
 | Netzwerk | nur Open Food Facts, nur Barcode, generischer User-Agent | gering |
-| Löschen | einzelne Einträge (Tombstones) | **„Alle Daten löschen“ fehlt** (Art. 17 DSGVO, P1-Aufgabe) |
-| Protokolle | keine | keine Gesundheitsdaten in Logs, weil es keine Logs gibt; beim Fehlerprotokoll beibehalten |
+| Löschen | einzelne Einträge (Tombstones); „Alle Daten löschen“ seit dem Datenschutz-PR (1.1) | erledigt |
+| Protokolle | lokales Fehlerprotokoll seit 1.2, bereinigt | keine Gesundheitsdaten im Protokoll (Unit-Test) |
 | Berechtigungen Android | Internet, Kamera (Scanner) | angemessen |
 | Schlüssel | keine API-Schlüssel im Code; Android-Signatur über Secrets (noch nicht angelegt) | KI-Schlüssel später nur im sicheren Speicher des Geräts |
