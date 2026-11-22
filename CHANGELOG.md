@@ -2,6 +2,10 @@
 
 ## Nächste Version (in Arbeit)
 
+- Wochenplan „Mit Rezepten füllen“ beachtet das Profil: Rezepte mit Unverträglichkeiten (z. B. Laktose steht
+  auch für Milch, Joghurt, Käse; Gluten für Weizen, Hafer, Nudeln …) oder abgelehnten Lebensmitteln bleiben
+  weg, mit Grund in der Meldung; Rezepte mit bevorzugten Lebensmitteln kommen öfter vor
+
 ## 0.3.0 – Barcode, Erinnerungen, Text-Eingabe, Vitamine und Mineralstoffe (2026-11-22)
 
 - PC als Planungs-Arbeitsplatz: der Wochenplan zeigt im breiten Fenster die Tage nebeneinander; Einträge lassen

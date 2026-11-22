@@ -29,13 +29,13 @@ Offen / bekannt:
 
 Nächster Schritt: 1.1 „Alle Daten löschen“.
 
-## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung
+## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung, 4.1 Wochenplan + Profil
 
 Thread „MyDiet AI Phase 2 entwickeln“, Branch `claude/project-thread-k8k628`.
 
 Erledigt:
 - Erinnerungen (#27) und W5 Mikronährstoffe mit Schema 6 (#29) sind auf main.
-- W8 PC-Planung:
+- W8 PC-Planung (#32):
   - `features/plan/plan_view.dart`: `planColumns` (ab ca. 550 px Tage nebeneinander, bis 7 Spalten), Einträge
     ziehbar (Maus sofort, Touch per langem Drücken), Ablegen auf einem Tag verschiebt, mit Strg kopiert,
     Menüpunkte „Auf anderen Tag verschieben/kopieren …“, Rückgängig. Einträge, die schon im Tagebuch stehen,
@@ -48,6 +48,11 @@ Erledigt:
 
 Tests: `flutter analyze` ohne Befund, neue Unit-Tests `test/meal_time_test.dart`, Widget-Test
 „PC: Wochenplan nebeneinander, Ziehen auf anderen Tag, Tastenkürzel“.
+
+- 4.1 Wochenplan und Profil: `core/meal_plan.dart` (`foldText`, `avoidSynonyms`, `avoidTermsFor`, `mentions`,
+  `excludedBy`, `preferenceScore`, `preferFirst`, `PlanFill`), `generatePlanFor` liefert jetzt `PlanFill`
+  (geplant + ausgelassen mit Grund, Parameter `useProfile`). Tests `test/meal_plan_filter_test.dart` und
+  ein Datenbanktest in `plan_fasting_test.dart`.
 
 Offen: Tabellen mit wählbaren Spalten (Aufgabe 2.5). Online-Update wartet auf die Android-Signatur-Secrets
 (Code in Commit 1265bf6, Anleitung docs/UPDATES.md im Branch-Verlauf).

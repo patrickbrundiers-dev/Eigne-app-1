@@ -12,8 +12,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| W8 PC-Planung: Wochenplan nebeneinander, Ziehen, Tastenkürzel (2.4) | Phase-2-Thread | nein | #32 |
-| 3.1 Texteingabe ohne KI (+ Teil von 3.2: zuletzt eingetragene Menge als Vorschlag) | Thread „Sattly auf Niveau führender Apps“ | nein | #31 |
+| 4.1 Wochenplan beachtet Profil (Unverträglichkeiten, Abneigungen, Vorlieben) | Phase-2-Thread | nein | #33 |
+| W9 Rezept-Import aus Webseite (3.5), nutzt `parseLine()` aus 3.1 | Phase-2-Thread | nein | – |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -50,7 +50,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 4.1 | Wochenplan berücksichtigt Unverträglichkeiten, Abneigungen und Essenszeiten aus dem Profil | H | M | N | – | Unit-Tests `meal_plan` |
+| 4.1 | ✅ Wochenplan berücksichtigt Unverträglichkeiten, Abneigungen und Vorlieben aus dem Profil (Essenszeiten: Snacks wie bisher) | H | M | N | – | Unit-Tests `meal_plan` |
 | 4.2 | Mikronährstoffziele (D-A-CH) im Profil sichtbar | M | S | N | W5 | Unit-Tests |
 | 4.3 | Proteinziel über den Tag verteilen (Hinweis je Mahlzeit) | M | S | N | – | Unit-Test |
 
