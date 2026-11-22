@@ -7,6 +7,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter/widgets.dart' show SizedBox;
 import 'package:mydiet_ai/src/app.dart';
 import 'package:mydiet_ai/src/core/app_lock.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
@@ -28,19 +29,17 @@ void main() {
   }
 
   Future<void> addProfile(AppDatabase db) async {
-    await db
-        .into(db.profiles)
-        .insert(
-          ProfilesCompanion.insert(
-            sex: 'male',
-            birthDate: DateTime(1986, 4, 1),
-            heightCm: 182,
-            startWeightKg: 104,
-            targetWeightKg: 88,
-            jobActivity: 'sitting',
-            displayName: const Value('Test'),
-          ),
-        );
+    await db.saveProfile(
+      ProfilesCompanion.insert(
+        sex: 'male',
+        birthDate: DateTime(1986, 4, 1),
+        heightCm: 182,
+        startWeightKg: 104,
+        targetWeightKg: 88,
+        jobActivity: 'sitting',
+        displayName: const Value('Test'),
+      ),
+    );
     await db.saveWeight(day: todayDayKey(), weightKg: 102.5);
   }
 
@@ -76,12 +75,16 @@ void main() {
     );
   });
 
-  testWidgets('App startet: Einrichtung, dann Dashboard und Tagebuch', (tester) async {
+  testWidgets('App startet ohne Profil mit der Einrichtung', (tester) async {
     final empty = AppDatabase(NativeDatabase.memory());
     await tester.pumpWidget(MyDietApp(db: empty));
     await settle(tester);
     expect(find.text('Über dich'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+    await settle(tester, 5);
+  });
 
+  testWidgets('App mit Profil: Dashboard und Tagebuch', (tester) async {
     final db = AppDatabase(NativeDatabase.memory());
     await addProfile(db);
     final slot = (await db.watchMealSlots().first).first;
