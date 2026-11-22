@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../core/meal_text.dart';
+import '../core/portion_memory.dart';
 import 'database.dart';
 import 'food_search.dart';
 
@@ -29,6 +30,20 @@ class TextMatch {
 
 /// Most recent amount the user logged for [foodId], used as "usual amount" when the
 /// text has no unit and the food has no serving size.
+/// The amounts logged for [foodId], newest first.
+Future<List<double>> recentAmounts(AppDatabase db, String foodId, {int limit = 10}) async {
+  final rows =
+      await (db.select(db.diaryEntries)
+            ..where((e) => e.foodId.equals(foodId) & e.deletedAt.isNull())
+            ..orderBy([(e) => OrderingTerm.desc(e.createdAt)])
+            ..limit(limit))
+          .get();
+  return [for (final r in rows) r.amount];
+}
+
+/// The usual amount for [foodId] (see core/portion_memory.dart), null if never logged.
+Future<double?> usualLoggedAmount(AppDatabase db, String foodId) async => usualAmount(await recentAmounts(db, foodId));
+
 Future<double?> lastLoggedAmount(AppDatabase db, String foodId) async {
   final row =
       await (db.select(db.diaryEntries)
@@ -41,7 +56,7 @@ Future<double?> lastLoggedAmount(AppDatabase db, String foodId) async {
 
 /// Resolves the amount of [line] for [food], using the user's last amount as a hint.
 Future<ResolvedAmount> resolveFor(AppDatabase db, ParsedLine line, Food food) async {
-  final usual = await lastLoggedAmount(db, food.id);
+  final usual = await usualLoggedAmount(db, food.id);
   return resolveAmount(
     line,
     FoodUnitInfo(unit: food.unit, servingAmount: food.servingAmount, servingLabel: food.servingLabel),
