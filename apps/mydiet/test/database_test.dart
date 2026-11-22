@@ -193,6 +193,39 @@ void main() {
       );
     });
 
+    test('Vorlage aus Mahlzeit speichern, eintragen, ersetzen, löschen', () async {
+      final slots = await db.watchMealSlots().first;
+      final breakfast = slots[0];
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      final quark = (await db.searchFoods('Magerquark')).first;
+      await db.logFood(day: '2026-03-01', mealSlotId: breakfast.id, food: oats, amount: 60);
+      await db.logFood(day: '2026-03-01', mealSlotId: breakfast.id, food: quark, amount: 250);
+      final id = await db.saveTemplateFromMeal(name: 'Mein Frühstück', day: '2026-03-01', mealSlotId: breakfast.id);
+      expect((await db.templateItemsOf(id)).map((i) => i.foodName), [oats.name, quark.name]);
+
+      expect(await db.logTemplate(templateId: id, day: '2026-03-02', mealSlotId: breakfast.id), 2);
+      final logged = await db.diaryForDay('2026-03-02');
+      expect(logged.map((e) => e.amount), [60, 250]);
+      expect((await db.watchTemplates().first).single.useCount, 1);
+
+      // Same name replaces the items.
+      await db.logFood(day: '2026-03-03', mealSlotId: breakfast.id, food: oats, amount: 80);
+      final id2 = await db.saveTemplateFromMeal(name: 'mein frühstück', day: '2026-03-03', mealSlotId: breakfast.id);
+      expect(id2, id);
+      expect((await db.templateItemsOf(id)).single.amount, 80);
+
+      await expectLater(
+        db.saveTemplateFromMeal(name: 'Leer', day: '2026-03-09', mealSlotId: breakfast.id),
+        throwsArgumentError,
+      );
+      await db.deleteTemplate(id);
+      expect(await db.watchTemplates().first, isEmpty);
+      // Diary entries stay, a new template may reuse the name.
+      expect((await db.diaryForDay('2026-03-02')).length, 2);
+      await db.saveTemplateFromMeal(name: 'Mein Frühstück', day: '2026-03-01', mealSlotId: breakfast.id);
+      expect((await db.watchTemplates().first).length, 1);
+    });
+
     test('Mahlzeit auf beliebiges Datum kopieren', () async {
       final slot = (await db.watchMealSlots().first).first;
       final oats = (await db.searchFoods('Haferflocken')).first;

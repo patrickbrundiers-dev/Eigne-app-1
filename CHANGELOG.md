@@ -1,6 +1,15 @@
 # Changelog
 
-## 0.2.0 – Phase 2: Ernährung (in Arbeit)
+## Nächste Version (in Arbeit)
+
+- Barcode-Scanner: Kamera auf Android, Eingabefeld oder USB-Scanner unter Windows; bekannte Produkte kommen
+  offline aus der eigenen Datenbank, neue von Open Food Facts (nur der Barcode wird gesendet) und werden vor
+  dem Speichern zur Prüfung vorausgefüllt; Prüfziffer wird kontrolliert
+- Datenqualität sichtbar: Quelle (Basis, eigen, Open Food Facts, KI) und Stufe (Richtwert, vom Etikett,
+  vollständig, prüfen, Schätzung) als Symbol in Liste und Suche; Open-Food-Facts-Werte mit Energie-Check
+- Android: Internet-Berechtigung ergänzt (nötig für Open Food Facts)
+
+## 0.2.0 – Phase 2: Ernährung (2026-11-22)
 
 - Neuer Name: Die App heißt jetzt **Sattly**, mit neuem Logo (grünes „S“ im Teller-Fortschrittsring mit Blatt) als
   App-Icon auf Android und Windows und in der Oberfläche. Updates von MyDiet AI 0.1.0 behalten alle Daten;
@@ -37,11 +46,9 @@
 - Sicherungen: täglich automatisch eine lokale Sicherung (die letzten 14 bleiben), „Jetzt sichern“ und
   Wiederherstellen in den Einstellungen; vor jeder Wiederherstellung wird der aktuelle Stand gesichert
 - CSV-Export für Tagebuch und Gewicht (Semikolon, Dezimalkomma, öffnet direkt in Excel)
-- Barcode-Scanner: Kamera auf Android, Eingabefeld oder USB-Scanner unter Windows; bekannte Produkte kommen
-  offline aus der eigenen Datenbank, neue von Open Food Facts (nur der Barcode wird gesendet) und werden vor
-  dem Speichern zur Prüfung vorausgefüllt; Prüfziffer wird kontrolliert
-- Datenqualität sichtbar: Quelle (Basis, eigen, Open Food Facts, KI) und Stufe (Richtwert, vom Etikett,
-  vollständig, prüfen, Schätzung) als Symbol in Liste und Suche; Open-Food-Facts-Werte mit Energie-Check
+- Mahlzeiten-Vorlagen: Mahlzeit im Tagebuch „Als Vorlage speichern“, in der Lebensmittelauswahl mit einem Tipp
+  komplett eintragen (Vorlagen der gleichen Mahlzeit zuerst), gleicher Name ersetzt, lange drücken löscht
+- Datenbank Schema 5 (Vorlagen) mit getesteter Migration
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 
