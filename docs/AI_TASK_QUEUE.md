@@ -12,9 +12,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen) | Phase-2-Thread | nein | #27 |
-| W5 Mikronährstoffe aus Lebensmitteln + Supplemente | Phase-2-Thread | v6 (reserviert) | – |
-| 3.1 Texteingabe ohne KI (+ Teil von 3.2: zuletzt eingetragene Menge als Vorschlag) | Thread „Sattly auf Niveau führender Apps“ | nein | dieser PR |
+| W8 PC-Planung: Wochenplan nebeneinander, Ziehen, Tastenkürzel (2.4) | Phase-2-Thread | nein | #32 |
+| 3.1 Texteingabe ohne KI (+ Teil von 3.2: zuletzt eingetragene Menge als Vorschlag) | Thread „Sattly auf Niveau führender Apps“ | nein | #31 |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -33,7 +32,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 2.1 | Dashboard „Heute“ entschlacken: eine Hauptzahl (übrig), Makro-Ringe, ein „+“ mit Eintragen/Scannen/Schnell/Vorlage | H | M | M | W5-Kachel | Widget-Test: Eintrag in ≤ 3 Taps |
 | 2.2 | Gewichts-Fortschritt auch als Dashboard-Kachel (kompakt) | M | S | N | dieser PR, W5 (Enum-Ende) | Widget-Test |
 | 2.3 | Barrierefreiheit: Semantics-Labels für Ringe/Diagramme, Schriftgröße 200 % ohne Überlauf | M | M | N | – | Widget-Test mit `textScaler` 2.0 |
-| 2.4 | Tastenkürzel unter Windows (Suchen, Eintragen, Tag vor/zurück) – W8 | M | S | N | – | Widget-Test mit Tastenereignissen |
+| 2.4 | ✅ Tastenkürzel unter Windows (Eintragen, Bereiche, Tag/Woche vor/zurück, F1) – W8, siehe AI_PROGRESS | M | S | N | – | Widget-Test mit Tastenereignissen |
+| 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8 | N | M | N | – | Widget-Test |
 
 ## Priorität 3 – Lebensmittelerfassung und Datenqualität
 

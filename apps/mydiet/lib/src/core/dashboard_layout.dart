@@ -13,7 +13,8 @@ enum DashTile {
   protein('Protein'),
   meals('Mahlzeiten heute'),
   supplements('Supplemente heute', wide: true),
-  fasting('Intervallfasten', wide: true);
+  fasting('Intervallfasten', wide: true),
+  micros('Vitamine und Mineralstoffe', wide: true);
 
   const DashTile(this.label, {this.wide = false});
   final String label;
@@ -28,7 +29,7 @@ class TileConfig {
   TileConfig copyWith({bool? visible}) => TileConfig(tile, visible ?? this.visible);
 }
 
-const _defaultHidden = {DashTile.protein, DashTile.meals, DashTile.supplements, DashTile.fasting};
+const _defaultHidden = {DashTile.protein, DashTile.meals, DashTile.supplements, DashTile.fasting, DashTile.micros};
 
 List<TileConfig> defaultLayout() => [for (final t in DashTile.values) TileConfig(t, !_defaultHidden.contains(t))];
 

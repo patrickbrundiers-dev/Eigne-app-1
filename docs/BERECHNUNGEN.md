@@ -85,8 +85,23 @@ Die App empfiehlt keine Dosierungen. Sie addiert, was eingetragen ist, und vergl
   Calcium 2.500 mg, Magnesium 250 mg*, Zink 25 mg, Kupfer 5 mg, Selen 255 µg, Jod 600 µg, Molybdän 600 µg;
   Eisen 40 mg (EFSA-Sicherheitswert 2024); Omega-3 (EPA+DHA) 5 g und Koffein 400 mg (EFSA-Einschätzungen).
   \* gilt nur für Nahrungsergänzung/zugesetzte Formen.
-- Lebensmittel sind nicht enthalten, weil die Lebensmitteldatenbank keine Mikronährstoffe führt; die App
-  weist darauf hin.
+- Die Supplement-Ansicht zeigt nur Supplemente. Essen und Supplemente zusammen zeigt die Übersicht
+  „Vitamine und Mineralstoffe“ (siehe unten).
+
+## Vitamine und Mineralstoffe (Essen + Supplemente)
+
+- Je Tagebucheintrag: Menge × Wert pro 100 ÷ 100; Rezepte: Summe der Zutaten ÷ Gewicht des fertigen Gerichts.
+  Supplemente zählen mit den abgehakten Portionen. Einträge ohne Werte zählen nicht mit; die App zeigt, für
+  wie viele Einträge Werte vorhanden sind.
+- Ziel: D-A-CH-Referenzwerte für Erwachsene (DGE, gerundet; Mann/Frau): Vitamin D 20 µg, B12 4 µg, Folat
+  300 µg, Vitamin C 110/95 mg, Calcium 1.000 mg, Magnesium 350/300 mg, Eisen 11/16 mg (Frauen ab 51: 14 mg),
+  Zink 14/8 mg (mittlere Phytatzufuhr), Jod 200 µg, Kalium 4.000 mg.
+- Ampel: unter dem Ziel / Ziel erreicht / nahe (ab 80 %) oder über der Höchstmenge. Für Magnesium, Folsäure
+  und Niacin gilt die Höchstmenge nur für Supplemente; es zählt dann nur deren Anteil.
+- Beim Anlegen eines Supplements zeigt die App, welche anderen aktiven Produkte denselben Stoff enthalten und
+  wie viel es zusammen pro Tag sind („enthält ebenfalls Zink, zusammen 38 mg“).
+- Richtwerte der Basis-Lebensmittel: gerundete Mittelwerte aus BLS und USDA FoodData Central für nicht
+  angereicherte Produkte. Werte vom Etikett oder von Open Food Facts lassen sich je Lebensmittel eintragen.
 
 ## Wochenplan
 

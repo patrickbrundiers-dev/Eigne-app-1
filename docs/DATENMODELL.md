@@ -1,4 +1,4 @@
-# Datenmodell (Schema-Version 4)
+# Datenmodell (Schema-Version 6)
 
 Lokale SQLite-Datenbank über drift. Definition: `apps/mydiet/lib/src/data/tables.dart`.
 
@@ -72,6 +72,12 @@ nie mehr als eine gleichzeitig.
 
 `profiles.carb_cap_g` (ab Schema 4) – optionale Obergrenze für Kohlenhydrate.
 
+**food_micronutrients** (ab Schema 6) – Vitamine und Mineralstoffe je Lebensmittel pro 100 g/ml: Katalog-ID
+(`core/supplements.dart`) und Menge in der Katalog-Einheit. Optional, eine fehlende Zeile heißt „unbekannt“,
+nicht 0. Basis-Lebensmittel bekommen Richtwerte aus `seed_micros.dart` (Setting `microSeedVersion`).
+Anders als die Makros werden diese Werte im Tagebuch **nicht** eingefroren: die Tagesübersicht rechnet mit
+den aktuellen Werten des Lebensmittels bzw. der Zutaten eines Rezepts.
+
 **settings** – Schlüssel/Wert: `themeMode`, `colorScheme`, `dashboardLayout` (JSON), `seedVersion`.
 
 ## Basis-Lebensmittel
@@ -133,3 +139,5 @@ Datenbank und dass vorhandene Daten erhalten bleiben.
 | 2 | `recipes`, `recipe_items`, `shopping_items`, `diary_entries.recipe_id` |
 | 3 | `supplements`, `supplement_ingredients`, `supplement_intakes` |
 | 4 | `meal_plan_entries`, `fasting_sessions`, `profiles.carb_cap_g` |
+| 5 | `meal_templates`, `meal_template_items` |
+| 6 | `food_micronutrients` (W5) |

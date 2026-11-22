@@ -6,6 +6,7 @@ import '../../data/database.dart';
 import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
+import '../micros/micros_view.dart';
 import 'supplement_form_page.dart';
 
 /// Today's supplement state: products, intakes and both totals.
@@ -95,6 +96,12 @@ class SupplementsView extends StatelessWidget {
                 title: 'Tagessumme',
                 icon: Icons.functions,
                 child: SupplementTotals(day: d),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.science_outlined),
+                label: const Text('Mit Essen zusammen: Vitamine und Mineralstoffe heute'),
+                onPressed: () => Navigator.push(context, MaterialPageRoute<void>(builder: (_) => const MicrosPage())),
               ),
               const SizedBox(height: 12),
               SectionCard(
