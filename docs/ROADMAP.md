@@ -41,7 +41,9 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 - ✅ Barcode-Scanner (Kamera auf Android, Eingabe oder USB-Scanner unter Windows) + Open Food Facts:
   erst lokal suchen (offline), sonst Open Food Facts fragen (nur der Barcode wird gesendet), Werte prüfen,
   dann speichern; Quelle und Datenqualität (W2) sichtbar
-- ⬜ Erinnerungen (Mahlzeiten, Wasser, Supplemente, Wiegen)
+- ✅ Erinnerungen (Einstellungen → Erinnerungen): Mahlzeiten zu ihren Uhrzeiten (optional früher), Wasser in
+  festem Abstand, Supplemente zu ihren Einnahmezeiten (gleiche Uhrzeit = eine Meldung), Wiegen an gewählten
+  Tagen; nur lokal geplant, passen sich automatisch an geänderte Mahlzeiten und Supplemente an
 
 ### Online-Update (vorbereitet, folgt sobald die Android-Signatur-Secrets angelegt sind)
 
