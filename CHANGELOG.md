@@ -13,6 +13,10 @@
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
 
+- Suche verzeiht Tippfehler: „Haferflokcen“, „Banae“ oder „Huhnerei“ finden trotzdem das Richtige. Was du oft
+  isst, steht bei gleich guten Treffern vorne. Auch „Als Text eintragen“ bietet bei Tippfehlern ähnliche
+  Lebensmittel an, markiert sie aber als unsicher
+
 - Rezept übernehmen (Essen → Rezepte, Link-Knopf): Webadresse eingeben, die App liest Name, Portionen, Zutaten
   und Zubereitung aus den Rezeptdaten der Seite und ordnet jede Zutat deinen Lebensmitteln zu; unsichere
   Zuordnungen und Mengenannahmen sind markiert und lassen sich ändern, fehlende Lebensmittel direkt anlegen.
