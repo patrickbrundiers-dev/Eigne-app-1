@@ -12,6 +12,18 @@ Tests: zwei Widget-Tests (200 % auf Dashboard, Tagebuch, Gewicht, Essen, Profil;
 Offen: Unterseiten (Rezepte, Wochenplan, Einstellungen) bei 200 % noch nicht automatisch geprüft.
 Nächster Schritt: 3.4 Open-Food-Facts-Textsuche.
 
+## 2026-11-22 – Homescreen-Widget Android (Aufgabe 6.4, W13)
+
+Phase-2-Thread. `core/widget_summary.dart` (Texte, Tausenderpunkte, freundlicher Status – `gentleStatus` nutzt ihn
+jetzt mit), `data/home_widget_sync.dart` (gleiche Budget-Rechnung wie das Dashboard, sendet nur bei Änderung,
+neu nach Mitternacht; auf Windows nichts), Start in `home_shell.dart`. Android: `SattlyWidgetProvider.kt`,
+Layout, Widget-Info, Receiver im Manifest. Neue Abhängigkeit `home_widget` (D-16). dashboard_page.dart und
+database.dart unverändert.
+
+Tests: `test/home_widget_test.dart` (5). Android-Build im CI; Aussehen auf dem Gerät noch ungeprüft.
+
+Nächster Schritt: App-Sperre (PIN/Fingerabdruck, ohne Verschlüsselung – Patricks Entscheidung 2026-11-22).
+
 ## 2026-11-22 – Stillstand erklären (Aufgabe 5.2)
 
 `core/stall.dart` (`analyzeStall`), Abschnitt „Stillstand: woran es liegen kann“ in der Fortschritt-Karte
