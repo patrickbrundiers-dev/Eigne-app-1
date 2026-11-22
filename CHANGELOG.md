@@ -5,6 +5,8 @@
 - Homescreen-Widget: zeigt jetzt auch das heute getrunkene Wasser; der Knopf „+ 250 ml Wasser“ trägt es mit einem
   Tipp ein (öffnet kurz die App)
 
+- Intern: Dashboard-Kacheln in eigene Dateien aufgeteilt (keine Änderung am Verhalten)
+
 - App-Sperre (Einstellungen → App-Sperre): PIN mit 4–8 Ziffern, auf Wunsch Fingerabdruck oder Windows Hello.
   Sperrt beim Start und nach einer wählbaren Zeit im Hintergrund; nach mehreren falschen Versuchen wartet die
   App. Die PIN wird nur als Prüfwert gespeichert und ist nicht Teil von Sicherungen oder Exporten
@@ -29,6 +31,12 @@
   Protein gegen das Ziel, Tage im Zielbereich, Wochenend-Muster, Ballaststoffe, eher niedrige Vitamine und
   Mineralstoffe, Gewicht im 7-Tage-Mittel gegen die Vorwoche; dazu höchstens drei Vorschläge für die nächste
   Woche. Jede Aussage nennt ihre Zahlen, alles lokal und regelbasiert, ohne KI
+
+- PC: Lebensmittel als Tabelle mit sortierbaren Spalten; „Spalten“ wählt aus Marke, kcal, Eiweiß,
+  Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe, Salz und Quelle
+
+- Profil: Karte „Vitamine und Mineralstoffe“ zeigt deine Tagesziele nach D-A-CH (passend zu Geschlecht und
+  Alter), mit Sprung zur heutigen Übersicht
 
 - Tagebuch: Jede Mahlzeit zeigt „Protein x / y g“, also ihren Anteil am Tagesziel (Hauptmahlzeiten zählen voll,
   Mahlzeiten ohne Uhrzeit wie Snacks halb)

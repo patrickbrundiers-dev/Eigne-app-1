@@ -7,6 +7,7 @@ import '../../data/database.dart';
 import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
+import 'micro_targets_card.dart';
 import '../home_shell.dart';
 import '../settings/settings_page.dart';
 import 'meal_slots_page.dart';
@@ -40,7 +41,13 @@ class ProfilePage extends StatelessWidget {
           final input = energyInputFor(p, weights);
           final r = calculateEnergy(input);
           final wide = MediaQuery.sizeOf(context).width >= 900;
-          final left = [_summary(context, p, input), const SizedBox(height: 12), _TargetsCard(r: r)];
+          final left = [
+            _summary(context, p, input),
+            const SizedBox(height: 12),
+            _TargetsCard(r: r),
+            const SizedBox(height: 12),
+            MicroTargetsCard(profile: p),
+          ];
           final right = [
             _AdjustCard(profile: p, result: r),
             const SizedBox(height: 12),

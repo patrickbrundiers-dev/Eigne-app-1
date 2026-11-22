@@ -12,18 +12,15 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 4.3 Protein je Mahlzeit | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
+| 4.2, 7.3, 2.5, 1.5 (gebündelt) | Thread „Sattly auf Niveau führender Apps“ | nein | folgt |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
-| 1.3 | Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
-| 1.4 ✅ | `AppDatabase` je Bereich aufteilen (rein strukturell; als Extensions in `data/dao/*.dart`) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
-
 | 1.3 | ✅ Gewichtsliste: mehr als 120 Einträge nachladen statt still abschneiden | N | S | N | – | Widget-Test |
-| 1.4 | `AppDatabase` in DatabaseAccessors je Bereich aufteilen (rein strukturell) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
-| 1.5 | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
+| 1.4 ✅ | `AppDatabase` je Bereich aufteilen (rein strukturell; als Extensions in `data/dao/*.dart`) | M (für Entwicklung) | M | M (Konflikte) | nach W5 | bestehende Tests unverändert grün |
+| 1.5 ✅ | Dashboard-Kacheln in eigene Dateien | N | S | N | nach W5 (neue Kachel) | bestehende Tests |
 
 ## Priorität 2 – Kernfunktionen und Bedienbarkeit
 
@@ -33,7 +30,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | 2.2 | ✅ Gewichts-Fortschritt auch als Dashboard-Kachel (kompakt) | M | S | N | dieser PR, W5 (Enum-Ende) | Widget-Test |
 | 2.3 | ✅ Barrierefreiheit: Semantics-Labels für Ringe/Diagramme, Schriftgröße 200 % ohne Überlauf | M | M | N | – | Widget-Test mit `textScaler` 2.0 |
 | 2.4 | ✅ Tastenkürzel unter Windows (Eintragen, Bereiche, Tag/Woche vor/zurück, F1) – W8, siehe AI_PROGRESS | M | S | N | – | Widget-Test mit Tastenereignissen |
-| 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8 | N | M | N | – | Widget-Test |
+| 2.5 | Tabellen mit wählbaren Spalten am PC (Tagebuch, Lebensmittel) – Rest von W8; Lebensmittel ✅, Tagebuch offen | N | M | N | – | Widget-Test |
 
 ## Priorität 3 – Lebensmittelerfassung und Datenqualität
 
@@ -51,7 +48,7 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 4.1 | ✅ Wochenplan berücksichtigt Unverträglichkeiten, Abneigungen und Vorlieben aus dem Profil (Essenszeiten: Snacks wie bisher) | H | M | N | – | Unit-Tests `meal_plan` |
-| 4.2 | Mikronährstoffziele (D-A-CH) im Profil sichtbar | M | S | N | W5 | Unit-Tests |
+| 4.2 | ✅ Mikronährstoffziele (D-A-CH) im Profil sichtbar | M | S | N | W5 | Unit-Tests |
 | 4.3 | ✅ Proteinziel über den Tag verteilen (Hinweis je Mahlzeit) | M | S | N | – | Unit-Test |
 
 ## Priorität 5 – KI und Lernfunktionen
@@ -80,7 +77,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 |---|---|---|---|---|---|---|
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
 | 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung (SQLCipher) zurückgestellt (Patrick 2026-11-22) | M | M | H (Migration bestehender Daten → **Freigabe**) | – | Migrationstest |
-| 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots | M | S | N | – | – |
+| 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/, Angaben zum Anbieter fehlen | M | S | N | – | – |
 | 7.4 | Integrationstests auf Android-Emulator in CI | M | M | N | – | CI |
 
 ## Nächster konkreter Schritt

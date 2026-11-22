@@ -13,6 +13,21 @@ im Manifest, Widget zwei Zellen hoch. Kein Schema, keine neue Abhängigkeit.
 
 Tests: `home_widget_test.dart` +1 und Klick-Test im Datentest. Auf dem Gerät ungeprüft.
 
+## 2026-11-22 – Lebensmittel-Tabelle am PC (Aufgabe 2.5, Teil Lebensmittel)
+
+`features/foods/food_table.dart` (`FoodColumn`, `FoodTable`, Spaltenwahl im Setting `foodTableColumns`), ab 900 px
+in der Lebensmittelliste. Tests: `test/food_table_test.dart` (2), Widget-Test am PC. Offen: Tagebuch als Tabelle;
+bei sehr vielen Lebensmitteln (Phase 4) DataTable durch eine virtualisierte Tabelle ersetzen.
+
+## 2026-11-22 – Datenschutzerklärung und Store-Texte (Aufgabe 7.3, Entwurf)
+
+`docs/DATENSCHUTZERKLAERUNG.md` und `docs/STORE-TEXTE.md` nach dem Stand des Codes. Offen: Verantwortlicher/
+Impressum (Patrick), Health-Connect-Absatz sobald gemergt, Store-Screenshots.
+
+## 2026-11-22 – Mikronährstoffziele im Profil (Aufgabe 4.2)
+
+`features/profile/micro_targets_card.dart` nutzt `dachTargets` + `forPerson` (W5). Prüfung im Profil-Widget-Test.
+
 ## 2026-11-22 – App-Sperre (Aufgabe 7.2 ohne Verschlüsselung)
 
 Phase-2-Thread, nach Patricks Entscheidung „Nur App-Sperre“. `core/app_lock.dart` (PIN-Regeln, PBKDF2, Wartezeiten,
@@ -38,6 +53,15 @@ ungeprüft.
 `features/foods/off_search_page.dart`, Eintrag „Bei Open Food Facts suchen“ in der Auswahl beim Eintragen.
 Entscheidung D-17. Tests: `test/off_search_test.dart` (3, Mock-Client), Widget-Test Suche → Formular → Eintrag.
 Nächster Schritt: 6.1 Health Connect (mit Phase-2-Thread abstimmen), sonst 1.4/1.5.
+
+## 2026-11-22 – Dashboard-Kacheln aufgeteilt (Aufgabe 1.5)
+
+Rein strukturell. `features/dashboard/dashboard_page.dart` (897 Zeilen) behält `DashboardPage`, `DashData` und den
+Rumpf. Die Kacheln liegen als `part`-Dateien in `features/dashboard/tiles/` (`nutrition_tiles.dart`: Kalorien, Makros,
+Protein; `day_tiles.dart`: Wasser, Aktivität, Supplemente, Mahlzeiten, Hinweise; `weight_tiles.dart`: Gewicht, Ziel,
+Gewichtskurve), der Anpassen-Dialog in `customize_sheet.dart`. Neue Kacheln in die passende Datei.
+
+Tests: alle 301 unverändert grün, `flutter analyze` ohne Befund.
 
 ## 2026-11-22 – Barrierefreiheit (Aufgabe 2.3)
 
