@@ -2,6 +2,7 @@
 
 ## Nächste Version (in Arbeit)
 
+- Intern: Tests laufen jetzt auch auf einem Android-Emulator (Datenbank, App-Sperre, Widget, App-Start)
 - Datenschutz: Die Datenbank auf dem Gerät ist jetzt verschlüsselt. Der Schlüssel liegt im sicheren Speicher von
   Android bzw. Windows. Vorhandene Daten werden beim ersten Start automatisch umgestellt; das Original bleibt
   erhalten, bis die verschlüsselte Kopie vollständig geprüft ist. Die Android-Gerätesicherung ist dafür
