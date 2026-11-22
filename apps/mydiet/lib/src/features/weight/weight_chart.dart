@@ -55,112 +55,121 @@ class WeightChart extends StatelessWidget {
     final labelStyle = t.textTheme.labelSmall?.copyWith(color: t.colorScheme.onSurfaceVariant);
     final primary = t.colorScheme.primary;
 
-    return LineChart(
-      LineChartData(
-        minX: 0,
-        maxX: maxX,
-        minY: minY.floorToDouble(),
-        maxY: maxY.ceilToDouble(),
-        clipData: const FlClipData.all(),
-        gridData: FlGridData(
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (_) =>
-              FlLine(color: t.colorScheme.outlineVariant.withValues(alpha: 0.5), strokeWidth: 1),
-        ),
-        borderData: FlBorderData(show: false),
-        titlesData: FlTitlesData(
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 34,
-              interval: ((maxY - minY) / 4).ceilToDouble().clamp(1, 50),
-              getTitlesWidget: (v, meta) => _offGrid(v, meta)
-                  ? const SizedBox.shrink()
-                  : SideTitleWidget(
-                      meta: meta,
-                      child: Text(n0(v), style: labelStyle),
-                    ),
-            ),
+    final first = trend.first.y, last = trend.last.y;
+    final diff = last - first;
+    final summary =
+        'Gewichtskurve: ${pts.length} ${pts.length == 1 ? 'Messung' : 'Messungen'} von ${dateShort(pts.first.date)} bis ${dateShort(pts.last.date)}, '
+        'Trend von ${kg(first)} auf ${kg(last)} (${diff <= 0 ? 'minus' : 'plus'} ${kg(diff.abs())}), Ziel ${kg(targetKg)}';
+    return Semantics(
+      label: summary,
+      excludeSemantics: true,
+      child: LineChart(
+        LineChartData(
+          minX: 0,
+          maxX: maxX,
+          minY: minY.floorToDouble(),
+          maxY: maxY.ceilToDouble(),
+          clipData: const FlClipData.all(),
+          gridData: FlGridData(
+            drawVerticalLine: false,
+            getDrawingHorizontalLine: (_) =>
+                FlLine(color: t.colorScheme.outlineVariant.withValues(alpha: 0.5), strokeWidth: 1),
           ),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 22,
-              interval: math.max(1, (maxX / (compact ? 4 : 6)).roundToDouble()),
-              getTitlesWidget: (v, meta) => _offGrid(v, meta)
-                  ? const SizedBox.shrink()
-                  : SideTitleWidget(
-                      meta: meta,
-                      child: Text(
-                        dateTiny(DateTime(origin.year, origin.month, origin.day + v.round())),
-                        style: labelStyle,
+          borderData: FlBorderData(show: false),
+          titlesData: FlTitlesData(
+            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 34,
+                interval: ((maxY - minY) / 4).ceilToDouble().clamp(1, 50),
+                getTitlesWidget: (v, meta) => _offGrid(v, meta)
+                    ? const SizedBox.shrink()
+                    : SideTitleWidget(
+                        meta: meta,
+                        child: Text(n0(v), style: labelStyle),
                       ),
-                    ),
+              ),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 22,
+                interval: math.max(1, (maxX / (compact ? 4 : 6)).roundToDouble()),
+                getTitlesWidget: (v, meta) => _offGrid(v, meta)
+                    ? const SizedBox.shrink()
+                    : SideTitleWidget(
+                        meta: meta,
+                        child: Text(
+                          dateTiny(DateTime(origin.year, origin.month, origin.day + v.round())),
+                          style: labelStyle,
+                        ),
+                      ),
+              ),
             ),
           ),
-        ),
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
-            HorizontalLine(
-              y: targetKg,
-              color: t.colorScheme.tertiary,
-              strokeWidth: 1.5,
-              dashArray: [6, 4],
-              label: HorizontalLineLabel(
+          extraLinesData: ExtraLinesData(
+            horizontalLines: [
+              HorizontalLine(
+                y: targetKg,
+                color: t.colorScheme.tertiary,
+                strokeWidth: 1.5,
+                dashArray: [6, 4],
+                label: HorizontalLineLabel(
+                  show: true,
+                  alignment: Alignment.topRight,
+                  style: labelStyle?.copyWith(color: t.colorScheme.tertiary, fontWeight: FontWeight.w700),
+                  labelResolver: (_) => 'Ziel ${n1(targetKg)}',
+                ),
+              ),
+            ],
+          ),
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (_) => t.colorScheme.inverseSurface,
+              getTooltipItems: (spots) => [
+                for (final s in spots)
+                  LineTooltipItem(
+                    s.barIndex == 0
+                        ? '${dateTiny(DateTime(origin.year, origin.month, origin.day + s.x.round()))}  ${kg(s.y)}'
+                        : 'Trend ${kg(s.y)}',
+                    TextStyle(color: t.colorScheme.onInverseSurface, fontSize: 12),
+                  ),
+              ],
+            ),
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: raw,
+              barWidth: 0,
+              color: Colors.transparent,
+              dotData: FlDotData(
+                getDotPainter: (s, _, _, _) => FlDotCirclePainter(
+                  radius: compact ? 2.5 : 3.5,
+                  color: primary.withValues(alpha: 0.45),
+                  strokeWidth: 0,
+                ),
+              ),
+            ),
+            LineChartBarData(
+              spots: trend,
+              isCurved: true,
+              preventCurveOverShooting: true,
+              barWidth: 3,
+              color: primary,
+              dotData: const FlDotData(show: false),
+              belowBarData: BarAreaData(
                 show: true,
-                alignment: Alignment.topRight,
-                style: labelStyle?.copyWith(color: t.colorScheme.tertiary, fontWeight: FontWeight.w700),
-                labelResolver: (_) => 'Ziel ${n1(targetKg)}',
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [primary.withValues(alpha: 0.18), primary.withValues(alpha: 0)],
+                ),
               ),
             ),
           ],
         ),
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipColor: (_) => t.colorScheme.inverseSurface,
-            getTooltipItems: (spots) => [
-              for (final s in spots)
-                LineTooltipItem(
-                  s.barIndex == 0
-                      ? '${dateTiny(DateTime(origin.year, origin.month, origin.day + s.x.round()))}  ${kg(s.y)}'
-                      : 'Trend ${kg(s.y)}',
-                  TextStyle(color: t.colorScheme.onInverseSurface, fontSize: 12),
-                ),
-            ],
-          ),
-        ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: raw,
-            barWidth: 0,
-            color: Colors.transparent,
-            dotData: FlDotData(
-              getDotPainter: (s, _, _, _) => FlDotCirclePainter(
-                radius: compact ? 2.5 : 3.5,
-                color: primary.withValues(alpha: 0.45),
-                strokeWidth: 0,
-              ),
-            ),
-          ),
-          LineChartBarData(
-            spots: trend,
-            isCurved: true,
-            preventCurveOverShooting: true,
-            barWidth: 3,
-            color: primary,
-            dotData: const FlDotData(show: false),
-            belowBarData: BarAreaData(
-              show: true,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [primary.withValues(alpha: 0.18), primary.withValues(alpha: 0)],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

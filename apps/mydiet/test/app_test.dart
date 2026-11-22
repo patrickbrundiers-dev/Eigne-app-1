@@ -596,6 +596,33 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Barrierefreiheit: 200 % Schrift ohne Überlauf auf allen Hauptseiten', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    tester.platformDispatcher.textScaleFactorTestValue = 2.0;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await pumpApp(tester, db);
+    expect(tester.takeException(), isNull, reason: 'Dashboard');
+    for (final page in ['Tagebuch', 'Gewicht', 'Essen', 'Profil']) {
+      await tester.tap(find.text(page).last);
+      await pumpApp(tester, db);
+      expect(tester.takeException(), isNull, reason: page);
+    }
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Barrierefreiheit: Ringe und Fortschritt haben Screenreader-Texte', (tester) async {
+    final handle = tester.ensureSemantics();
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    expect(find.bySemanticsLabel(RegExp(r'Kalorien heute: [\d.]+ kcal (übrig|zu viel)')), findsWidgets);
+    expect(find.bySemanticsLabel(RegExp(r'Protein: [\d.]+ von [\d.]+ g')), findsWidgets);
+    await tester.tap(find.text('Gewicht').last);
+    await pumpApp(tester, db);
+    expect(find.bySemanticsLabel(RegExp(r'Fortschritt zum Ziel')), findsWidgets);
+    handle.dispose();
+    await closeDb(tester, db);
+  });
+
   testWidgets('Als Text eintragen: Mahlzeit erkennen, Unsicheres bestätigen, eintragen', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await pumpApp(tester, db);

@@ -77,6 +77,7 @@ class RingGauge extends StatelessWidget {
     required this.color,
     this.stroke = 12,
     this.child,
+    this.semanticLabel,
   });
 
   final double progress;
@@ -85,15 +86,24 @@ class RingGauge extends StatelessWidget {
   final double stroke;
   final Widget? child;
 
+  /// What a screen reader announces instead of the ring and its inner text.
+  final String? semanticLabel;
+
   @override
   Widget build(BuildContext context) {
     final bg = Theme.of(context).colorScheme.surfaceContainerHighest;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: CustomPaint(
-        painter: _RingPainter(progress, color, bg, stroke, Theme.of(context).colorScheme.error),
-        child: Center(child: child),
+    final pct = progress.isFinite ? (progress * 100).round() : 0;
+    return Semantics(
+      label: semanticLabel,
+      value: '$pct Prozent',
+      excludeSemantics: semanticLabel != null,
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: CustomPaint(
+          painter: _RingPainter(progress, color, bg, stroke, Theme.of(context).colorScheme.error),
+          child: Center(child: child),
+        ),
       ),
     );
   }
@@ -144,41 +154,45 @@ class MacroBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final p = target <= 0 ? 0.0 : value / target;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: t.textTheme.bodyMedium),
-            ),
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: n0(value),
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  TextSpan(
-                    text: ' / ${n0(target)} $unit',
-                    style: TextStyle(color: t.colorScheme.onSurfaceVariant),
-                  ),
-                ],
+    return Semantics(
+      label: '$label: ${n0(value)} von ${n0(target)} $unit',
+      excludeSemantics: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: t.textTheme.bodyMedium),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: LinearProgressIndicator(
-            value: p.clamp(0.0, 1.0),
-            minHeight: 8,
-            color: p > 1.1 ? t.colorScheme.error : color,
-            backgroundColor: t.colorScheme.surfaceContainerHighest,
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: n0(value),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    TextSpan(
+                      text: ' / ${n0(target)} $unit',
+                      style: TextStyle(color: t.colorScheme.onSurfaceVariant),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+          const SizedBox(height: 6),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: p.clamp(0.0, 1.0),
+              minHeight: 8,
+              color: p > 1.1 ? t.colorScheme.error : color,
+              backgroundColor: t.colorScheme.surfaceContainerHighest,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

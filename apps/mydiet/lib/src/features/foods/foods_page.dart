@@ -65,11 +65,13 @@ class _FoodsPageState extends State<FoodsPage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
                 children: [
                   for (final (i, l) in const [(0, 'Alle'), (1, 'Eigene'), (2, 'Favoriten')])
                     Padding(
-                      padding: const EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.zero,
                       child: ChoiceChip(
                         label: Text(l),
                         selected: _filter == i,

@@ -4,6 +4,14 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Barrierefreiheit (Aufgabe 2.3)
+
+`RingGauge(semanticLabel:)` + Prozentwert, `MacroBar` als ein Screenreader-Text, Gewichtskurve mit Zusammenfassung.
+Überläufe bei 200 % behoben (Kalorienring skaliert den Innentext, Filter-Chips bei Lebensmitteln umbrechen).
+Tests: zwei Widget-Tests (200 % auf Dashboard, Tagebuch, Gewicht, Essen, Profil; Semantics-Labels), Suite grün.
+Offen: Unterseiten (Rezepte, Wochenplan, Einstellungen) bei 200 % noch nicht automatisch geprüft.
+Nächster Schritt: 3.4 Open-Food-Facts-Textsuche.
+
 ## 2026-11-22 – Stillstand erklären (Aufgabe 5.2)
 
 `core/stall.dart` (`analyzeStall`), Abschnitt „Stillstand: woran es liegen kann“ in der Fortschritt-Karte
