@@ -124,10 +124,30 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
+      - name: Release notes from CHANGELOG
+        env:
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          VERSION="${TAG#mydiet-v}"
+          APP_VERSION="$(grep '^version:' apps/mydiet/pubspec.yaml | sed 's/version: //; s/+.*//')"
+          if [ "$VERSION" != "$APP_VERSION" ]; then
+            echo "::error::release_tag $TAG passt nicht zur Version $APP_VERSION in apps/mydiet/pubspec.yaml"; exit 1
+          fi
+          # Section "## <version> ..." up to the next "## " heading.
+          awk -v v="$VERSION" '
+            /^## / { if (found) exit; if (index($0, "## " v " ") == 1 || $0 == "## " v) { found = 1; next } }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          {
+            echo
+            echo "**Installation:** Windows: Setup (.exe) oder portable ZIP. Android: APK direkt installieren (Installation aus unbekannten Quellen erlauben)."
+          } >> notes.md
+          cat notes.md
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -140,4 +160,4 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "Sattly $TAG" \
-            --notes "Windows: Setup (.exe) oder portable ZIP. Android: APK direkt installieren (Installation aus unbekannten Quellen erlauben)."
+            --notes-file notes.md
