@@ -2,6 +2,10 @@
 
 ## Nächste Version (in Arbeit)
 
+- Wochenplan „Mit Rezepten füllen“ beachtet das Profil: Rezepte mit Unverträglichkeiten (z. B. Laktose steht
+  auch für Milch, Joghurt, Käse; Gluten für Weizen, Hafer, Nudeln …) oder abgelehnten Lebensmitteln bleiben
+  weg, mit Grund in der Meldung; Rezepte mit bevorzugten Lebensmitteln kommen öfter vor
+
 - PC als Planungs-Arbeitsplatz: der Wochenplan zeigt im breiten Fenster die Tage nebeneinander; Einträge lassen
   sich mit der Maus (am Handy lange drücken) auf einen anderen Tag ziehen, mit Strg kopieren, oder über das Menü
   „Auf anderen Tag verschieben/kopieren“, jeweils mit Rückgängig. Tastenkürzel: Strg+E Eintragen für die

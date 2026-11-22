@@ -109,6 +109,16 @@ Die App empfiehlt keine Dosierungen. Sie addiert, was eingetragen ist, und vergl
 - Automatisch füllen: für jede leere Mahlzeit das nächste passende Rezept (rotierend, am selben Tag kein
   Rezept doppelt); Menge = Kalorienziel × Anteil ÷ kcal pro 100 g × 100, begrenzt auf 0,5–2,5 Portionen,
   auf 10 g gerundet.
+- Profil (`core/meal_plan.dart`: `excludedBy`, `preferenceScore`): Rezepte, deren Name oder eine Zutat einen
+  Eintrag aus „Unverträglichkeiten & Allergien“ oder „Abgelehnte Lebensmittel“ enthält, werden nicht
+  verwendet. Vergleich ohne Groß-/Kleinschreibung, Umlaute und ß vereinheitlicht; Begriffe ab 4 Buchstaben
+  auch in zusammengesetzten Wörtern („Vollmilch“), kürzere nur als ganzes Wort („Ei“, nicht „Weizen“).
+  Häufige Einträge stehen für Gruppen (Laktose → Milch, Joghurt, Käse, Quark, Sahne, Butter …; Gluten →
+  Weizen, Dinkel, Roggen, Gerste, Hafer, Nudeln, Brot, Mehl …; Nüsse, Erdnüsse, Ei, Fisch, Meeresfrüchte,
+  Soja, Sesam, Sellerie, Senf; Liste `avoidSynonyms`). Im Zweifel wird ausgelassen. Ausgelassene Rezepte
+  stehen mit Grund in der Meldung. Rezepte mit bevorzugten Lebensmitteln kommen in der Reihenfolge zuerst und
+  damit öfter vor. Das ist eine Planungshilfe, keine Allergen-Garantie: Zutaten fertiger Produkte prüft die
+  App nicht.
 - Übernehmen ins Tagebuch kopiert die geplanten Werte; ein schon übernommener Eintrag wird nicht noch einmal
   eingetragen (erst wieder, wenn er im Tagebuch gelöscht wurde).
 

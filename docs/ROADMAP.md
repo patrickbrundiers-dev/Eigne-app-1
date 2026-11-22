@@ -34,7 +34,8 @@ Supplemente, Sync. Diese Funktionen sind in der App nirgends als fertig dargeste
 - ✅ Ernährungsplanung: Wochenplan für alle Mahlzeiten, automatisch mit eigenen Rezepten füllen (Filter über
   Rezept-Stichworte wie vegetarisch, günstig, schnell, Meal Prep, Familie), Portionen passend zum Kalorienziel,
   Einträge ändern/entfernen mit Rückgängig, Woche kopieren, Tag oder Woche ins Tagebuch (ohne Doppelzählung),
-  Einkaufsliste aus dem Plan
+  Einkaufsliste aus dem Plan; beim Füllen bleiben Rezepte mit Unverträglichkeiten oder abgelehnten Lebensmitteln
+  aus dem Profil weg, bevorzugte kommen öfter vor
 - ✅ Intervallfasten (14:10 bis 36 h): Timer, Start nachträglich, Verlauf, Dashboard-Kachel
 - ✅ Makro-Aufteilung nach Ernährungsweise: Vorlagen Ausgewogen, High Protein, Low Carb, Ketogen, Ausdauer;
   Kohlenhydrat-Obergrenze mit Rechenweg

@@ -178,18 +178,23 @@ class _PlanViewState extends State<PlanView> {
             builder: (_) => _AutoSheet(defaultKcal: target ?? 2000),
           );
           if (opts == null) return;
-          final n = await db.generatePlanFor(
+          final fill = await db.generatePlanFor(
             days: days,
             targetKcal: opts.kcal,
             tags: opts.tags,
             includeSnacks: opts.snacks,
           );
+          final n = fill.planned;
+          final skipped = fill.skippedText();
           if (context.mounted) {
             showMessage(
               context,
-              n == 0
-                  ? 'Keine passenden Rezepte oder alle Mahlzeiten schon geplant. Lege Rezepte unter „Rezepte“ an.'
-                  : '$n Mahlzeiten geplant. Bereits geplante Mahlzeiten blieben unverändert.',
+              [
+                n == 0
+                    ? 'Keine passenden Rezepte oder alle Mahlzeiten schon geplant. Lege Rezepte unter „Rezepte“ an.'
+                    : '$n Mahlzeiten geplant. Bereits geplante Mahlzeiten blieben unverändert.',
+                ?skipped,
+              ].join(' '),
             );
           }
         case 'diary':
@@ -605,7 +610,9 @@ class _AutoSheetState extends State<_AutoSheet> {
           const SizedBox(height: 6),
           Text(
             'Leere Mahlzeiten werden mit deinen Rezepten gefüllt; die Portionsgröße richtet sich nach dem '
-            'Kalorienziel. Bereits Geplantes bleibt unverändert, alles ist danach änderbar.',
+            'Kalorienziel. Rezepte mit Unverträglichkeiten oder abgelehnten Lebensmitteln aus dem Profil '
+            'bleiben weg, bevorzugte kommen öfter vor. Bereits Geplantes bleibt unverändert, alles ist danach '
+            'änderbar.',
             style: t.textTheme.bodySmall,
           ),
           const SizedBox(height: 12),
