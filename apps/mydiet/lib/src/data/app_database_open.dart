@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'backup.dart' show backupKey;
 import 'database.dart';
 import 'db_encryption.dart';
 import 'error_log.dart';
@@ -47,11 +48,12 @@ Future<OpenedDatabase> openAppDatabase({DbKeyStore? keys}) async {
   try {
     final p = await prepareEncryptedDatabase(file, keys ?? SecureDbKeyStore());
     final db = AppDatabase(AppDatabase.openEncrypted(p.path, p.key));
+    backupKey = p.key;
     final notice = p.result == DbPrepareResult.keyLost
         ? 'Die bisherige Datenbank ließ sich nicht entschlüsseln, zum Beispiel weil sie aus einer '
               'Gerätesicherung eines anderen Telefons stammt. Sie wurde nicht gelöscht, sondern beiseitegelegt. '
-              'Sattly startet leer. Eigene Daten lassen sich unter Einstellungen → Daten aus einem Export oder einer '
-              'Sicherung wiederherstellen.'
+              'Sattly startet leer. Eigene Daten lassen sich unter Einstellungen → Daten aus einem Export '
+              'wiederherstellen.'
         : null;
     return OpenedDatabase(db, DbProtection.encrypted, notice: notice);
   } catch (e, st) {

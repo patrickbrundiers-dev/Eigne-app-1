@@ -2,6 +2,9 @@
 
 ## Nächste Version (in Arbeit)
 
+- Datenschutz: Auch die täglichen automatischen Sicherungen werden jetzt verschlüsselt gespeichert, mit demselben
+  Schlüssel wie die Datenbank. Ältere Sicherungen werden beim Start umgewandelt; Exporte bleiben lesbare Dateien
+
 - Datenschutz: Die Datenbank auf dem Gerät ist jetzt verschlüsselt. Der Schlüssel liegt im sicheren Speicher von
   Android bzw. Windows. Vorhandene Daten werden beim ersten Start automatisch umgestellt; das Original bleibt
   erhalten, bis die verschlüsselte Kopie vollständig geprüft ist. Die Android-Gerätesicherung ist dafür

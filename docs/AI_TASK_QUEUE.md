@@ -77,7 +77,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | # | Aufgabe | Nutzen | Aufwand | Risiko | Abhängig | Test |
 |---|---|---|---|---|---|---|
 | 7.1 | Android-Signatur-Secrets (Patrick) → Online-Update aktivieren | H | S | N | Patrick | Release-Lauf |
-| 7.2 | 🟡 App-Sperre erledigt (PIN/Fingerabdruck); Datenbank-Verschlüsselung umgesetzt (Patrick 2026-11-22 19:10, D-24), auf Geräten noch ungeprüft; offen 7.2b: tägliche Sicherungen verschlüsseln | M | M | H (Migration bestehender Daten, freigegeben) | – | Migrationstest |
+| 7.2 | ✅ App-Sperre (PIN/Fingerabdruck), Datenbank-Verschlüsselung (Patrick 2026-11-22 19:10, D-24, #58) und verschlüsselte tägliche Sicherungen (7.2b); auf Geräten noch ungeprüft | M | M | H (Migration bestehender Daten, freigegeben) | – | Migrationstest |
 | 7.3 | Datenschutzerklärung, Impressum, Store-Texte, Screenshots – Entwürfe in docs/ (DATENSCHUTZERKLAERUNG, IMPRESSUM mit Patricks Angaben, STORE-TEXTE); offen: Screenshots, rechtliche Prüfung | M | S | N | – | – |
 | 7.4 | Integrationstests auf Android-Emulator in CI | M | M | N | – | CI |
 

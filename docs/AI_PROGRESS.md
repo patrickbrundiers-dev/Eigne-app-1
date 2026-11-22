@@ -4,6 +4,15 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Tägliche Sicherungen verschlüsselt (7.2b)
+
+`backup.dart`: `BackupService(key:)`, Schlüssel kommt über `backupKey` aus `openAppDatabase`. Mit Schlüssel
+schreibt die Sicherung eine verschlüsselte SQLite-Datei `.sbak` (Tabelle `backup`, eine Zeile JSON), `read()`
+liest beide Formate, `encryptLegacy()` wandelt alte `.json` beim Start um (Löschen erst nach Gegenlesen).
+Keine neue Abhängigkeit, kein Schema. Hinweistext bei verlorenem Schlüssel nennt nur noch den Export.
+Tests: drei neue in `backup_csv_test.dart` (kein Klartext in der Datei, Wiederherstellen, fremder Schlüssel,
+Umwandlung alter Sicherungen, Verhalten ohne Schlüssel). Offen: Emulator-Test nach #57.
+
 ## 2026-11-22 – Datenbank verschlüsselt (7.2)
 
 Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-24: `lib/src/data/db_encryption.dart`
