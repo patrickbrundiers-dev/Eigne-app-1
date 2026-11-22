@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.2.0 – Phase 2: Ernährung (in Arbeit)
+## Nächste Version (in Arbeit)
+
+## 0.2.0 – Phase 2: Ernährung (2026-11-22)
 
 - Neuer Name: Die App heißt jetzt **Sattly**, mit neuem Logo (grünes „S“ im Teller-Fortschrittsring mit Blatt) als
   App-Icon auf Android und Windows und in der Oberfläche. Updates von MyDiet AI 0.1.0 behalten alle Daten;
