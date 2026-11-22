@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../core/dates.dart';
+import '../../data/display_prefs.dart';
 import '../../ui/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -98,6 +99,38 @@ class SettingsPage extends StatelessWidget {
                       label: const Text('Export importieren (ersetzt alle Daten)'),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              SectionCard(
+                title: 'Ziel und Anzeige',
+                icon: Icons.tune,
+                child: StreamBuilder<List<Object?>>(
+                  stream: combineLatest([db.watchSetting(budgetModeKey), db.watchSetting(hideNumbersKey)]),
+                  builder: (context, snap) => Column(
+                    children: [
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Wochenbudget statt Tagesziel'),
+                        subtitle: const Text(
+                          'Mehr oder weniger an einem Tag wird auf die restlichen Tage der Woche verteilt '
+                          '(höchstens +20 %, nie unter dem Mindestwert).',
+                        ),
+                        value: snap.data?[0] == 'week',
+                        onChanged: (v) => db.setSetting(budgetModeKey, v ? 'week' : 'day'),
+                      ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Zahlen ausblenden'),
+                        subtitle: const Text(
+                          'Dashboard und Tagebuch zeigen nur den Fortschritt, keine Kalorien und Gramm. '
+                          'Die App rechnet im Hintergrund unverändert weiter.',
+                        ),
+                        value: snap.data?[1] == 'true',
+                        onChanged: (v) => db.setSetting(hideNumbersKey, v ? 'true' : 'false'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 12),

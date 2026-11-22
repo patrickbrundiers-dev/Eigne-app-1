@@ -150,6 +150,58 @@ void main() {
     });
   });
 
+  group('Schnell-Erfassung', () {
+    test('Vorschläge je Mahlzeit: häufig zuerst, nur passende Mahlzeit, mind. zweimal', () async {
+      final slots = await db.watchMealSlots().first;
+      final breakfast = slots[0], dinner = slots[2];
+      final skyrF = (await db.searchFoods('Magerquark')).first;
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      final potato = (await db.searchFoods('Kartoffeln, gekocht')).first;
+      for (var d = 1; d <= 3; d++) {
+        await db.logFood(day: '2026-03-0$d', mealSlotId: breakfast.id, food: oats, amount: 50);
+      }
+      for (var d = 1; d <= 2; d++) {
+        await db.logFood(day: '2026-03-0$d', mealSlotId: breakfast.id, food: skyrF, amount: 200);
+      }
+      await db.logFood(day: '2026-03-04', mealSlotId: breakfast.id, food: potato, amount: 100);
+      for (var d = 1; d <= 4; d++) {
+        await db.logFood(day: '2026-03-0$d', mealSlotId: dinner.id, food: potato, amount: 250);
+      }
+      final now = DateTime(2026, 3, 5);
+      final b = await db.suggestedFoods(mealSlotId: breakfast.id, now: now);
+      expect(b.map((f) => f.id), [oats.id, skyrF.id]);
+      final d = await db.suggestedFoods(mealSlotId: dinner.id, now: now);
+      expect(d.map((f) => f.id), [potato.id]);
+      // Older than the window: nothing.
+      expect(await db.suggestedFoods(mealSlotId: breakfast.id, now: DateTime(2026, 6, 1)), isEmpty);
+    });
+
+    test('Schnelleintrag nur mit Kalorien, als Schätzung gekennzeichnet', () async {
+      final slot = (await db.watchMealSlots().first)[1];
+      await db.logQuickEntry(day: '2026-03-01', mealSlotId: slot.id, label: 'Pizza', kcal: 850, protein: 30, fat: 35);
+      final e = (await db.diaryForDay('2026-03-01')).single;
+      expect(e.foodName, 'Pizza');
+      expect(e.brand, AppDatabase.quickEntryBrand);
+      expect(e.nutrients.kcal, closeTo(850, 1e-9));
+      expect(e.nutrients.protein, closeTo(30, 1e-9));
+      expect(e.nutrients.carbs, 0);
+      final totals = await db.dailyTotals('2026-03-01', '2026-03-01');
+      expect(totals['2026-03-01']!.kcal, closeTo(850, 1e-9));
+      await expectLater(
+        db.logQuickEntry(day: '2026-03-01', mealSlotId: slot.id, label: '', kcal: 0),
+        throwsArgumentError,
+      );
+    });
+
+    test('Mahlzeit auf beliebiges Datum kopieren', () async {
+      final slot = (await db.watchMealSlots().first).first;
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      await db.logFood(day: '2026-03-01', mealSlotId: slot.id, food: oats, amount: 60);
+      expect(await db.copyMeal(fromDay: '2026-03-01', fromSlotId: slot.id, toDay: '2026-03-10'), 1);
+      expect((await db.diaryForDay('2026-03-10')).single.amount, 60);
+    });
+  });
+
   group('Mahlzeiten', () {
     test('1 bis 6 Mahlzeiten; entfernte behalten ihre Einträge', () async {
       final slots = await db.watchMealSlots().first;

@@ -3,7 +3,9 @@ import 'package:material_ui/material_ui.dart';
 import '../../app.dart';
 import '../../core/dates.dart';
 import '../../core/nutrition.dart';
+import '../../core/week_budget.dart';
 import '../../data/database.dart';
+import '../../data/display_prefs.dart';
 import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
@@ -50,7 +52,15 @@ class _DiaryPageState extends State<DiaryPage> {
         ],
       ),
       body: StreamBuilder<List<Object?>>(
-        stream: combineLatest([db.watchProfile(), db.watchWeights(), db.watchMealSlots(), db.watchDiary(key)]),
+        stream: combineLatest([
+          db.watchProfile(),
+          db.watchWeights(),
+          db.watchMealSlots(),
+          db.watchDiary(key),
+          db.watchSetting(budgetModeKey),
+          db.watchSetting(hideNumbersKey),
+          db.watchDailyTotals(dayKey(mondayOf(_day)), dayKey(DateTime(_day.year, _day.month, _day.day - 1))),
+        ]),
         builder: (context, snap) {
           final v = snap.data;
           if (v == null || v[0] == null) return const Center(child: CircularProgressIndicator());
@@ -59,6 +69,17 @@ class _DiaryPageState extends State<DiaryPage> {
           final slots = v[2] as List<MealSlot>;
           final entries = v[3] as List<DiaryEntry>;
           final total = Nutrients.sum(entries.map((e) => e.nutrients));
+          final hide = v[5] == 'true';
+          final week = v[4] == 'week'
+              ? weekBudget(
+                  today: _day,
+                  dailyTargetKcal: targets.targetKcal,
+                  consumedByDay: {
+                    for (final e in (v[6] as Map<String, Nutrients>).entries) parseDayKey(e.key): e.value.kcal,
+                  },
+                  floorKcal: p.sex == 'female' ? 1200 : 1500,
+                )
+              : null;
           final slotIds = slots.map((s) => s.id).toSet();
           final orphans = entries.where((e) => !slotIds.contains(e.mealSlotId)).toList();
           return PageBody(
@@ -68,7 +89,9 @@ class _DiaryPageState extends State<DiaryPage> {
               children: [
                 _DaySummary(
                   total: total,
-                  targetKcal: targets.targetKcal,
+                  targetKcal: week?.todayTargetKcal ?? targets.targetKcal,
+                  isWeekBudget: week != null,
+                  hideNumbers: hide,
                   proteinG: targets.proteinG,
                   carbsG: targets.carbsG,
                   fatG: targets.fatG,
@@ -80,10 +103,12 @@ class _DiaryPageState extends State<DiaryPage> {
                     slot: s,
                     slots: slots,
                     entries: entries.where((e) => e.mealSlotId == s.id).toList(),
+                    hideNumbers: hide,
                   ),
                   const SizedBox(height: 12),
                 ],
-                if (orphans.isNotEmpty) _MealCard(day: key, slot: null, slots: slots, entries: orphans),
+                if (orphans.isNotEmpty)
+                  _MealCard(day: key, slot: null, slots: slots, entries: orphans, hideNumbers: hide),
               ],
             ),
           );
@@ -100,10 +125,14 @@ class _DaySummary extends StatelessWidget {
     required this.proteinG,
     required this.carbsG,
     required this.fatG,
+    this.isWeekBudget = false,
+    this.hideNumbers = false,
   });
 
   final Nutrients total;
   final int targetKcal, proteinG, carbsG, fatG;
+  final bool isWeekBudget;
+  final bool hideNumbers;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +143,8 @@ class _DaySummary extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(l, style: t.textTheme.labelSmall),
-          Text('${n0(v)} / $target g', style: t.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+          if (!hideNumbers)
+            Text('${n0(v)} / $target g', style: t.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
           const SizedBox(height: 4),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -133,23 +163,40 @@ class _DaySummary extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: StatValue(label: 'Gegessen', value: kcal(total.kcal)),
-                ),
-                Expanded(
-                  child: StatValue(label: 'Ziel', value: kcal(targetKcal)),
-                ),
-                Expanded(
-                  child: StatValue(
-                    label: rest < 0 ? 'Zu viel' : 'Übrig',
-                    value: kcal(rest.abs()),
-                    valueColor: rest < 0 ? t.colorScheme.error : t.colorScheme.primary,
+            if (hideNumbers)
+              Row(
+                children: [
+                  Expanded(child: Text(gentleStatus(targetKcal <= 0 ? 0 : total.kcal / targetKcal))),
+                  SizedBox(
+                    width: 120,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: targetKcal <= 0 ? 0 : (total.kcal / targetKcal).clamp(0.0, 1.0),
+                        minHeight: 8,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              )
+            else
+              Row(
+                children: [
+                  Expanded(
+                    child: StatValue(label: 'Gegessen', value: kcal(total.kcal)),
+                  ),
+                  Expanded(
+                    child: StatValue(label: isWeekBudget ? 'Ziel (Woche)' : 'Ziel', value: kcal(targetKcal)),
+                  ),
+                  Expanded(
+                    child: StatValue(
+                      label: rest < 0 ? 'Zu viel' : 'Übrig',
+                      value: kcal(rest.abs()),
+                      valueColor: rest < 0 ? t.colorScheme.error : t.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             const SizedBox(height: 14),
             Row(
               children: [
@@ -168,7 +215,14 @@ class _DaySummary extends StatelessWidget {
 }
 
 class _MealCard extends StatelessWidget {
-  const _MealCard({required this.day, required this.slot, required this.slots, required this.entries});
+  const _MealCard({
+    required this.day,
+    required this.slot,
+    required this.slots,
+    required this.entries,
+    this.hideNumbers = false,
+  });
+  final bool hideNumbers;
   final String day;
   final MealSlot? slot;
   final List<MealSlot> slots;
@@ -198,8 +252,9 @@ class _MealCard extends StatelessWidget {
                       Text(
                         [
                           if (s?.minuteOfDay != null) timeOfDay(s!.minuteOfDay),
-                          kcal(sum.kcal),
-                          'P ${grams(sum.protein)}',
+                          if (!hideNumbers) kcal(sum.kcal),
+                          if (!hideNumbers) 'P ${grams(sum.protein)}',
+                          if (hideNumbers) '${entries.length} Einträge',
                         ].join(' · '),
                         style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant),
                       ),
@@ -214,6 +269,8 @@ class _MealCard extends StatelessWidget {
                       const PopupMenuItem(value: 'yesterday', child: Text('Vom Vortag übernehmen')),
                       if (entries.isNotEmpty && day != todayDayKey())
                         const PopupMenuItem(value: 'toToday', child: Text('Nach heute kopieren')),
+                      if (entries.isNotEmpty)
+                        const PopupMenuItem(value: 'toDate', child: Text('Auf anderes Datum kopieren …')),
                     ],
                   ),
                 if (s != null)
@@ -261,10 +318,13 @@ class _MealCard extends StatelessWidget {
                           [
                             amountWithUnit(e.amount, e.unit),
                             if (e.brand != null) e.brand!,
-                            'P ${grams(e.nutrients.protein)} · K ${grams(e.nutrients.carbs)} · F ${grams(e.nutrients.fat)}',
+                            if (!hideNumbers)
+                              'P ${grams(e.nutrients.protein)} · K ${grams(e.nutrients.carbs)} · F ${grams(e.nutrients.fat)}',
                           ].join(' · '),
                         ),
-                        trailing: Text(kcal(e.nutrients.kcal), style: const TextStyle(fontWeight: FontWeight.w600)),
+                        trailing: hideNumbers
+                            ? null
+                            : Text(kcal(e.nutrients.kcal), style: const TextStyle(fontWeight: FontWeight.w600)),
                         onTap: () => _edit(context, e),
                       ),
                     ),
@@ -313,6 +373,20 @@ class _MealCard extends StatelessWidget {
       if (context.mounted) {
         showMessage(context, n == 0 ? 'Am Vortag war ${s.name} leer.' : '$n Einträge vom Vortag übernommen');
       }
+    } else if (v == 'toDate') {
+      final from = parseDayKey(day);
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime(from.year, from.month, from.day + 1),
+        firstDate: DateTime(from.year - 1),
+        lastDate: DateTime(from.year + 1, 12, 31),
+        helpText: '${s.name} kopieren nach',
+      );
+      if (picked == null || !context.mounted) return;
+      final to = dayKey(picked);
+      if (to == day) return;
+      n = await db.copyMeal(fromDay: day, fromSlotId: s.id, toDay: to);
+      if (context.mounted) showMessage(context, '$n Einträge nach ${dateShort(picked)} kopiert');
     } else {
       n = await db.copyMeal(fromDay: day, fromSlotId: s.id, toDay: todayDayKey());
       if (context.mounted) {
