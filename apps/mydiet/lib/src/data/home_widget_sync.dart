@@ -17,11 +17,16 @@ import 'targets.dart';
 /// Hands the summary to the home screen widget. Replaceable in tests ([homeWidgetBridgeFactory]).
 abstract class HomeWidgetBridge {
   Future<void> push(WidgetSummary s);
+
+  /// Links the app was opened with from the widget (first the one it started with, then later ones).
+  Stream<Uri?> launches();
 }
 
 class NoHomeWidget implements HomeWidgetBridge {
   @override
   Future<void> push(WidgetSummary s) async {}
+  @override
+  Stream<Uri?> launches() => const Stream.empty();
 }
 
 /// Android widget `SattlyWidgetProvider` (android/app/src/main/kotlin/…).
@@ -32,7 +37,14 @@ class AndroidHomeWidget implements HomeWidgetBridge {
     await HomeWidget.saveWidgetData<String>('headline', s.headline);
     await HomeWidget.saveWidgetData<String>('detail', s.detail);
     await HomeWidget.saveWidgetData<int>('percent', s.percent);
+    await HomeWidget.saveWidgetData<String>('water', s.water);
     await HomeWidget.updateWidget(androidName: 'SattlyWidgetProvider');
+  }
+
+  @override
+  Stream<Uri?> launches() async* {
+    yield await HomeWidget.initiallyLaunchedFromHomeWidget();
+    yield* HomeWidget.widgetClicked;
   }
 }
 
@@ -52,6 +64,7 @@ Stream<WidgetSummary> watchWidgetSummary(AppDatabase db, {DateTime? now}) {
     db.watchSetting(budgetModeKey),
     db.watchSetting(hideNumbersKey),
     db.watchDailyTotals(dayKey(monday), dayKey(yesterday)),
+    db.watchWaterMl(day),
   ]).where((v) => v[0] != null).map((v) {
     final profile = v[0] as Profile;
     final targets = targetsFor(profile, v[1] as List<WeightEntry>, today: t);
@@ -81,6 +94,7 @@ Stream<WidgetSummary> watchWidgetSummary(AppDatabase db, {DateTime? now}) {
       eatenKcal: eaten.kcal,
       proteinG: eaten.protein,
       proteinTargetG: targets.proteinG,
+      waterMl: v[7] as int,
       hideNumbers: v[5] == 'true',
     );
   });
@@ -109,11 +123,21 @@ StreamSubscription<void> startHomeWidgetSync(AppDatabase db, {HomeWidgetBridge? 
 
   if (b is NoHomeWidget) return out.stream.listen((_) {});
   subscribe();
+  final clicks = b.launches().listen((uri) async {
+    final ml = waterFromWidgetLink(uri);
+    if (ml == null) return;
+    try {
+      await db.addWater(todayDayKey(), ml);
+    } catch (e) {
+      debugPrint('Wasser aus dem Widget nicht gespeichert: $e');
+    }
+  });
   final timer = Timer.periodic(const Duration(minutes: 5), (_) {
     if (todayDayKey() != subscribedDay) subscribe();
   });
   out.onCancel = () async {
     timer.cancel();
+    await clicks.cancel();
     await sub?.cancel();
   };
   return out.stream.listen((_) {});

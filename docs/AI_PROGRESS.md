@@ -4,6 +4,15 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Widget: Wasser +250 ml (W13, Teil 2)
+
+Phase-2-Thread. `widgetSummary` bekommt Wasser (`waterText`), `waterFromWidgetLink` prüft den Link
+`sattly://water?ml=…` (50–1000 ml). `HomeWidgetBridge.launches()` liefert Start- und Klick-Links des Widgets,
+`startHomeWidgetSync` trägt das Wasser für heute ein. Android: Knopf und Wasserzeile im Layout, Launch-Intent-Filter
+im Manifest, Widget zwei Zellen hoch. Kein Schema, keine neue Abhängigkeit.
+
+Tests: `home_widget_test.dart` +1 und Klick-Test im Datentest. Auf dem Gerät ungeprüft.
+
 ## 2026-11-22 – App-Sperre (Aufgabe 7.2 ohne Verschlüsselung)
 
 Phase-2-Thread, nach Patricks Entscheidung „Nur App-Sperre“. `core/app_lock.dart` (PIN-Regeln, PBKDF2, Wartezeiten,

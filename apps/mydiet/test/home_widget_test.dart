@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,8 +12,11 @@ import 'package:mydiet_ai/src/data/targets.dart';
 
 class FakeBridge implements HomeWidgetBridge {
   final pushed = <WidgetSummary>[];
+  final clicks = StreamController<Uri?>();
   @override
   Future<void> push(WidgetSummary s) async => pushed.add(s);
+  @override
+  Stream<Uri?> launches() => clicks.stream;
 }
 
 void main() {
@@ -40,6 +45,21 @@ void main() {
       expect(s.headline, 'Gut im Rahmen');
       expect(s.detail, isNot(contains('kcal')));
       expect(gentleStatus(1.0), 'Ziel erreicht');
+    });
+
+    test('Wasser-Text und Widget-Link', () {
+      expect(waterText(0), '0 ml');
+      expect(waterText(750), '750 ml');
+      expect(waterText(1000), '1 l');
+      expect(waterText(1250), '1,25 l');
+      expect(waterText(2500), '2,5 l');
+      expect(waterFromWidgetLink(Uri.parse('sattly://water?ml=250')), 250);
+      expect(waterFromWidgetLink(Uri.parse('sattly://water?ml=5000')), isNull);
+      expect(waterFromWidgetLink(Uri.parse('sattly://water')), isNull);
+      expect(waterFromWidgetLink(Uri.parse('https://water?ml=250')), isNull);
+      expect(waterFromWidgetLink(null), isNull);
+      final s = widgetSummary(day: 'd', budgetKcal: 2000, eatenKcal: 0, proteinG: 0, proteinTargetG: 1, waterMl: 500);
+      expect(s.water, 'Wasser 500 ml');
     });
 
     test('Tausenderpunkte', () {
@@ -94,6 +114,13 @@ void main() {
       await db.setSetting(hideNumbersKey, 'true');
       await pumpEventQueue();
       expect(bridge.pushed.last.detail, 'Tippen zum Eintragen');
+
+      bridge.clicks.add(Uri.parse('sattly://water?ml=$widgetWaterMl'));
+      bridge.clicks.add(Uri.parse('sattly://other'));
+      bridge.clicks.add(null);
+      await pumpEventQueue();
+      expect(await db.watchWaterMl(today).first, widgetWaterMl);
+      expect(bridge.pushed.last.water, 'Wasser 250 ml');
       await sub.cancel();
     });
 

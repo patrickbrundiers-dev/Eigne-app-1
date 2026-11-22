@@ -2,6 +2,9 @@
 
 ## Nächste Version (in Arbeit)
 
+- Homescreen-Widget: zeigt jetzt auch das heute getrunkene Wasser; der Knopf „+ 250 ml Wasser“ trägt es mit einem
+  Tipp ein (öffnet kurz die App)
+
 - App-Sperre (Einstellungen → App-Sperre): PIN mit 4–8 Ziffern, auf Wunsch Fingerabdruck oder Windows Hello.
   Sperrt beim Start und nach einer wählbaren Zeit im Hintergrund; nach mehreren falschen Versuchen wartet die
   App. Die PIN wird nur als Prüfwert gespeichert und ist nicht Teil von Sicherungen oder Exporten
