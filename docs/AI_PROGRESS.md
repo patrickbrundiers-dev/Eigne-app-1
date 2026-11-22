@@ -4,6 +4,15 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign Schritt 4: Tagebuch (Design 2)
+
+`diary_page.dart`: Tageskopf als `StatStrip` (Gegessen · Ziel/Ziel (Woche) · Übrig/Zu viel), Kalorienbalken mit
+Screenreader-Text, Makro-Balken in Makrofarbe. Mahlzeitenkarten: Plus als eckige Taste, Einträge mit
+Anfangsbuchstabe (`_FoodInitial`, Platzhalter bis eigene Bilder kommen), zweite Zeile mit farbigen Makropunkten
+(`_EntryLine`, Punkte als Widget, weil Barlow kein „●“ hat), kcal in Zahlenschrift. PC-Tabellen: Kopfzeile über
+`dataTableTheme` (gilt für alle Tabellen). Wischen zum Löschen, Menü, Tabellen-Spalten unverändert. Tests: alle
+grün, `app_test.dart` prüft Kennzahl-Leiste und Makrozeile. Nächster Schritt: Gewicht & Fortschritt.
+
 ## 2026-11-22 – Redesign Schritt 3: Startseite (Design 2)
 
 Neue Bausteine `lib/src/ui/design/components.dart`: `ConcentricRings` (Kalorien außen, Protein, Wasser),

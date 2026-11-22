@@ -215,5 +215,16 @@ ThemeData _build(Brightness brightness, Color? accent) {
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(color: t.primary, linearTrackColor: t.track),
     listTileTheme: ListTileThemeData(iconColor: t.muted, minVerticalPadding: 10),
+    dataTableTheme: DataTableThemeData(
+      headingTextStyle: TextStyle(
+        fontFamily: SattlyFonts.numbers,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.6,
+        color: t.muted,
+      ),
+      dataTextStyle: TextStyle(fontFamily: SattlyFonts.body, fontSize: 15, color: t.ink),
+      dividerThickness: 1,
+    ),
   );
 }
