@@ -4,6 +4,16 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Redesign Schritt 5: Gewicht & Fortschritt (Design 2)
+
+`weight_page.dart`: Seite heißt „Fortschritt“ (wie die Navigation). Oben großes Trendgewicht (Zahlenschrift 52)
+mit „zuletzt …“, daneben eckige Plus-Taste „Gewicht eintragen“ (ersetzt den schwebenden Knopf, der Inhalte
+verdeckte; Eintragen geht außerdem über das zentrale Plus). Darunter `StatStrip` Pro Woche · BMI · Ziel mit
+Erläuterungszeile (`StatStrip(notes:)` neu). Karte „Fortschritt“ heißt jetzt „Zielfortschritt“ wie die
+Startseiten-Kachel. Plateau-Hinweis und Ziellinie im Diagramm in Warnfarbe aus den Tokens, Listenwerte in
+Zahlenschrift. Rechenwerte unverändert. Tests: `app_test.dart` an neuen Kartentitel angepasst. Nächster Schritt:
+Profil & Einstellungen.
+
 ## 2026-11-22 – Redesign Schritt 4: Tagebuch (Design 2)
 
 `diary_page.dart`: Tageskopf als `StatStrip` (Gegessen · Ziel/Ziel (Woche) · Übrig/Zu viel), Kalorienbalken mit

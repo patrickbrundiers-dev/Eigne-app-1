@@ -11,6 +11,8 @@
   Gegessen, Tagesbudget und Bewegung, Makronährstoffe mit Prozent vom Ziel
 - Tagebuch: Kopf mit Gegessen, Ziel und Übrig in großer Zahlenschrift, Einträge mit Anfangsbuchstabe und
   farbigen Punkten für Protein, Kohlenhydrate und Fett; ruhigere Tabellenköpfe am PC
+- Fortschritt: dein Trendgewicht groß oben, daneben ein Knopf zum Eintragen, darunter Tempo pro Woche, BMI und
+  Prognose fürs Ziel. Die Karte „Fortschritt“ heißt jetzt „Zielfortschritt“ wie auf der Startseite
 
 - Lebensmittelsuche: Findet deine eigene Datenbank kaum etwas, sucht Sattly nach einer kurzen Tipp-Pause
   automatisch bei Open Food Facts und zeigt die Treffer direkt unter den eigenen an (auch bei der Zutatensuche

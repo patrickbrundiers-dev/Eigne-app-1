@@ -75,10 +75,13 @@ class _RingsPainter extends CustomPainter {
 
 /// Kennzahl mit farbiger Kante links (Design 2): Beschriftung klein und groß geschrieben, Zahl groß.
 class StatStrip extends StatelessWidget {
-  const StatStrip({super.key, required this.items});
+  const StatStrip({super.key, required this.items, this.notes});
 
   /// (Beschriftung, Wert, Kantenfarbe)
   final List<(String, String, Color)> items;
+
+  /// Optionale Zeile unter dem Wert, je Eintrag (z. B. „Prognose aus Trend“).
+  final List<String?>? notes;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +89,7 @@ class StatStrip extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final (label, value, color) in items)
+        for (final (i, (label, value, color)) in items.indexed)
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(right: SattlySpace.s),
@@ -114,6 +117,8 @@ class StatStrip extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(value, maxLines: 1, style: numberStyle(24, color: tk.ink)),
                   ),
+                  if (notes?.elementAtOrNull(i) case final note?)
+                    Text(note, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: tk.muted)),
                 ],
               ),
             ),
