@@ -9,6 +9,9 @@ import 'package:mydiet_ai/src/branding.dart';
 import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
+import 'package:mydiet_ai/src/data/reminder_scheduler.dart';
+import 'package:mydiet_ai/src/core/reminders.dart';
+import 'package:mydiet_ai/src/features/settings/reminders_page.dart';
 import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +21,7 @@ void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
   setUpAll(() async {
     await initializeDateFormatting('de_DE');
+    reminderScheduler = NoopReminderScheduler(); // no notification plugin in tests
     // Real font, so layout overflows in tests match the app.
     final loader = FontLoader('Inter');
     for (final w in ['Regular', 'Medium', 'SemiBold', 'Bold', 'ExtraBold']) {
@@ -259,6 +263,24 @@ void main() {
     final saved = (await tester.runAsync(() => db.findFoodByBarcode('4006381333931')))!;
     expect(saved.source, 'off');
     expect(saved.kcal, 380);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Erinnerungen: Wasser einschalten plant Benachrichtigungen', (tester) async {
+    final sched = NoopReminderScheduler();
+    reminderScheduler = sched;
+    addTearDown(() => reminderScheduler = NoopReminderScheduler());
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    expect(sched.applied, isNotEmpty); // synced at start
+    expect(sched.applied.last, isEmpty);
+    final ctx = tester.element(find.byType(Scaffold).first);
+    Navigator.of(ctx).push(MaterialPageRoute<void>(builder: (_) => const RemindersPage()));
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Ans Trinken erinnern'));
+    await pumpApp(tester, db);
+    expect(find.textContaining('6× am Tag, 09:00–20:00'), findsOneWidget);
+    expect(sched.applied.last.where((r) => r.kind == ReminderKind.water), hasLength(6));
     await closeDb(tester, db);
   });
 

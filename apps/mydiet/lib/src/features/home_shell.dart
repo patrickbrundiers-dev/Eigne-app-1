@@ -1,11 +1,15 @@
 import 'package:material_ui/material_ui.dart';
 
+import 'dart:async';
+
+import '../app.dart';
 import '../branding.dart';
 
 import 'dashboard/dashboard_page.dart';
 import 'diary/diary_page.dart';
 import 'foods/food_hub_page.dart';
 import 'profile/profile_page.dart';
+import 'settings/reminders_page.dart';
 import 'weight/weight_page.dart';
 
 /// Navigation: bottom bar on phones, navigation rail from 840 px width.
@@ -22,6 +26,20 @@ class HomeShellState extends State<HomeShell> {
   static HomeShellState? of(BuildContext context) => context.findAncestorStateOfType<HomeShellState>();
 
   void go(int i) => setState(() => _index = i);
+
+  StreamSubscription<void>? _reminders;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _reminders ??= startReminderSync(context.db);
+  }
+
+  @override
+  void dispose() {
+    _reminders?.cancel();
+    super.dispose();
+  }
 
   static const _dest = [
     (Icons.space_dashboard_outlined, Icons.space_dashboard, 'Heute'),
