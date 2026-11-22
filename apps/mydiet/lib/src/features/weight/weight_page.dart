@@ -9,6 +9,7 @@ import '../../data/targets.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../home_shell.dart';
+import 'adaptive_card.dart';
 import 'weight_chart.dart';
 import 'weight_entry_sheet.dart';
 
@@ -48,6 +49,8 @@ class _WeightPageState extends State<WeightPage> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 96),
               children: [
                 _stats(context, p, a, cur),
+                const SizedBox(height: 12),
+                AdaptiveCard(profile: p, weights: weights),
                 const SizedBox(height: 12),
                 SectionCard(
                   title: 'Verlauf',
@@ -156,8 +159,8 @@ class _WeightPageState extends State<WeightPage> {
                     child: Text(
                       'Plateau erkannt: In den letzten drei Wochen hat sich dein Trendgewicht um weniger als '
                       '0,1 kg pro Woche verändert. Das ist häufig und oft Wassereinlagerung. Prüfe, ob die '
-                      'Einträge im Tagebuch vollständig sind. Eine Anpassung des Kalorienziels schlägt die '
-                      'Wochenanalyse vor (Phase 3); du entscheidest selbst.',
+                      'Einträge im Tagebuch vollständig sind. Eine Anpassung des Kalorienziels schlägt der '
+                      'Wochen-Check unten vor; du entscheidest selbst.',
                       style: TextStyle(color: t.colorScheme.onTertiaryContainer),
                     ),
                   ),

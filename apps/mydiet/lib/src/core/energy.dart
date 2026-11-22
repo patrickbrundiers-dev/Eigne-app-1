@@ -13,7 +13,7 @@ enum Sex { male, female }
 /// Values sit at the lower end of the DGE reference ranges (sitting 1.4-1.5, sitting with
 /// some walking 1.6-1.7, standing 1.8-1.9, heavy 2.0-2.4), because predictive BMR formulas
 /// tend to overestimate the needs of people with a higher body weight. The weekly analysis
-/// (Phase 3) corrects the target from the real weight trend.
+/// ("Wochen-Check", core/adaptive_target.dart) corrects the target from the real weight trend.
 enum JobActivity {
   sedentary(1.25, 'Kaum Bewegung', 'überwiegend sitzend oder liegend, kaum Wege'),
   sitting(1.4, 'Sitzend', 'Büro, kaum Wege zu Fuß'),

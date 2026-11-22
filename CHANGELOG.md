@@ -21,6 +21,9 @@
 - Makro-Vorlagen je Ernährungsweise und Kohlenhydrat-Obergrenze (Low Carb, Ketogen) im Profil
 - Intervallfasten mit Timer, nachträglichem Start und Verlauf als Dashboard-Kachel
 - Datenbank Schema 4; Migrationen laufen jetzt schrittweise über die gespeicherten Schemata
+- Wochen-Check auf der Gewichtsseite: echter Verbrauch aus Aufnahme und Gewichtsverlauf der letzten 28 Tage,
+  unvollständige Tage werden ausgelassen, Vorschlag für das Kalorienziel mit Rechenweg (höchstens 300 kcal
+  Änderung auf einmal, nie unter dem Mindestwert), gilt erst nach Bestätigung
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 
