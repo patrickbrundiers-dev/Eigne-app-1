@@ -2,6 +2,10 @@
 
 ## Nächste Version (in Arbeit)
 
+- Basisdatenbank: rund 220 weitere Lebensmittel mit deutschen Namen (Obst, Gemüse, Fisch, Fleisch, Käse,
+  Brot, Getreide, Hülsenfrüchte, Nüsse, Öle), Werte aus USDA FoodData Central (gemeinfrei), meist mit Vitaminen
+  und Mineralstoffen. Kommt beim Update automatisch dazu; eigene und gelöschte Lebensmittel bleiben unberührt
+
 - Homescreen-Widget: zeigt jetzt auch das heute getrunkene Wasser; der Knopf „+ 250 ml Wasser“ trägt es mit einem
   Tipp ein (öffnet kurz die App)
 

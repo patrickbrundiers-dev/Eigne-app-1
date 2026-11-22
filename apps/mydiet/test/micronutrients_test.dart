@@ -7,6 +7,7 @@ import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/seed_foods.dart';
 import 'package:mydiet_ai/src/data/seed_micros.dart';
+import 'package:mydiet_ai/src/data/seed_usda.dart';
 
 const _d3 = SupplementDose(nutrientId: 'vit_d', amount: 20, unit: 'µg');
 const _mg = SupplementDose(nutrientId: 'magnesium', amount: 300, unit: 'mg');
@@ -127,6 +128,21 @@ void main() {
       expect(e.value['calcium'] ?? 0, lessThan(1500), reason: e.key);
     }
     expect(referenceMicros.length, greaterThan(90));
+  });
+
+  test('USDA micros: every key is a USDA food, values plausible', () {
+    final names = {for (final f in usdaFoods) f.name};
+    for (final e in usdaMicros.entries) {
+      expect(names, contains(e.key));
+      expect(referenceMicros.containsKey(e.key), isFalse, reason: e.key);
+      for (final v in e.value.entries) {
+        expect(nutrientById(v.key), isNotNull, reason: v.key);
+        expect(v.value, greaterThanOrEqualTo(0));
+      }
+      expect(e.value['potassium'] ?? 0, lessThan(2000), reason: e.key);
+      expect(e.value['calcium'] ?? 0, lessThan(1500), reason: e.key);
+    }
+    expect(usdaMicros.length, greaterThan(150));
   });
 
   test('Open Food Facts micronutrients are converted from g', () {

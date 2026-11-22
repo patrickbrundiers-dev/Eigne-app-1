@@ -214,6 +214,7 @@ class SettingsPage extends StatelessWidget {
                 icon: Icons.info_outline,
                 child: Text(
                   'Daten zu Lebensmitteln mit Barcode: Open Food Facts (ODbL).\n'
+                  'Basis-Lebensmittel teilweise aus USDA FoodData Central (gemeinfrei, CC0).\n'
                   'Berechnungen sind Schätzwerte und ersetzen keine ärztliche oder ernährungsmedizinische Beratung.',
                   style: t.textTheme.bodySmall,
                 ),

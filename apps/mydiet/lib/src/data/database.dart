@@ -15,6 +15,7 @@ import '../core/supplements.dart';
 import 'database.steps.dart';
 import 'seed_foods.dart';
 import 'seed_micros.dart';
+import 'seed_usda.dart';
 import 'tables.dart';
 
 export '../core/food_quality.dart' show FoodSource, FoodQuality;
@@ -115,8 +116,14 @@ const _defaultSlots = [
 ];
 
 /// Increase when the shipped reference foods change; [seedReferenceFoods] then
-/// adds new ones without touching the user's foods.
-const int seedVersion = 1;
+/// adds new ones without touching the user's foods. 2 = USDA-Lebensmittel (Aufgabe 3.6).
+const int seedVersion = 2;
+
+/// All shipped base foods: hand-curated reference values plus USDA FoodData Central.
+const baseFoods = [...referenceFoods, ...usdaFoods];
+
+/// Shipped vitamins and minerals per base food name.
+Map<String, double>? baseMicros(String name) => referenceMicros[name] ?? usdaMicros[name];
 
 @DriftDatabase(
   tables: [
@@ -228,9 +235,12 @@ class AppDatabase extends _$AppDatabase {
     final current = int.tryParse(await getSetting('seedVersion') ?? '') ?? 0;
     if (current >= seedVersion) return;
     await transaction(() async {
-      final existing = (await select(foods).get()).map((f) => f.foodKey).toSet();
+      // Also the names of deleted foods, so a base food the user deleted does not come back.
+      final existing = {
+        for (final f in await select(foods).get()) ...[f.foodKey, foodKey(f.name, f.brand)],
+      };
       await batch((b) {
-        for (final f in referenceFoods) {
+        for (final f in baseFoods) {
           final key = foodKey(f.name, null);
           if (existing.contains(key)) continue;
           existing.add(key);
@@ -330,7 +340,7 @@ class AppDatabase extends _$AppDatabase {
   // ---------------------------------------------------------------- constants used by the part files
 
   static const quickEntryBrand = 'Schnelleintrag (Schätzung)';
-  static const microSeedVersion = 1;
+  static const microSeedVersion = 2;
   static const exportFormat = 'mydiet-export';
   static const exportVersion = 1;
 }
