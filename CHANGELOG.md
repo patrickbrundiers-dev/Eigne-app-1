@@ -10,6 +10,11 @@
   eigene Einträge („500 g Hackfleisch“), abhaken, erledigte entfernen, Wischen zum Löschen mit Rückgängig
 - Navigation: „Lebensmittel“ heißt jetzt „Essen“ mit den Reitern Lebensmittel, Rezepte, Einkauf
 - Datenbank Schema 2 mit getesteter Migration; Export/Import enthält Rezepte und Einkaufsliste
+- Supplemente: Produkte mit Inhaltsstoffen vom Etikett (28 Stoffe im Katalog plus eigene), Verzehrempfehlung
+  des Herstellers, Portionen pro Tag, Uhrzeiten, Vorrat in Tagen, Abhaken pro Uhrzeit (auch auf dem Dashboard)
+- Tagessumme je Inhaltsstoff über alle Produkte (z. B. Vitamin D aus Multi + D3/K2) mit % der Referenzmenge
+  und der tolerierbaren Höchstmenge (EFSA): Hinweis ab 80 %, Warnung darüber; keine Dosierungsempfehlungen
+- Datenbank Schema 3
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

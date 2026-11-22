@@ -11,7 +11,8 @@ enum DashTile {
   weightChart('Gewichtskurve', wide: true),
   hints('Tageshinweise', wide: true),
   protein('Protein'),
-  meals('Mahlzeiten heute');
+  meals('Mahlzeiten heute'),
+  supplements('Supplemente heute', wide: true);
 
   const DashTile(this.label, {this.wide = false});
   final String label;
@@ -26,7 +27,7 @@ class TileConfig {
   TileConfig copyWith({bool? visible}) => TileConfig(tile, visible ?? this.visible);
 }
 
-const _defaultHidden = {DashTile.protein, DashTile.meals};
+const _defaultHidden = {DashTile.protein, DashTile.meals, DashTile.supplements};
 
 List<TileConfig> defaultLayout() => [for (final t in DashTile.values) TileConfig(t, !_defaultHidden.contains(t))];
 
@@ -56,3 +57,9 @@ List<TileConfig> parseLayout(String? json) {
 String encodeLayout(List<TileConfig> layout) => jsonEncode([
   for (final c in layout) {'id': c.tile.name, 'visible': c.visible},
 ]);
+
+/// Returns [json] with the tile [id] made visible (or hidden). Unknown ids leave it unchanged.
+String setTileVisible(String? json, String id, bool visible) {
+  final layout = parseLayout(json);
+  return encodeLayout([for (final c in layout) c.tile.name == id ? c.copyWith(visible: visible) : c]);
+}

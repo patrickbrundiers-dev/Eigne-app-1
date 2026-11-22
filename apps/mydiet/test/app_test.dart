@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:mydiet_ai/src/app.dart';
+import 'package:mydiet_ai/src/core/supplements.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
 
@@ -124,6 +125,37 @@ void main() {
     await pumpApp(tester, db);
     expect(find.textContaining('120 g Haferflocken'), findsOneWidget);
     expect(find.text('für Overnight Oats'), findsOneWidget);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Supplemente: Summe über Produkte, Warnung, Abhaken', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      await db.saveSupplement(
+        name: 'Multivitamin',
+        times: [480],
+        doses: const [SupplementDose(nutrientId: 'vit_d', amount: 25, unit: 'µg')],
+      );
+      await db.saveSupplement(
+        name: 'Vitamin D3',
+        doses: const [SupplementDose(nutrientId: 'vit_d', amount: 100, unit: 'µg')],
+      );
+      await db.setDashTileVisible('supplements', true);
+    });
+    await pumpApp(tester, db);
+    expect(find.text('Supplemente heute'), findsOneWidget);
+    await tester.tap(find.text('Essen'));
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Supplemente'));
+    await tester.pumpAndSettle();
+    await pumpApp(tester, db);
+    expect(find.textContaining('Über der tolerierbaren Höchstmenge'), findsOneWidget);
+    expect(find.text('125 µg'), findsOneWidget); // geplant
+    expect(find.text('125 %'), findsOneWidget);
+    await tester.tap(find.text('Multivitamin').first);
+    await pumpApp(tester, db);
+    final intakes = await tester.runAsync(() => db.watchIntakes(todayDayKey()).first);
+    expect(intakes!.single.plannedMinute, 480);
     await closeDb(tester, db);
   });
 
