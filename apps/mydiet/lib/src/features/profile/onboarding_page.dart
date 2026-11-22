@@ -1,3 +1,5 @@
+import '../../branding.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import 'profile_form.dart';
@@ -23,12 +25,9 @@ class OnboardingPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: t.colorScheme.primaryContainer,
-                            child: Icon(Icons.eco, color: t.colorScheme.onPrimaryContainer),
-                          ),
+                          Image.asset(appLogoAsset, width: 44, height: 44, semanticLabel: 'Logo'),
                           const SizedBox(width: 12),
-                          Text('MyDiet AI', style: t.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
+                          Text(appName, style: t.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800)),
                         ],
                       ),
                       const SizedBox(height: 12),

@@ -1,3 +1,5 @@
+import 'branding.dart';
+
 import 'package:material_ui/material_ui.dart';
 
 import 'data/database.dart';
@@ -80,7 +82,7 @@ class MyDietApp extends StatelessWidget {
               _ => ThemeMode.system,
             };
             return MaterialApp(
-              title: 'MyDiet AI',
+              title: appName,
               debugShowCheckedModeBanner: false,
               theme: buildTheme(seed, Brightness.light),
               darkTheme: buildTheme(seed, Brightness.dark),
