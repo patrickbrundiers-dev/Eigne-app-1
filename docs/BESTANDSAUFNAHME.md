@@ -56,7 +56,7 @@ Keine reproduzierbaren Abstürze gefunden; alle Tests grün. Auffällig:
 
 - `docs/SICHERHEIT.md` behauptet „Die App baut keine Netzwerkverbindungen auf“. Seit dem Barcode-Scanner
   stimmt das nicht mehr (Open Food Facts, nur Barcode). → in diesem PR korrigiert.
-- Gewichtsliste zeigt höchstens 120 Einträge ohne Hinweis, dass ältere fehlen.
+- Gewichtsliste zeigte höchstens 120 Einträge ohne Hinweis, dass ältere fehlen → behoben (1.3).
 
 ## 5. Fehlende Funktionen (gegenüber führenden Apps)
 

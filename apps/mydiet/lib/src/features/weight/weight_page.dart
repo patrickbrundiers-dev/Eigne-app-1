@@ -14,6 +14,9 @@ import 'progress_card.dart';
 import 'weight_chart.dart';
 import 'weight_entry_sheet.dart';
 
+/// Weigh-ins shown at once in the list.
+const weightPageSize = 120;
+
 class WeightPage extends StatefulWidget {
   const WeightPage({super.key});
 
@@ -23,6 +26,9 @@ class WeightPage extends StatefulWidget {
 
 class _WeightPageState extends State<WeightPage> {
   int? _days = 90;
+
+  /// Entries shown in the list; „Ältere anzeigen“ adds [weightPageSize] more.
+  int _shown = weightPageSize;
   int _tab = 0;
 
   @override
@@ -185,7 +191,7 @@ class _WeightPageState extends State<WeightPage> {
       final rev = weights.reversed.toList();
       return Column(
         children: [
-          for (var i = 0; i < rev.length && i < 120; i++)
+          for (var i = 0; i < rev.length && i < _shown; i++)
             ListTile(
               title: Text(kg(rev[i].weightKg), style: const TextStyle(fontWeight: FontWeight.w700)),
               subtitle: Text(
@@ -199,6 +205,15 @@ class _WeightPageState extends State<WeightPage> {
               trailing: i + 1 < rev.length ? _delta(t, rev[i].weightKg - rev[i + 1].weightKg) : null,
               onTap: () => showWeightEntrySheet(context, entry: rev[i]),
               onLongPress: () => _confirmDelete(context, rev[i]),
+            ),
+          if (rev.length > _shown)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: OutlinedButton.icon(
+                onPressed: () => setState(() => _shown += weightPageSize),
+                icon: const Icon(Icons.expand_more),
+                label: Text('Ältere anzeigen (noch ${rev.length - _shown})'),
+              ),
             ),
         ],
       );

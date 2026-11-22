@@ -4,6 +4,10 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+## 2026-11-22 – Gewichtsliste nachladen (Aufgabe 1.3)
+
+`weight_page.dart`: Knopf „Ältere anzeigen (noch n)“ lädt jeweils 120 weitere. Widget-Test mit 131 Einträgen.
+
 ## 2026-11-22 – Open-Food-Facts-Textsuche (Aufgabe 3.4)
 
 `OffClient.search()` (nur Suchbegriff, Produkte ohne Namen oder Energie fallen weg, nur gültige Barcodes),
