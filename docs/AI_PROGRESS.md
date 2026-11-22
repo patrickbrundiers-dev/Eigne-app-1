@@ -48,7 +48,7 @@ Offen / bekannt:
 
 Nächster Schritt: 1.1 „Alle Daten löschen“.
 
-## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung, 4.1 Wochenplan + Profil, W9 Rezept-Import
+## 2026-11-22 – Phase-2-Thread: Erinnerungen, W5 Mikronährstoffe, W8 PC-Planung, 4.1 Wochenplan + Profil, W9 Rezept-Import, 5.4 Wochenbericht
 
 Thread „MyDiet AI Phase 2 entwickeln“, Branch `claude/project-thread-k8k628`.
 
@@ -78,11 +78,15 @@ Tests: `flutter analyze` ohne Befund, neue Unit-Tests `test/meal_time_test.dart`
   für Tests, `recipeFromPastedText`, `matchIngredients` auf Basis von `matchMealText`),
   `features/recipes/recipe_import_page.dart`, Link-Knopf in der Rezeptliste. Tests `test/recipe_import_test.dart`
   (7) und Widget-Test „Rezept von Webseite übernehmen“.
+- 5.4 Wochenbericht: `core/weekly_report.dart` (`buildWeeklyReport`, `Finding`, `goalFrom`),
+  `data/weekly_report_data.dart` (`loadWeeklyReport`, `defaultReportMonday`),
+  `features/report/weekly_report_page.dart` (Seite + Kachel `DashTile.weeklyReport`, am Enum-Ende).
+  Tests `test/weekly_report_test.dart` (7) und Widget-Test „Wochenbericht“.
 
 Offen: Tabellen mit wählbaren Spalten (Aufgabe 2.5). Online-Update wartet auf die Android-Signatur-Secrets
 (Code in Commit 1265bf6, Anleitung docs/UPDATES.md im Branch-Verlauf).
 
-Nächster Schritt dieses Threads: W10 Freundlicher Umgang, danach Phase-4-Vorbereitung (Sync-Konzept, W12).
+Nächster Schritt dieses Threads: Phase 4 Health Connect (6.1) und Sync-Konzept (6.3, Freigabe nötig). W10 gehört laut Aufteilung dem Thread „MyDiet AI besser machen“.
 
 ## 2026-11-22 – Bestandsaufnahme, Wettbewerb, Gewichts-Dashboard
 

@@ -19,6 +19,8 @@ import 'package:mydiet_ai/src/features/micros/micros_view.dart';
 import 'package:mydiet_ai/src/features/diary/food_picker_page.dart';
 import 'package:mydiet_ai/src/data/off_client.dart';
 import 'package:mydiet_ai/src/data/recipe_import_client.dart';
+import 'package:mydiet_ai/src/data/weekly_report_data.dart';
+import 'package:mydiet_ai/src/features/report/weekly_report_page.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -213,6 +215,35 @@ void main() {
     expect(items.firstWhere((i) => i.foodName.startsWith('Haferflocken')).amount, 160);
     expect(r.instructions, contains('Quelle: https://example.org/porridge'));
     expect(find.text('Pro Portion'), findsOneWidget); // detail page opened
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Wochenbericht: Befunde und Vorschläge der letzten Woche', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    final mon = defaultReportMonday(DateTime.now());
+    await tester.runAsync(() async {
+      final slot = (await db.watchMealSlots().first).first;
+      final oats = (await db.searchFoods('Haferflocken')).first;
+      for (var i = 0; i < 5; i++) {
+        final d = DateTime(mon.year, mon.month, mon.day + i);
+        await db.logFood(day: dayKey(d), mealSlotId: slot.id, food: oats, amount: 400); // ~1500 kcal, wenig Protein
+      }
+    });
+    await pumpApp(tester, db);
+    final tile = find.text('Wochenbericht');
+    expect(find.byType(WeeklyReportTile), findsOneWidget);
+    await tester.ensureVisible(tile);
+    await tester.pump();
+    await tester.tap(tile);
+    for (var i = 0; i < 40; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.byType(WeeklyReportPage), findsOneWidget);
+    expect(find.text('5 von 7 Tagen eingetragen'), findsOneWidget);
+    expect(find.text('Protein oft unter dem Ziel'), findsOneWidget);
+    expect(find.text('Vorschläge für nächste Woche'), findsOneWidget);
+    expect(find.textContaining('1. '), findsWidgets);
     await closeDb(tester, db);
   });
 

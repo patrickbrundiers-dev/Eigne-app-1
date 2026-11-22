@@ -12,9 +12,8 @@ Bewertung: **Nutzen** (H/M/N), **Aufwand** S ≤ 1 Tag · M 2–4 Tage · L ≥ 
 
 | Aufgabe | Wer | Schema | PR |
 |---|---|---|---|
-| 4.1 Wochenplan beachtet Profil (Unverträglichkeiten, Abneigungen, Vorlieben) | Phase-2-Thread | nein | #33 |
-| W9 Rezept-Import aus Webseite (3.5), nutzt `parseLine()` aus 3.1 | Phase-2-Thread | nein | folgt |
-| 1.1 Alle Daten löschen + 1.2 Fehlerprotokoll | Thread „Sattly auf Niveau führender Apps“ | nein | neuer PR |
+| 5.4 Wochenbericht (Phase 3) | Phase-2-Thread | nein | #36 |
+| 1.1 Alle Daten löschen + 1.2 Fehlerprotokoll | Thread „Sattly auf Niveau führender Apps“ | nein | #35 |
 
 ## Priorität 1 – Fehler und technische Grundlagen
 
@@ -62,7 +61,7 @@ Grundsatz (siehe AI_DECISIONS D-07): erst lokal und regelbasiert, externe KI nur
 | 5.1 | Gewohnheiten erkennen: wiederkehrende Mahlzeiten → Vorlage vorschlagen | H | M | N | – | Unit-Tests mit synthetischem Tagebuch |
 | 5.2 | Stagnations-Analyse: Plateau + Bilanz + Lücken + Wochenendmuster → erklärte Ursachen | H | M | N | dieser PR | Unit-Tests |
 | 5.3 | Optionale Cloud-KI für Text/Foto (Anbieter wählbar, Schlüssel im sicheren Speicher, Datenvorschau vor dem Senden) | H | L | H (Kosten, Datenschutz → **Freigabe nötig**) | 3.1 | Tests mit Mock |
-| 5.4 | Wochenbericht mit Begründung (nutzt Wochen-Check, Fortschritt, Mikros) | M | M | N | W5 | Unit-Tests |
+| 5.4 | ✅ Wochenbericht mit Begründung (nutzt Wochen-Check, Fortschritt, Mikros) | M | M | N | W5 | Unit-Tests |
 
 ## Priorität 6 – Integrationen
 
