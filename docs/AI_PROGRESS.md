@@ -4,6 +4,12 @@ Neueste Einträge oben. Jede Sitzung: zuerst diese Datei, [AI_TASK_QUEUE.md](AI_
 [AI_DECISIONS.md](AI_DECISIONS.md) und `git status` / offene PRs lesen, dann an der nächsten offenen Aufgabe
 weiterarbeiten.
 
+
+## 2026-11-22 – Gerätetest für die Verschlüsselung (7.2)
+
+`integration_test/app_android_test.dart`: Klartext-DB als Datei anlegen, `prepareEncryptedDatabase` mit echtem
+`SecureDbKeyStore` (eigener Schlüsselname je Lauf, `SecureDbKeyStore(name:)` neu), verschlüsselt öffnen, Daten
+prüfen, verschlüsselte Sicherung schreiben und lesen, zweiter Start. Läuft im CI-Job android-emulator.
 ## 2026-11-22 – Tägliche Sicherungen verschlüsselt (7.2b)
 
 `backup.dart`: `BackupService(key:)`, Schlüssel kommt über `backupKey` aus `openAppDatabase`. Mit Schlüssel

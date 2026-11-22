@@ -11,14 +11,16 @@ import 'error_log.dart';
 
 /// The key in the platform's secure storage (Android Keystore, Windows Credential Manager).
 class SecureDbKeyStore implements DbKeyStore {
-  static const _name = 'sattly_db_key_v1';
-  final _storage = const FlutterSecureStorage();
+  /// [name] differs only in device tests, so they never touch the app's real key.
+  const SecureDbKeyStore({this.name = 'sattly_db_key_v1'});
+  final String name;
+  static const _storage = FlutterSecureStorage();
 
   @override
-  Future<String?> read() => _storage.read(key: _name);
+  Future<String?> read() => _storage.read(key: name);
 
   @override
-  Future<void> write(String key) => _storage.write(key: _name, value: key);
+  Future<void> write(String key) => _storage.write(key: name, value: key);
 }
 
 /// Whether this run uses the encrypted database; shown in the settings.
@@ -46,7 +48,7 @@ Future<OpenedDatabase> openAppDatabase({DbKeyStore? keys}) async {
   if (kIsWeb) return OpenedDatabase(AppDatabase(), DbProtection.unsupported);
   final file = await appDatabaseFile();
   try {
-    final p = await prepareEncryptedDatabase(file, keys ?? SecureDbKeyStore());
+    final p = await prepareEncryptedDatabase(file, keys ?? const SecureDbKeyStore());
     final db = AppDatabase(AppDatabase.openEncrypted(p.path, p.key));
     backupKey = p.key;
     final notice = p.result == DbPrepareResult.keyLost

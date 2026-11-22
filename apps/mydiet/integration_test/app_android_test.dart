@@ -12,7 +12,14 @@ import 'package:mydiet_ai/src/app.dart';
 import 'package:mydiet_ai/src/core/app_lock.dart';
 import 'package:mydiet_ai/src/data/targets.dart';
 import 'package:mydiet_ai/src/core/widget_summary.dart';
+
+import 'dart:io';
+
+import 'package:mydiet_ai/src/data/app_database_open.dart';
 import 'package:mydiet_ai/src/data/app_lock_store.dart';
+import 'package:mydiet_ai/src/data/backup.dart';
+import 'package:mydiet_ai/src/data/db_encryption.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:mydiet_ai/src/data/database.dart';
 import 'package:mydiet_ai/src/data/home_widget_sync.dart';
 
@@ -98,5 +105,36 @@ void main() {
     await settle(tester);
     expect(find.textContaining('Skyr'), findsWidgets);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Verschlüsselung: Klartext-DB umstellen, Schlüssel im Keystore, Sicherung verschlüsselt (7.2)', (
+    tester,
+  ) async {
+    final stamp = DateTime.now().millisecondsSinceEpoch;
+    final dir = await Directory((await getTemporaryDirectory()).path).createTemp('enc_$stamp');
+    final file = File('${dir.path}/mydiet.sqlite');
+    var db = AppDatabase(NativeDatabase(file));
+    await addProfile(db);
+    await db.close();
+    expect(await isPlainSqlite(file), isTrue);
+
+    // Own key name, so the app's real key on this device stays untouched.
+    final keys = SecureDbKeyStore(name: 'integration_db_key_$stamp');
+    final p = await prepareEncryptedDatabase(file, keys);
+    expect(p.result, DbPrepareResult.migrated);
+    expect(await isPlainSqlite(file), isFalse);
+    expect(await keys.read(), p.key); // really stored in the Android Keystore-backed storage
+
+    db = AppDatabase(AppDatabase.openEncrypted(p.path, p.key));
+    expect((await db.allWeights()).single.weightKg, 102.5);
+    final backups = BackupService(db, Directory('${dir.path}/backups'), key: p.key);
+    final b = (await backups.runIfDue())!;
+    expect(BackupService.isEncrypted(b), isTrue);
+    expect(await backups.read(b), contains('102.5'));
+    await db.close();
+
+    final again = await prepareEncryptedDatabase(file, keys);
+    expect(again.result, DbPrepareResult.opened);
+    await dir.delete(recursive: true);
   });
 }
