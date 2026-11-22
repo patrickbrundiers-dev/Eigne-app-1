@@ -215,6 +215,25 @@ class SettingsPage extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               SectionCard(
+                title: 'Lebensmittelsuche',
+                icon: Icons.travel_explore,
+                child: StreamBuilder<String?>(
+                  stream: db.watchSetting(offLiveSearchKey),
+                  builder: (context, snap) => SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Beim Tippen auch online suchen'),
+                    subtitle: const Text(
+                      'Findet deine eigene Datenbank kaum etwas, fragt $appName nach einer kurzen Tipp-Pause '
+                      'Open Food Facts. Gesendet wird nur der Suchbegriff. Ohne Internet suchst du wie gewohnt '
+                      'nur in deiner Datenbank.',
+                    ),
+                    value: offLiveSearchEnabled(snap.data),
+                    onChanged: (v) => db.setSetting(offLiveSearchKey, v ? 'true' : 'false'),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SectionCard(
                 title: 'Über $appName',
                 icon: Icons.info_outline,
                 child: Text(

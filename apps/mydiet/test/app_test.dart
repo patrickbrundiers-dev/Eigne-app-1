@@ -31,6 +31,8 @@ import 'package:mydiet_ai/src/data/app_lock_store.dart';
 import 'package:mydiet_ai/src/features/lock/app_lock_page.dart';
 import 'package:mydiet_ai/src/features/lock/lock_gate.dart';
 import 'package:mydiet_ai/src/features/foods/barcode.dart';
+import 'package:mydiet_ai/src/features/foods/off_live_section.dart';
+import 'package:mydiet_ai/src/data/display_prefs.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -526,6 +528,8 @@ void main() {
     );
     addTearDown(() => offClientFactory = OffClient.new);
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    // Online-Suche beim Tippen abgeschaltet: dann nur auf Knopfdruck.
+    await tester.runAsync(() => db.setSetting(offLiveSearchKey, 'false'));
     await pumpApp(tester, db);
     await tester.tap(find.text('Tagebuch'));
     await pumpApp(tester, db);
@@ -533,7 +537,9 @@ void main() {
     await pumpApp(tester, db);
     await tester.enterText(find.byType(SearchBar), 'Testmüsli');
     await pumpApp(tester, db);
-    expect(sent, isNull, reason: 'ohne Knopfdruck wird nichts gesendet');
+    await tester.pump(const Duration(seconds: 1));
+    await pumpApp(tester, db);
+    expect(sent, isNull, reason: 'abgeschaltet: ohne Knopfdruck wird nichts gesendet');
     await tester.tap(find.text('Bei Open Food Facts suchen'));
     await pumpApp(tester, db);
     await tester.tap(find.widgetWithText(FilledButton, 'Suchen'));
@@ -554,6 +560,96 @@ void main() {
     expect(saved.source, 'off');
     final entries = (await tester.runAsync(() => db.diaryForDay(todayDayKey())))!;
     expect(entries.map((e) => e.foodName), contains('Testmüsli'));
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
+
+  Future<void> settle(WidgetTester tester) async {
+    for (var i = 0; i < 4; i++) {
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+      await tester.pumpAndSettle();
+    }
+  }
+
+  testWidgets('Open Food Facts beim Tippen: Treffer erscheinen, prüfen, speichern, eintragen', (tester) async {
+    final sent = <String>[];
+    OffLiveSearch.clearCache();
+    offClientFactory = () => OffClient(
+      client: MockClient((req) async {
+        sent.add(req.url.queryParameters['search_terms'] ?? '');
+        return http.Response(
+          '{"products":[{"code":"40012345","product_name":"Proteinriegel Kokos","brands":"Marke",'
+          '"nutriments":{"energy-kcal_100g":360,"proteins_100g":30,"carbohydrates_100g":30,'
+          '"sugars_100g":5,"fat_100g":12,"saturated-fat_100g":6,"fiber_100g":10,"salt_100g":0.4}}]}',
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      }),
+    );
+    addTearDown(() {
+      offClientFactory = OffClient.new;
+      OffLiveSearch.clearCache();
+    });
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Tagebuch'));
+    await pumpApp(tester, db);
+    await tester.tap(find.byTooltip('Frühstück hinzufügen'));
+    await pumpApp(tester, db);
+    // Lokal reichlich Treffer: nichts wird gesendet.
+    await tester.enterText(find.byType(SearchBar), 'Apfel');
+    await pumpApp(tester, db);
+    await tester.pump(const Duration(seconds: 1));
+    await settle(tester);
+    expect(sent, isEmpty);
+    expect(find.text('Online bei Open Food Facts'), findsNothing);
+    // Tippen: erst nach der Pause genau eine Anfrage für den letzten Stand.
+    await tester.enterText(find.byType(SearchBar), 'Proteinri');
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.enterText(find.byType(SearchBar), 'Proteinriegel');
+    await pumpApp(tester, db);
+    expect(sent, isEmpty, reason: 'noch in der Tipp-Pause');
+    await tester.pump(const Duration(seconds: 1));
+    await settle(tester);
+    expect(sent, ['Proteinriegel']);
+    expect(find.text('Online bei Open Food Facts'), findsOneWidget);
+    await tester.ensureVisible(find.text('Proteinriegel Kokos'));
+    await tester.tap(find.text('Proteinriegel Kokos'));
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Speichern').first);
+    await pumpApp(tester, db);
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Hinzufügen'));
+    await pumpApp(tester, db);
+    final saved = (await tester.runAsync(() => db.findFoodByBarcode('40012345')))!;
+    expect(saved.source, 'off');
+    final entries = (await tester.runAsync(() => db.diaryForDay(todayDayKey())))!;
+    expect(entries.map((e) => e.foodName), contains('Proteinriegel Kokos'));
+    expect(tester.takeException(), isNull);
+    await closeDb(tester, db);
+  });
+
+  testWidgets('Open Food Facts beim Tippen: ohne Internet bleibt die eigene Suche nutzbar', (tester) async {
+    OffLiveSearch.clearCache();
+    offClientFactory = () => OffClient(client: MockClient((_) async => throw const SocketLikeException()));
+    addTearDown(() {
+      offClientFactory = OffClient.new;
+      OffLiveSearch.clearCache();
+    });
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await pumpApp(tester, db);
+    await tester.tap(find.text('Tagebuch'));
+    await pumpApp(tester, db);
+    await tester.tap(find.byTooltip('Frühstück hinzufügen'));
+    await pumpApp(tester, db);
+    await tester.enterText(find.byType(SearchBar), 'Laugenbrez');
+    await pumpApp(tester, db);
+    await tester.pump(const Duration(seconds: 1));
+    await settle(tester);
+    // Die mitgelieferte Laugenbrezel wird lokal gefunden …
+    expect(find.text('Laugenbrezel'), findsOneWidget);
+    // … und weil es nur ein Treffer ist, wird online gefragt; das scheitert leise.
+    expect(find.text('Online-Suche gerade nicht möglich'), findsOneWidget);
     expect(tester.takeException(), isNull);
     await closeDb(tester, db);
   });
@@ -921,4 +1017,8 @@ class _NoBiometrics implements Biometrics {
   Future<bool> available() async => false;
   @override
   Future<bool> authenticate() async => false;
+}
+
+class SocketLikeException implements Exception {
+  const SocketLikeException();
 }

@@ -124,7 +124,7 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-# Datenbank-Verschlüsselung (7.2, D-20): package:sqlite3 bindet statt SQLite den Build von
+# Datenbank-Verschlüsselung (7.2, D-22): package:sqlite3 bindet statt SQLite den Build von
 # SQLite3 Multiple Ciphers ein (MIT-Lizenz, ohne OpenSSL). Ohne Schlüssel verhält er sich wie SQLite.
 hooks:
   user_defines:

@@ -117,8 +117,9 @@ const _defaultSlots = [
 ];
 
 /// Increase when the shipped reference foods change; [seedReferenceFoods] then
-/// adds new ones without touching the user's foods. 2 = USDA-Lebensmittel (Aufgabe 3.6).
-const int seedVersion = 2;
+/// adds new ones without touching the user's foods. 2 = USDA-Lebensmittel (Aufgabe 3.6),
+/// 3 = weitere USDA-Lebensmittel (Fertiggerichte, Gewürze, Wurst, Backwaren …).
+const int seedVersion = 3;
 
 /// All shipped base foods: hand-curated reference values plus USDA FoodData Central.
 const baseFoods = [...referenceFoods, ...usdaFoods];
@@ -357,7 +358,7 @@ class AppDatabase extends _$AppDatabase {
   // ---------------------------------------------------------------- constants used by the part files
 
   static const quickEntryBrand = 'Schnelleintrag (Schätzung)';
-  static const microSeedVersion = 2;
+  static const microSeedVersion = 3;
   static const exportFormat = 'mydiet-export';
   static const exportVersion = 1;
 }

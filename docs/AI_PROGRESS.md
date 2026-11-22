@@ -6,7 +6,7 @@ weiterarbeiten.
 
 ## 2026-11-22 – Datenbank verschlüsselt (7.2)
 
-Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-20: `lib/src/data/db_encryption.dart`
+Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-22: `lib/src/data/db_encryption.dart`
 (`prepareEncryptedDatabase`, ohne Flutter-Import), `lib/src/data/app_database_open.dart` (`openAppDatabase`,
 Schlüssel in `flutter_secure_storage`), `AppDatabase.openEncrypted/openPlain`, `main.dart` öffnet darüber.
 Hinweisdialog nach beiseitegelegter Datei, Fehlerseite `StartupErrorApp`, Status unter Einstellungen →
@@ -15,6 +15,25 @@ Tests: `db_encryption_test.dart` (Neuinstallation, Umstellung mit Datenvergleich
 Schlüssel verloren/falsch, Speicher nicht lesbar/beschreibbar, abgebrochene Umstellung) und zwei Widget-Tests in
 `app_test.dart`. Offen: auf Android und Windows ungeprüft (Windows-Build braucht ATL, auf GitHub-Runnern
 vorhanden); Android-Emulator-Test aus #57 kann Schlüssel und Umstellung echt prüfen; 7.2b Sicherungen verschlüsseln.
+## 2026-11-22 – Mehr Lebensmittel und Open Food Facts beim Tippen (3.6, 3.7)
+
+Thread „Lebensmittel-Datenbank vergrößern mit Live-Suche“, Branch `claude/project-thread-nlurk1`. Kein Schema-Eingriff.
+
+- 3.6: 470 weitere USDA-Lebensmittel in `tool/usda/auswahl.csv` (deutsche Namen, Kategorien inkl. neu
+  „Gewürze & Kräuter“, „Fertiggerichte“), `seed_usda.dart` neu erzeugt (689 USDA + rund 100 eigene Richtwerte).
+  `seedVersion` 3 und `microSeedVersion` 3 liefern sie beim Update nach. Ausgelassen: Schmalz/Talg (> 900 kcal),
+  Fleisch ohne Zuckerwert, Einträge mit kcal-Abweichung (Spirulina, Haferkleie, Kakao, Backpulver).
+- 3.7: `core/online_search.dart` (`shouldSearchOnline`, `withoutKnown`, `RecentCache`), `smartSearch()` in
+  `data/food_search.dart` liefert die Zahl exakter Treffer, `knownFoods()` im Foods-DAO, Controller und Liste
+  `features/foods/off_live_section.dart`, eingebaut in Hinzufügen-Suche und Zutatensuche, `openOffProduct()`
+  aus der OFF-Suchseite wiederverwendet, Schalter in den Einstellungen (`offLiveSearchKey`, Standard an).
+
+Tests: `flutter analyze` ohne Befund, Format sauber, neue Unit-Tests `test/online_search_test.dart`, Datenbanktest
+„Update von Version 2“, Widget-Tests „Open Food Facts beim Tippen“ (Treffer, Tipp-Pause, Speichern, Eintragen)
+und „ohne Internet“; bestehender OFF-Test prüft jetzt den abgeschalteten Zustand.
+
+Offen: echte Abfrage gegen Open Food Facts konnte in der Cloud nicht laufen (Server dort gesperrt), Antwortformat
+wie bei der bestehenden Textsuche. FTS5 erst, wenn die Datenbank deutlich wächst.
 
 ## 2026-11-22 – Impressum und Verantwortlicher (7.3)
 

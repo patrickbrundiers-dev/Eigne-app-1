@@ -240,3 +240,473 @@ fdc_id;name;kategorie;mikros
 172241;Balsamico-Essig;Saucen;ja
 174524;Salsa;Saucen;ja
 173627;Hähnchenschenkel ohne Haut, roh;Fleisch & Fisch;ja
+168154;Kumquat;Obst;ja
+168156;Limettensaft;Obst;ja
+168164;Sultaninen;Obst;ja
+168177;Nashi-Birne;Obst;ja
+168216;Kochbanane, gekocht;Obst;ja
+169091;Mango, getrocknet (gezuckert);Obst;ja
+169096;Oliven, grün (eingelegt);Obst;ja
+169098;Orangensaft, frisch gepresst;Getränke;ja
+169121;Birnen, getrocknet;Obst;ja
+169913;Maulbeeren;Obst;ja
+169934;Pfirsiche, getrocknet;Obst;ja
+169947;Ananassaft;Getränke;ja
+171691;Apfelringe, getrocknet;Obst;ja
+171696;Apfelmus, gezuckert;Obst;ja
+171715;Sternfrucht (Karambole);Obst;ja
+171723;Cranberries, getrocknet (gezuckert);Obst;ja
+171724;Korinthen;Obst;ja
+173032;Gojibeeren, getrocknet;Obst;ja
+173039;Grapefruitsaft;Getränke;ja
+173042;Traubensaft;Getränke;ja
+173044;Guave;Obst;ja
+173953;Cherimoya;Obst;ja
+174687;Jackfrucht;Obst;ja
+167749;Zitronenschale;Obst;ja
+167763;Tamarinde;Obst;ja
+167781;Kandierte Früchte;Süßes & Snacks;ja
+167787;Granatapfelsaft;Getränke;ja
+168117;Cranberrysaft, ungesüßt;Getränke;ja
+168211;Kiwi, gold;Obst;ja
+168173;Erdbeeren (TK);Obst;ja
+168209;Himbeeren (TK);Obst;ja
+173950;Heidelbeeren (TK);Obst;ja
+171718;Sauerkirschen (TK);Obst;ja
+170174;Kokoswasser;Getränke;ja
+168599;Nussmischung, geröstet und gesalzen;Nüsse, Samen & Öle;ja
+170585;Nussmischung, geröstet, ungesalzen;Nüsse, Samen & Öle;ja
+168596;Mandeln, geröstet und gesalzen;Nüsse, Samen & Öle;ja
+170158;Mandeln, geröstet;Nüsse, Samen & Öle;ja
+170568;Mandeln, blanchiert;Nüsse, Samen & Öle;ja
+170160;Marzipanrohmasse (Mandelpaste);Süßes & Snacks;ja
+169421;Cashewkerne, geröstet und gesalzen;Nüsse, Samen & Öle;ja
+170571;Cashewkerne, geröstet;Nüsse, Samen & Öle;ja
+170169;Kokosnuss, frisch;Nüsse, Samen & Öle;ja
+170583;Haselnüsse, geröstet;Nüsse, Samen & Öle;ja
+169426;Pistazien, geröstet und gesalzen;Nüsse, Samen & Öle;ja
+170190;Maronen (Esskastanien), geröstet;Nüsse, Samen & Öle;ja
+170557;Kürbiskerne, geröstet;Nüsse, Samen & Öle;ja
+170563;Sonnenblumenkerne, geröstet;Nüsse, Samen & Öle;ja
+169412;Sesam, geschält;Nüsse, Samen & Öle;ja
+168598;Macadamianüsse, geröstet und gesalzen;Nüsse, Samen & Öle;ja
+170155;Sonnenblumenkernmus;Nüsse, Samen & Öle;ja
+170918;Kümmel;Gewürze & Kräuter;ja
+170923;Kreuzkümmel;Gewürze & Kräuter;ja
+170924;Currypulver;Gewürze & Kräuter;ja
+170926;Ingwerpulver;Gewürze & Kräuter;ja
+170928;Majoran, getrocknet;Gewürze & Kräuter;ja
+170930;Petersilie, getrocknet;Gewürze & Kräuter;ja
+170931;Pfeffer, schwarz;Gewürze & Kräuter;ja
+170932;Cayennepfeffer;Gewürze & Kräuter;ja
+170938;Thymian, getrocknet;Gewürze & Kräuter;ja
+171317;Basilikum, getrocknet;Gewürze & Kräuter;ja
+171319;Chilipulver (Gewürzmischung);Gewürze & Kräuter;ja
+171320;Zimt;Gewürze & Kräuter;ja
+171325;Knoblauchpulver;Gewürze & Kräuter;ja
+171326;Muskatnuss;Gewürze & Kräuter;ja
+171327;Zwiebelpulver;Gewürze & Kräuter;ja
+171328;Oregano, getrocknet;Gewürze & Kräuter;ja
+171329;Paprikapulver;Gewürze & Kräuter;ja
+171330;Mohn;Gewürze & Kräuter;ja
+172231;Kurkuma;Gewürze & Kräuter;ja
+172232;Basilikum, frisch;Gewürze & Kräuter;ja
+170416;Petersilie, frisch;Gewürze & Kräuter;ja
+172237;Branntweinessig;Saucen;ja
+172238;Kapern;Saucen;ja
+172240;Rotweinessig;Saucen;ja
+173469;Apfelessig;Saucen;ja
+173468;Speisesalz;Gewürze & Kräuter;ja
+173472;Meerrettich (gerieben, Glas);Saucen;ja
+168386;Artischocke, gekocht;Gemüse;ja
+168407;Gartenkresse;Gemüse;ja
+168412;Endivie (Frisée);Gemüse;ja
+168423;Morcheln;Gemüse;ja
+168425;Kohlrabi, gekocht;Gemüse;ja
+168426;Lauch, gekocht;Gemüse;ja
+168431;Lollo Rosso;Gemüse;ja
+168434;Braune Champignons;Gemüse;ja
+168449;Kürbis, gekocht;Gemüse;ja
+168451;Rettich (Daikon);Gemüse;ja
+168454;Steckrübe;Gemüse;ja
+168458;Nori-Algen;Gemüse;ja
+169207;Spargel (Glas), abgetropft;Gemüse;ja
+169210;Bambussprossen;Gemüse;ja
+169212;Bambussprossen (Dose), abgetropft;Gemüse;ja
+169229;Aubergine, gekocht;Gemüse;ja
+169236;Topinambur;Gemüse;ja
+169238;Grünkohl, gekocht;Gemüse;ja
+169248;Eisbergsalat;Gemüse;ja
+169249;Blattsalat, grün;Gemüse;ja
+169252;Champignons, gekocht;Gemüse;ja
+169254;Champignons (Dose), abgetropft;Gemüse;ja
+169255;Portobello-Pilze;Gemüse;ja
+169260;Okra;Gemüse;ja
+169278;Schwarzwurzeln, gekocht;Gemüse;ja
+169292;Zucchini, gekocht;Gemüse;ja
+169298;Spaghettikürbis;Gemüse;ja
+169382;Enoki-Pilze;Gemüse;ja
+169966;Rote Bete (Glas), abgetropft;Gemüse;ja
+169976;Weißkohl, gekocht;Gemüse;ja
+169978;Rotkohl, gekocht;Gemüse;ja
+169985;Maniok;Gemüse;ja
+170001;Zwiebeln, gekocht;Gemüse;ja
+170005;Frühlingszwiebeln;Gemüse;ja
+170009;Pastinaken, gekocht;Gemüse;ja
+170011;Zuckerschoten, gekocht;Gemüse;ja
+170013;Erbsen (Dose), abgetropft;Gemüse;ja
+170018;Erbsen und Möhren (TK), gekocht;Gemüse;ja
+170065;Mischgemüse (Dose), abgetropft;Gemüse;ja
+170066;Wasserkastanien;Gemüse;ja
+170071;Yamswurzel;Gemüse;ja
+170106;Chili, rot;Gemüse;ja
+170497;Chili, grün;Gemüse;ja
+170110;Paprika, rot, gekocht;Gemüse;ja
+170401;Mangold, gekocht;Gemüse;ja
+170419;Erbsen, frisch;Gemüse;ja
+170420;Erbsen, gekocht;Gemüse;ja
+170456;Tomaten, grün;Gemüse;ja
+170472;Mischgemüse (TK), gekocht;Gemüse;ja
+170496;Wakame;Gemüse;ja
+170381;Stängelkohl (Cima di Rapa);Gemüse;ja
+170391;Pak Choi, gekocht;Gemüse;ja
+168399;Mais (TK), gekocht;Gemüse;ja
+169320;Wachsbohnen;Gemüse;ja
+169322;Wachsbohnen, gekocht;Gemüse;ja
+168430;Lotuswurzel, gekocht;Gemüse;ja
+168436;Shiitake, getrocknet;Gemüse;ja
+168567;Getrocknete Tomaten;Gemüse;ja
+168948;Pommes frites (TK), unzubereitet;Getreide & Beilagen;ja
+170054;Tomatensauce (Dose);Saucen;ja
+169296;Butternut-Kürbis, gebacken;Gemüse;ja
+170036;Rösti (Kartoffelpuffer aus Raspeln), selbst gemacht;Getreide & Beilagen;ja
+170445;Kartoffelpüree-Flocken (trocken);Getreide & Beilagen;ja
+170048;Kartoffelkroketten (TK), gebacken;Getreide & Beilagen;ja
+170092;Kartoffelpuffer;Getreide & Beilagen;ja
+170460;Passierte Tomaten;Gemüse;ja
+170491;Karottensaft;Getränke;ja
+170090;Agar-Agar, getrocknet;Süßes & Snacks;ja
+172428;Spalterbsen, getrocknet;Hülsenfrüchte & Tofu;ja
+172429;Spalterbsen, gekocht;Hülsenfrüchte & Tofu;ja
+172442;Miso;Hülsenfrüchte & Tofu;ja
+172443;Natto;Hülsenfrüchte & Tofu;ja
+172446;Sojadrink natur (nicht angereichert);Getränke;ja
+172449;Seidentofu;Hülsenfrüchte & Tofu;ja
+172451;Tofu, frittiert;Hülsenfrüchte & Tofu;ja
+173753;Dicke Bohnen, gekocht;Hülsenfrüchte & Tofu;ja
+173759;Augenbohnen, gekocht;Hülsenfrüchte & Tofu;ja
+174256;Mungbohnen, getrocknet;Hülsenfrüchte & Tofu;ja
+174257;Mungbohnen, gekocht;Hülsenfrüchte & Tofu;ja
+174258;Glasnudeln, trocken;Getreide & Beilagen;ja
+174276;Sojaproteinisolat;Hülsenfrüchte & Tofu;ja
+174287;Gemüse-Soja-Burger, unzubereitet;Hülsenfrüchte & Tofu;ja
+174288;Kichererbsenmehl;Hülsenfrüchte & Tofu;ja
+174269;Vegetarische Wurst (Soja);Hülsenfrüchte & Tofu;ja
+175200;Pintobohnen, gekocht;Hülsenfrüchte & Tofu;ja
+174271;Sojabohnen, gekocht;Hülsenfrüchte & Tofu;ja
+168147;Weizengluten (Seitan-Grundlage);Hülsenfrüchte & Tofu;ja
+168871;Hirse, gekocht;Getreide & Beilagen;ja
+168884;Roggenkörner;Getreide & Beilagen;ja
+168886;Roggenmehl, mittel;Getreide & Beilagen;ja
+168897;Wildreis, gekocht;Getreide & Beilagen;ja
+168914;Reisnudeln, gekocht;Getreide & Beilagen;ja
+169707;Parboiled Reis, roh;Getreide & Beilagen;nein
+169708;Parboiled Reis, gekocht;Getreide & Beilagen;nein
+169714;Reismehl;Getreide & Beilagen;ja
+169717;Tapioka (Perlen);Getreide & Beilagen;ja
+169722;Weizenkleie;Getreide & Beilagen;ja
+169739;Gerstenmehl;Getreide & Beilagen;ja
+169741;Hafermehl;Getreide & Beilagen;ja
+169743;Kamut (Khorasan-Weizen), roh;Getreide & Beilagen;ja
+169747;Teff, roh;Getreide & Beilagen;ja
+170285;Perlgraupen, gekocht;Getreide & Beilagen;ja
+170682;Amaranth, roh;Getreide & Beilagen;ja
+170686;Buchweizen, gekocht;Getreide & Beilagen;ja
+170687;Buchweizenmehl;Getreide & Beilagen;ja
+172023;Hirsemehl;Getreide & Beilagen;ja
+167724;Hirse, gepufft;Getreide & Beilagen;ja
+171646;Granola (Knuspermüsli), selbst gemacht;Getreide & Beilagen;ja
+171658;Weizengrieß, roh;Getreide & Beilagen;nein
+173896;Weizenkeime;Getreide & Beilagen;ja
+173905;Haferbrei mit Wasser;Getreide & Beilagen;ja
+173265;Glutenfreie Nudeln (Mais und Reis), gekocht;Getreide & Beilagen;ja
+170843;Fontina;Eier & Milchprodukte;ja
+170847;Mozzarella light (teilentrahmt);Eier & Milchprodukte;ja
+170860;Sprühsahne;Eier & Milchprodukte;ja
+170885;Molke;Getränke;ja
+170887;Magerjoghurt 0,1 %;Eier & Milchprodukte;ja
+170888;Vanillejoghurt (fettarm);Eier & Milchprodukte;ja
+170889;Fruchtjoghurt (fettarm);Eier & Milchprodukte;ja
+170903;Griechischer Joghurt 2 %;Eier & Milchprodukte;ja
+170904;Kefir (fettarm);Eier & Milchprodukte;ja
+171242;Gruyère (Greyerzer);Eier & Milchprodukte;ja
+171243;Limburger;Eier & Milchprodukte;ja
+171247;Parmesan, gerieben;Eier & Milchprodukte;ja
+171249;Pecorino Romano;Eier & Milchprodukte;ja
+171275;Gezuckerte Kondensmilch;Eier & Milchprodukte;ja
+171277;Heiße Schokolade (mit Milch, selbst gemacht);Getränke;ja
+171304;Griechischer Joghurt (Vollmilch);Eier & Milchprodukte;ja
+172179;Hüttenkäse 4 %;Eier & Milchprodukte;ja
+173417;Hüttenkäse 1 %;Eier & Milchprodukte;ja
+172185;Omelett;Eier & Milchprodukte;ja
+172186;Ei, pochiert;Eier & Milchprodukte;ja
+172189;Entenei;Eier & Milchprodukte;ja
+172191;Wachtelei;Eier & Milchprodukte;ja
+172197;Ziegenkäse, hart;Eier & Milchprodukte;ja
+173433;Ziegenkäse, Schnittkäse;Eier & Milchprodukte;ja
+173410;Butter, gesalzen;Eier & Milchprodukte;ja
+173466;Eis am Stiel mit Schokoladenüberzug;Süßes & Snacks;ja
+170883;Milchshake, Schokolade;Getränke;ja
+170884;Milchshake, Vanille;Getränke;ja
+173450;Schokomilch (fettarm);Getränke;nein
+167742;Jakobsmuscheln, gedünstet;Fleisch & Fisch;ja
+174220;Jakobsmuscheln, roh;Fleisch & Fisch;ja
+171965;Schwarzer Heilbutt, roh;Fleisch & Fisch;ja
+171978;Austern, roh;Fleisch & Fisch;ja
+173668;Bückling (geräucherter Hering);Fleisch & Fisch;ja
+173693;Lachs (Dose), abgetropft;Fleisch & Fisch;ja
+173702;Surimi;Fleisch & Fisch;ja
+173703;Schwertfisch, roh;Fleisch & Fisch;ja
+173711;Felchen (Renke), roh;Fleisch & Fisch;ja
+173712;Felchen, geräuchert;Fleisch & Fisch;ja
+174188;Kaviar;Fleisch & Fisch;ja
+174190;Klippfisch (Stockfisch, gesalzen);Fleisch & Fisch;ja
+174193;Aal, roh;Fleisch & Fisch;ja
+174199;Schellfisch, geräuchert;Fleisch & Fisch;ja
+174200;Heilbutt, roh;Fleisch & Fisch;ja
+174206;Flusskrebse, roh;Fleisch & Fisch;ja
+174208;Hummer, roh;Fleisch & Fisch;ja
+174209;Hummer, gekocht;Fleisch & Fisch;ja
+174214;Venusmuscheln, roh;Fleisch & Fisch;ja
+173681;Alaska-Seelachs, gegart;Fleisch & Fisch;ja
+171971;Garnelen, gekocht;Fleisch & Fisch;ja
+173718;Forelle, gegart;Fleisch & Fisch;ja
+174195;Fischstäbchen, gebacken;Fleisch & Fisch;nein
+175167;Lachs aus Zucht, roh;Fleisch & Fisch;ja
+175177;Tilapia, gegart;Fleisch & Fisch;ja
+170204;Pastrami (Rind);Fleisch & Fisch;ja
+170602;Corned Beef (Dose);Fleisch & Fisch;ja
+170604;Trockenfleisch (Rind);Fleisch & Fisch;ja
+171618;Blutwurst;Fleisch & Fisch;ja
+171619;Bockwurst;Fleisch & Fisch;ja
+171620;Bratwurst (Schwein), gebraten;Fleisch & Fisch;ja
+171621;Leberwurst;Fleisch & Fisch;ja
+171624;Geflügelwürstchen (Hähnchen);Fleisch & Fisch;ja
+171625;Putenwürstchen;Fleisch & Fisch;ja
+171630;Presskopf (Sülze);Fleisch & Fisch;ja
+172013;Fleischwurst (Lyoner-Art);Fleisch & Fisch;ja
+172928;Geflügelleberpastete;Fleisch & Fisch;ja
+172937;Putensalami;Fleisch & Fisch;ja
+172940;Cervelatwurst;Fleisch & Fisch;ja
+172941;Putenbrust-Aufschnitt;Fleisch & Fisch;ja
+172963;Hähnchenbrust-Aufschnitt;Fleisch & Fisch;ja
+173859;Chorizo, roh;Fleisch & Fisch;ja
+173867;Knackwurst;Fleisch & Fisch;ja
+173879;Krakauer (Kielbasa);Fleisch & Fisch;ja
+174573;Mortadella;Fleisch & Fisch;ja
+174575;Peperoni-Salami (Pepperoni);Fleisch & Fisch;ja
+174595;Kalbsbratwurst, gebraten;Fleisch & Fisch;ja
+174570;Roastbeef-Aufschnitt;Fleisch & Fisch;ja
+171631;Salsiccia (italienische Bratwurst), roh;Fleisch & Fisch;ja
+172964;Wiener Würstchen;Fleisch & Fisch;ja
+171116;Hähnchenhackfleisch, roh;Fleisch & Fisch;ja
+171445;Grillhähnchen, Brust ohne Haut;Fleisch & Fisch;ja
+171125;Grillhähnchen, Brust mit Haut;Fleisch & Fisch;ja
+171127;Grillhähnchen, Schenkel mit Haut;Fleisch & Fisch;ja
+171496;Putenbrust, gebraten;Fleisch & Fisch;ja
+171531;Putenoberschenkel, roh;Fleisch & Fisch;ja
+172112;Chicken Nuggets (TK);Fleisch & Fisch;nein
+172408;Ente mit Haut, roh;Fleisch & Fisch;ja
+172409;Ente mit Haut, gebraten;Fleisch & Fisch;ja
+172412;Gans mit Haut, gebraten;Fleisch & Fisch;ja
+174491;Hühnerleber, gebraten;Fleisch & Fisch;ja
+167812;Schweinebauch, roh;Fleisch & Fisch;ja
+167818;Schweinelachs (Kotelettstrang), roh;Fleisch & Fisch;ja
+167821;Schweinebraten (Lachs), gebraten;Fleisch & Fisch;ja
+167843;Schweineschulter, roh;Fleisch & Fisch;ja
+167844;Schweineschulter, gebraten;Fleisch & Fisch;ja
+167853;Spareribs, roh;Fleisch & Fisch;ja
+167854;Spareribs, geschmort;Fleisch & Fisch;ja
+167887;Schweinekotelett ohne Knochen, gebraten;Fleisch & Fisch;ja
+167814;Schweinekeule, roh;Fleisch & Fisch;ja
+167815;Schweinekeule, gebraten;Fleisch & Fisch;ja
+167869;Kasseler (Lachs);Fleisch & Fisch;ja
+167903;Schweinehackfleisch, gebraten;Fleisch & Fisch;ja
+167905;Schweinefilet, gebraten;Fleisch & Fisch;ja
+167914;Bacon, knusprig gebraten;Fleisch & Fisch;ja
+168714;Rinderbrust, roh;Fleisch & Fisch;ja
+170611;Rinderbrust, geschmort;Fleisch & Fisch;ja
+169457;Rumpsteak, gegrillt;Fleisch & Fisch;ja
+169464;T-Bone-Steak, gegrillt;Fleisch & Fisch;ja
+169563;Flanksteak, roh;Fleisch & Fisch;ja
+168733;Flanksteak, gegrillt;Fleisch & Fisch;ja
+170228;Rinderbraten (mager), gebraten;Fleisch & Fisch;ja
+170237;Rinderfilet-Steak, gegrillt;Fleisch & Fisch;ja
+173988;Rinderfilet, roh;Fleisch & Fisch;ja
+171206;Rindergulasch, roh;Fleisch & Fisch;ja
+171203;Rindergulasch, geschmort;Fleisch & Fisch;ja
+171792;Rinderhackfleisch (5 % Fett), gebraten;Fleisch & Fisch;ja
+174033;Rinderhackfleisch (15 % Fett), gebraten;Fleisch & Fisch;ja
+171799;Rinderhackfleisch (20 % Fett), gebraten;Fleisch & Fisch;ja
+172164;Ribeye-Steak, gegrillt;Fleisch & Fisch;ja
+173402;Ribeye-Steak, roh;Fleisch & Fisch;ja
+171743;Rinderschnitzel (Oberschale), roh;Fleisch & Fisch;ja
+172490;Lammrücken, gebraten;Fleisch & Fisch;ja
+172496;Lammschulter, roh;Fleisch & Fisch;ja
+172544;Lammhackfleisch, gebraten;Fleisch & Fisch;ja
+172643;Kalbsschnitzel, roh;Fleisch & Fisch;ja
+174880;Kalbsschnitzel, gegrillt;Fleisch & Fisch;ja
+173819;Kalbsschnitzel, paniert und gebraten;Fleisch & Fisch;ja
+172649;Ossobuco (Kalbshaxe), geschmort;Fleisch & Fisch;ja
+175278;Kalbsschulter, geschmort;Fleisch & Fisch;ja
+174430;Hirschfilet, gegrillt;Fleisch & Fisch;ja
+175304;Ziegenfleisch, gebraten;Fleisch & Fisch;ja
+167534;Eclair (Liebesknochen);Süßes & Snacks;nein
+167939;Knoblauchbrot (TK);Getreide & Beilagen;nein
+167940;Zimtschnecke, glasiert;Süßes & Snacks;nein
+167945;Focaccia;Getreide & Beilagen;nein
+171838;Mehrkorn-Cracker;Süßes & Snacks;nein
+171844;Chapati;Getreide & Beilagen;nein
+171845;Naan;Getreide & Beilagen;nein
+171847;Kokosmakronen;Süßes & Snacks;ja
+171866;Schoko-Keksstangen;Süßes & Snacks;nein
+172675;Baguette;Getreide & Beilagen;nein
+172704;Sandkuchen (mit Butter);Süßes & Snacks;nein
+172706;Biskuitkuchen;Süßes & Snacks;nein
+172711;Käsekuchen (Cheesecake);Süßes & Snacks;nein
+172713;Brownies;Süßes & Snacks;nein
+172716;Schokoladenkekse (Cookies);Süßes & Snacks;nein
+172718;Doppelkekse mit Cremefüllung;Süßes & Snacks;nein
+172725;Haferkekse;Süßes & Snacks;nein
+172738;Blätterteig, gebacken;Getreide & Beilagen;nein
+172790;Blätterteig (TK), roh;Getreide & Beilagen;nein
+172740;Matzen;Getreide & Beilagen;nein
+172746;Salzcracker;Süßes & Snacks;nein
+172752;Croutons;Getreide & Beilagen;nein
+172755;Plundergebäck mit Frucht;Süßes & Snacks;nein
+172758;Donut, glasiert;Süßes & Snacks;nein
+172759;Berliner (Krapfen) mit Marmelade;Süßes & Snacks;nein
+172765;Blaubeermuffin;Süßes & Snacks;nein
+167522;Gedeckter Apfelkuchen;Süßes & Snacks;nein
+172791;Filoteig (Yufka);Getreide & Beilagen;nein
+172796;Burgerbrötchen;Getreide & Beilagen;nein
+172800;Taco-Schalen;Getreide & Beilagen;ja
+174913;Italienisches Weißbrot (Ciabatta-Art);Getreide & Beilagen;nein
+174928;Paniermehl;Getreide & Beilagen;nein
+174929;Grissini;Getreide & Beilagen;nein
+174939;Früchtekuchen;Süßes & Snacks;nein
+174956;Ingwerkekse;Süßes & Snacks;nein
+174959;Löffelbiskuits;Süßes & Snacks;nein
+174967;Shortbread (Mürbekekse);Süßes & Snacks;nein
+174977;Zwieback (Melba-Toast);Getreide & Beilagen;nein
+174982;Butter-Cracker;Süßes & Snacks;nein
+174899;Bagel;Getreide & Beilagen;nein
+174916;Vollkorn-Fladenbrot (Pita);Getreide & Beilagen;ja
+172771;Pancakes (TK);Süßes & Snacks;nein
+167516;Waffeln (TK);Süßes & Snacks;nein
+172794;Vollkornbrötchen;Getreide & Beilagen;ja
+172673;Hefezopf (Eierbrot);Getreide & Beilagen;nein
+172680;Rosinenbrot;Getreide & Beilagen;nein
+167571;Weiße Schokolade;Süßes & Snacks;ja
+167573;Sahneeis (Vanille);Süßes & Snacks;ja
+168809;Schokoladeneis;Süßes & Snacks;ja
+167577;Fruchteis Orange (Sherbet);Süßes & Snacks;ja
+167574;Karamellpudding (Flan);Süßes & Snacks;ja
+167974;Karamellbonbons (Toffees);Süßes & Snacks;ja
+167990;Bonbons (Hartkaramellen);Süßes & Snacks;ja
+168000;Nuss-Nougat-Creme;Süßes & Snacks;ja
+168001;Schoko-Erdnüsse;Süßes & Snacks;ja
+168754;Vollmilchschokolade mit Mandeln;Süßes & Snacks;ja
+168771;Kaugummi;Süßes & Snacks;ja
+168777;Mousse au Chocolat;Süßes & Snacks;ja
+168778;Schokoladenpudding (fertig);Süßes & Snacks;ja
+168782;Milchreis (fertig);Süßes & Snacks;ja
+168819;Orangenmarmelade;Süßes & Snacks;ja
+169576;Schoko-Rosinen;Süßes & Snacks;ja
+169586;Erdnusskrokant;Süßes & Snacks;ja
+169599;Gelatine (Pulver);Süßes & Snacks;ja
+169608;Vanillepudding (fertig);Süßes & Snacks;ja
+169642;Fruchtgelee;Süßes & Snacks;ja
+169656;Puderzucker;Süßes & Snacks;ja
+170272;Zartbitterschokolade 60–69 %;Süßes & Snacks;ja
+170277;Agavendicksaft;Süßes & Snacks;ja
+170280;Fruchtaufstrich (mit Fruchtsaft gesüßt);Süßes & Snacks;ja
+168835;Schokoladensauce;Süßes & Snacks;ja
+168841;Karamellsauce;Süßes & Snacks;ja
+168105;Frozen Yogurt;Süßes & Snacks;ja
+167536;Beef Jerky;Fleisch & Fisch;ja
+167542;Müsliriegel, knusprig;Süßes & Snacks;ja
+169674;Müsliriegel, weich, mit Schokostückchen;Süßes & Snacks;ja
+167969;Studentenfutter mit Schokolade;Süßes & Snacks;ja
+168849;Bananenchips;Süßes & Snacks;ja
+168854;Kartoffelsticks;Süßes & Snacks;ja
+169064;Laugenbrezel;Getreide & Beilagen;nein
+167949;Käseflips (Mais);Süßes & Snacks;nein
+170649;Kartoffelchips, ungesalzen;Süßes & Snacks;ja
+173147;Pita-Chips;Süßes & Snacks;nein
+173161;Reiscracker;Süßes & Snacks;ja
+173160;Krabbenchips;Süßes & Snacks;ja
+174796;Gemüsechips;Süßes & Snacks;ja
+171869;Tonic Water;Getränke;ja
+171880;Kaffeegetränk mit Milch, gesüßt;Getränke;ja
+171917;Grüner Tee;Getränke;ja
+171942;Reisdrink, ungesüßt;Getränke;ja
+173205;Zitronenlimonade;Getränke;ja
+168751;Mandeldrink Vanille, gesüßt;Getränke;nein
+171888;Eistee Zitrone, gesüßt;Getränke;ja
+171167;Teriyakisauce;Saucen;ja
+171176;Tomatensuppe (Dose, zubereitet);Fertiggerichte;ja
+171177;Instant-Nudelsuppe (Ramen), trocken;Fertiggerichte;nein
+171192;Tomatensauce für Pasta (Marinara);Saucen;ja
+171538;Rinderbrühe;Saucen;ja
+171550;Minestrone (Dose);Fertiggerichte;ja
+171564;Bratensauce (Rind);Saucen;ja
+174070;Erdnusssauce;Saucen;ja
+171583;Gemüsebrühe;Saucen;ja
+171610;Worcestersauce;Saucen;ja
+171826;Remoulade (Tartarsauce);Saucen;ja
+171831;Wasabi-Paste;Saucen;ja
+172880;Pizzasauce;Saucen;ja
+174536;Hühnerbrühe;Saucen;ja
+172886;Hoisinsauce;Saucen;ja
+172909;Hühnernudelsuppe (Dose, zubereitet);Fertiggerichte;nein
+172915;Champignoncremesuppe (Dose, zubereitet);Fertiggerichte;ja
+174066;Süß-saure Sauce;Saucen;ja
+174067;Cocktailsauce;Saucen;ja
+174523;Barbecuesauce;Saucen;ja
+174525;Béchamelsauce;Saucen;ja
+174527;Scharfe Chilisauce;Saucen;ja
+174529;Austernsauce;Saucen;ja
+174531;Fischsauce;Saucen;ja
+174561;Erbsensuppe (Dose, zubereitet);Fertiggerichte;ja
+174564;Gemüsesuppe (Dose, zubereitet);Fertiggerichte;ja
+169055;Caesar-Dressing;Saucen;ja
+171019;Italienisches Dressing;Saucen;ja
+171043;Honig-Senf-Dressing;Saucen;ja
+171417;Essig-Öl-Dressing;Saucen;ja
+173592;Ranch-Dressing;Saucen;ja
+171402;Thousand-Island-Dressing;Saucen;ja
+171014;Weizenkeimöl;Nüsse, Samen & Öle;ja
+171015;Palmöl;Nüsse, Samen & Öle;ja
+171026;Distelöl;Nüsse, Samen & Öle;ja
+171028;Traubenkernöl;Nüsse, Samen & Öle;ja
+171031;Mandelöl;Nüsse, Samen & Öle;ja
+171410;Erdnussöl;Nüsse, Samen & Öle;ja
+171427;Haselnussöl;Nüsse, Samen & Öle;ja
+169779;Piroggen (Teigtaschen mit Kartoffel-Käse-Füllung, TK);Fertiggerichte;nein
+169773;Gyoza (Teigtaschen mit Schwein und Gemüse, TK);Fertiggerichte;nein
+172094;Tortellini mit Käsefüllung (frisch);Fertiggerichte;nein
+172097;Chili con Carne mit Bohnen (Dose);Fertiggerichte;ja
+172103;Frühlingsrolle mit Schweinefleisch;Fertiggerichte;nein
+172105;Frühlingsrolle, vegetarisch;Fertiggerichte;nein
+172106;Gemüselasagne (TK), gebacken;Fertiggerichte;nein
+172114;Lasagne mit Fleischsoße (TK), gebacken;Fertiggerichte;nein
+173329;Ravioli mit Fleischfüllung in Tomatensoße (Dose);Fertiggerichte;nein
+173330;Rindfleischeintopf (Dose);Fertiggerichte;ja
+173343;Kartoffelsalat mit Ei;Fertiggerichte;ja
+173344;Pulled Pork in Barbecuesauce;Fertiggerichte;ja
+173335;Burrito mit Rind und Bohnen (TK);Fertiggerichte;nein
+173341;Makkaroni mit Käsesoße;Fertiggerichte;nein
+170715;Pizza mit Fleisch und Gemüse (TK), gebacken;Fertiggerichte;nein
+172096;Pizza Peperoni-Salami (TK), gebacken;Fertiggerichte;nein
+172089;Spaghetti Bolognese (TK-Fertiggericht);Fertiggerichte;nein
