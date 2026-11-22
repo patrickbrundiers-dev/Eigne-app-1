@@ -1,9 +1,9 @@
 /// Online update: versions and GitHub release parsing. Pure Dart, unit tested.
 library;
 
-/// Release tags of this app look like `mydiet-v0.2.0`. Older tags of the previous
-/// app (`v0.8.0`) are ignored.
-const releaseTagPrefix = 'mydiet-v';
+/// Release tags of this app look like `mydiet-v0.2.0` (or `sattly-v0.2.0` after the
+/// rename). Older tags of the previous app (`v0.8.0`) are ignored.
+const releaseTagPrefixes = ['mydiet-v', 'sattly-v'];
 
 class AppVersion implements Comparable<AppVersion> {
   const AppVersion(this.major, this.minor, this.patch);
@@ -87,8 +87,10 @@ UpdateInfo? latestRelease(List<dynamic> releases) {
     if (r is! Map) continue;
     if (r['draft'] == true || r['prerelease'] == true) continue;
     final tag = r['tag_name'];
-    if (tag is! String || !tag.startsWith(releaseTagPrefix)) continue;
-    final v = AppVersion.tryParse(tag.substring(releaseTagPrefix.length));
+    if (tag is! String) continue;
+    final prefix = releaseTagPrefixes.where(tag.startsWith).firstOrNull;
+    if (prefix == null) continue;
+    final v = AppVersion.tryParse(tag.substring(prefix.length));
     if (v == null) continue;
     if (best != null && !(v > best.version)) continue;
     final assets = <UpdateAsset>[];

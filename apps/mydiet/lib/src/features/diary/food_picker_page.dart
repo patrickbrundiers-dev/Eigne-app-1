@@ -9,6 +9,7 @@ import '../foods/barcode.dart';
 import '../foods/food_form_page.dart';
 import '../foods/foods_page.dart' show FoodSourceIcon;
 import 'amount_sheet.dart';
+import 'quick_entry_sheet.dart';
 
 /// Search, pick a food, enter the amount, log it.
 class FoodPickerPage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   final _q = TextEditingController();
   List<Food> _results = [];
   List<Food> _recent = [];
+  List<Food> _suggested = [];
   List<Food> _favorites = [];
   List<Recipe> _recipeResults = [];
   List<Recipe> _favRecipes = [];
@@ -39,11 +41,13 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   Future<void> _loadLists() async {
     final db = context.db;
     final recent = await db.recentFoods();
+    final suggested = await db.suggestedFoods(mealSlotId: widget.mealSlotId);
     final favs = await db.watchFoods(onlyFavorites: true).first;
     final favRecipes = await db.watchRecipes(onlyFavorites: true).first;
     if (mounted) {
       setState(() {
         _recent = recent;
+        _suggested = suggested;
         _favorites = favs;
         _favRecipes = favRecipes;
       });
@@ -109,6 +113,16 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
     } catch (e) {
       if (mounted) showMessage(context, errorText(e));
     }
+  }
+
+  Future<void> _quick() async {
+    final ok = await showQuickEntrySheet(
+      context,
+      day: widget.day,
+      mealSlotId: widget.mealSlotId,
+      initialLabel: _q.text.trim(),
+    );
+    if (ok && mounted) setState(() => _added++);
   }
 
   Future<void> _create() async {
@@ -192,6 +206,10 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                         ),
                       for (final f in _results) _FoodTile(food: f, onTap: () => _pick(f)),
                     ] else ...[
+                      if (_suggested.isNotEmpty) ...[
+                        _header(context, 'Oft zum $slotName'),
+                        for (final f in _suggested) _FoodTile(food: f, onTap: () => _pick(f)),
+                      ],
                       if (_favRecipes.isNotEmpty) ...[
                         _header(context, 'Lieblingsrezepte'),
                         for (final r in _favRecipes) _RecipeTile(recipe: r, onTap: () => _pickRecipe(r)),
@@ -209,8 +227,17 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                             style: t.textTheme.bodyMedium?.copyWith(color: t.colorScheme.onSurfaceVariant),
                           ),
                         ),
-                      for (final f in _recent) _FoodTile(food: f, onTap: () => _pick(f)),
+                      for (final f in _recent.where((f) => !_suggested.any((x) => x.id == f.id)))
+                        _FoodTile(food: f, onTap: () => _pick(f)),
                     ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      child: OutlinedButton.icon(
+                        onPressed: _quick,
+                        icon: const Icon(Icons.bolt),
+                        label: const Text('Schnelleintrag: nur Kalorien (z. B. Restaurant)'),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: OutlinedButton.icon(

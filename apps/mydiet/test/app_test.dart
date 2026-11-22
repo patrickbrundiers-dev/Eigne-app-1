@@ -106,6 +106,24 @@ void main() {
     await closeDb(tester, db);
   });
 
+  testWidgets('Zahlen ausblenden und Wochenbudget', (tester) async {
+    final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
+    await tester.runAsync(() async {
+      await db.setSetting('hideNumbers', 'true');
+      await db.setSetting('budgetMode', 'week');
+    });
+    await pumpApp(tester, db);
+    expect(find.text('Gut im Rahmen'), findsOneWidget);
+    expect(find.text('189 kcal'), findsNothing);
+    expect(find.text('Wochenbudget aktiv. Zahlen sind ausgeblendet.'), findsOneWidget);
+
+    await tester.runAsync(() => db.setSetting('hideNumbers', 'false'));
+    await pumpApp(tester, db);
+    expect(find.text('Heute aus Wochenbudget'), findsOneWidget);
+    expect(find.text('189 kcal'), findsWidgets);
+    await closeDb(tester, db);
+  });
+
   testWidgets('Essen: Rezepte und Einkaufsliste', (tester) async {
     final db = (await tester.runAsync(() => openDb(withProfile: true)))!;
     await tester.runAsync(() async {
@@ -267,9 +285,10 @@ void main() {
     await tester.pumpAndSettle();
     final ctx = tester.element(find.byType(Scaffold).first);
     Navigator.of(ctx).push(MaterialPageRoute<void>(builder: (_) => const SettingsPage()));
-    for (var i = 0; i < 4; i++) {
+    // The backup card shows a spinner while it reads files: pump, don't settle.
+    for (var i = 0; i < 8; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
     }
     expect(find.text('Installierte Version: 0.2.0'), findsOneWidget);
     await tester.ensureVisible(find.text('Nach Updates suchen'));
@@ -279,13 +298,12 @@ void main() {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
       await tester.pump(const Duration(milliseconds: 100));
     }
-    await tester.pumpAndSettle();
     expect(find.text('Version 9.9.0 ist da'), findsOneWidget);
     expect(find.text('Neu: Testfunktion'), findsOneWidget);
     await tester.tap(find.text('Überspringen'));
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 6; i++) {
       await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
     }
     expect(await tester.runAsync(() => db.getSetting('updateSkippedTag')), 'mydiet-v9.9.0');
     await closeDb(tester, db);

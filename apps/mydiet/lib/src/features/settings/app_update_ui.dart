@@ -50,7 +50,7 @@ Future<void> autoCheckForUpdate(BuildContext context) async {
     if (offer == null || !context.mounted) return;
     showMessage(
       context,
-      'MyDiet AI ${offer.version} ist verfügbar.',
+      'Version ${offer.version} ist verfügbar.',
       action: SnackBarAction(label: 'Ansehen', onPressed: () => showUpdateDialog(context, offer)),
     );
   } catch (_) {

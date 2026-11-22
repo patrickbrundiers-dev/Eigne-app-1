@@ -7,7 +7,7 @@ Die App holt neue Versionen direkt aus den GitHub Releases dieses Repositorys. E
 1. Nach dem Start prüft die App höchstens einmal am Tag `GET https://api.github.com/repos/patrickbrundiers-dev/Eigne-app-1/releases`.
    Abschalten geht unter Einstellungen → Updates. Dort gibt es auch „Nach Updates suchen“.
    Gesendet wird nur eine normale HTTPS-Anfrage mit dem User-Agent `MyDietAI-Updater (Flutter app)`, ohne persönliche Daten.
-2. Gezählt werden nur veröffentlichte Releases mit dem Tag `mydiet-vX.Y.Z`. Entwürfe, Vorabversionen und die alten
+2. Gezählt werden nur veröffentlichte Releases mit dem Tag `mydiet-vX.Y.Z` oder `sattly-vX.Y.Z`. Entwürfe, Vorabversionen und die alten
    `v0.x`-Tags von Paperless AI zählen nicht. Ist die Version höher als die installierte, erscheint ein Hinweis mit den
    Release-Notizen. Optionen: „Jetzt aktualisieren“, „Später“, „Überspringen“ (diese Version wird dann nicht mehr angeboten).
 3. **Windows:** Die App lädt `MyDietAI-Setup-X.Y.Z.exe` in den Temp-Ordner. Größe und SHA-256 (aus dem `digest` der GitHub-API)

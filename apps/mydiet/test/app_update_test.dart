@@ -48,6 +48,7 @@ void main() {
     expect(r.assetFor(UpdatePlatform.windows)!.name, 'MyDietAI-Setup-x.exe');
     expect(r.assetFor(UpdatePlatform.other), isNull);
     expect(latestRelease([_rel('v0.8.0')]), isNull);
+    expect(latestRelease([_rel('mydiet-v0.2.0'), _rel('sattly-v0.3.0')])!.tag, 'sattly-v0.3.0');
   });
 
   test('only https assets, digest is read', () {
