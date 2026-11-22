@@ -11,3 +11,9 @@ const hideNumbersKey = 'hideNumbers';
 
 /// Text used instead of numbers when [hideNumbersKey] is on.
 String gentleStatus(double progress) => gentle(progress);
+
+/// "false": do not ask Open Food Facts while typing in the food search (default: on).
+const offLiveSearchKey = 'offLiveSearch';
+
+/// Live search is on unless the user switched it off.
+bool offLiveSearchEnabled(String? value) => value != 'false';

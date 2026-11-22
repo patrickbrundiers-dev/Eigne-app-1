@@ -78,6 +78,27 @@ Fett: (Kalorienziel − Protein × 4 − KH × 4) ÷ 9. Die Energie bleibt gleic
   App kennt keinen Alkohol-Wert, Energie wäre nicht erklärbar) und Einträge, die die Plausibilitätsprüfung
   oben nicht bestehen (z. B. Kakaopulver, Haferkleie: USDA rechnet mit stoffspezifischen Atwater-Faktoren).
 - Werte gelten für US-Produkte; Abweichungen zu deutschen Produkten sind möglich (Anzeige „Richtwert“).
+- Zwei Lieferungen: 219 Lebensmittel mit `seedVersion` 2, weitere 470 mit `seedVersion` 3 (Wurst, Fleischstücke,
+  Fisch, Backwaren, Süßes, Snacks, Saucen, Gewürze, Fertiggerichte). Beim Update kommen nur fehlende Namen dazu;
+  eigene und gelöschte Lebensmittel bleiben, wie sie sind. `microSeedVersion` 3 ergänzt die Mikronährstoffe der
+  neuen Einträge.
+- Ebenfalls nicht übernommen: reine tierische Fette mit mehr als 900 kcal je 100 g (Schmalz, Talg; über der
+  Plausibilitätsgrenze), Fleisch ohne gemessenen Zuckerwert (z. B. Lamm- und Kaninchenteile).
+- Gewürze, Kräuter und Getrocknetes sind konzentriert; dort sind Kalium- und Calciumwerte über 2 g bzw. 1,5 g je
+  100 g echt (Portionen sind klein).
+
+### Online-Suche beim Tippen (`core/online_search.dart`, Aufgabe 3.7)
+
+Keine Rechnung, sondern eine Regel, wann Open Food Facts gefragt wird:
+- Die eigene Datenbank wird immer zuerst durchsucht und sofort angezeigt.
+- Online gefragt wird nur, wenn sie weniger als 3 Treffer hat, die alle Suchwörter enthalten (die
+  tippfehlertoleranten Vorschläge zählen nicht mit), der Suchbegriff mindestens 3 Zeichen hat und keine ganze
+  Mahlzeit („200 g Reis, 1 Ei“) oder kein Barcode ist.
+- Erst nach 600 ms Tipp-Pause, höchstens 12 Treffer; Antworten für einen älteren Suchbegriff werden verworfen.
+  Bereits gestellte Suchbegriffe kommen aus einem Zwischenspeicher (30 Begriffe, nur im Arbeitsspeicher).
+- Treffer, deren Barcode oder Name mit Marke schon in der eigenen Datenbank steht, werden nicht doppelt gezeigt.
+- Nährwerte von Open Food Facts werden wie beim Barcode geprüft (Qualität „vollständig“ / „prüfen“) und erst
+  nach dem Speichern im Formular übernommen.
 
 ## Rezepte
 

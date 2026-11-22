@@ -2,7 +2,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
 import '../../data/database.dart';
+import '../../core/food_quality.dart' show OffProduct;
 import '../../core/habits.dart';
+import '../../data/display_prefs.dart';
 import '../../data/food_search.dart';
 import '../../data/habits_data.dart';
 import '../../data/meal_text_match.dart' show usualLoggedAmount;
@@ -11,6 +13,7 @@ import '../../ui/widgets.dart';
 import '../../core/recipes.dart';
 import '../foods/barcode.dart';
 import '../foods/food_form_page.dart';
+import '../foods/off_live_section.dart';
 import '../foods/off_search_page.dart';
 import '../foods/foods_page.dart' show FoodSourceIcon;
 import 'amount_sheet.dart';
@@ -49,6 +52,8 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   List<Recipe> _favRecipes = [];
   List<HabitSuggestion> _habits = [];
   int _added = 0;
+  OffLiveSearch? _live;
+  bool _liveEnabled = true;
 
   @override
   void initState() {
@@ -78,6 +83,8 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _live ??= OffLiveSearch(context.db);
+    context.db.getSetting(offLiveSearchKey).then((v) => _liveEnabled = offLiveSearchEnabled(v));
     _loadLists();
   }
 
@@ -149,14 +156,24 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
 
   Future<void> _search(String q) async {
     final db = context.db;
-    final r = q.trim().isEmpty ? <Food>[] : await smartSearchFoods(db, q);
+    final r = q.trim().isEmpty ? FoodSearchResult.empty : await smartSearch(db, q);
     final rr = q.trim().isEmpty ? <Recipe>[] : await db.searchRecipes(q, limit: 5);
     if (mounted && q == _q.text) {
       setState(() {
-        _results = r;
+        _results = r.foods;
         _recipeResults = rr;
       });
+      _live?.update(q, localHits: r.exactHits + rr.length, enabled: _liveEnabled);
     }
+  }
+
+  /// An Open Food Facts hit from the live search: check and save it, then log it.
+  Future<void> _pickOnline(OffProduct p) async {
+    final id = await openOffProduct(context, p);
+    if (id == null || !mounted) return;
+    final f = await context.db.getFood(id);
+    if (f != null && mounted) await _pick(f);
+    if (mounted) _search(_q.text);
   }
 
   Future<void> _pickRecipe(Recipe r) async {
@@ -290,6 +307,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
 
   @override
   void dispose() {
+    _live?.dispose();
     _q.dispose();
     super.dispose();
   }
@@ -331,6 +349,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                         onPressed: () {
                           _q.clear();
                           setState(() => _results = []);
+                          _live?.update('', localHits: 0, enabled: _liveEnabled);
                         },
                       ),
                   ],
@@ -360,6 +379,7 @@ class _FoodPickerPageState extends State<FoodPickerPage> {
                           child: Text('Nichts gefunden für „${_q.text.trim()}“.', style: t.textTheme.bodyLarge),
                         ),
                       for (final f in _results) _FoodTile(food: f, onTap: () => _pick(f)),
+                      if (_live != null) OffLiveSection(search: _live!, onTap: _pickOnline),
                       ListTile(
                         leading: const Icon(Icons.travel_explore),
                         title: const Text('Bei Open Food Facts suchen'),

@@ -1,11 +1,15 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../app.dart';
+import '../../core/food_quality.dart' show OffProduct;
 import '../../data/database.dart';
+import '../../data/display_prefs.dart';
 import '../../data/food_search.dart';
 import '../../ui/format.dart';
 import 'barcode.dart';
 import 'food_form_page.dart';
+import 'off_live_section.dart';
+import 'off_search_page.dart' show openOffProduct;
 
 /// Searches the food database and returns the chosen food (used for recipe ingredients).
 class FoodSearchPage extends StatefulWidget {
@@ -20,18 +24,32 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
   final _q = TextEditingController();
   List<Food> _results = [];
   List<Food> _favorites = [];
+  OffLiveSearch? _live;
+  bool _liveEnabled = true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _live ??= OffLiveSearch(context.db);
+    context.db.getSetting(offLiveSearchKey).then((v) => _liveEnabled = offLiveSearchEnabled(v));
     context.db.watchFoods(onlyFavorites: true).first.then((f) {
       if (mounted) setState(() => _favorites = f);
     });
   }
 
   Future<void> _search(String q) async {
-    final r = q.trim().isEmpty ? <Food>[] : await smartSearchFoods(context.db, q);
-    if (mounted && q == _q.text) setState(() => _results = r);
+    final r = q.trim().isEmpty ? FoodSearchResult.empty : await smartSearch(context.db, q);
+    if (mounted && q == _q.text) {
+      setState(() => _results = r.foods);
+      _live?.update(q, localHits: r.exactHits, enabled: _liveEnabled);
+    }
+  }
+
+  Future<void> _pickOnline(OffProduct p) async {
+    final id = await openOffProduct(context, p);
+    if (id == null || !mounted) return;
+    final f = await context.db.getFood(id);
+    if (f != null && mounted) Navigator.pop(context, f);
   }
 
   Future<void> _create() async {
@@ -46,6 +64,7 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
 
   @override
   void dispose() {
+    _live?.dispose();
     _q.dispose();
     super.dispose();
   }
@@ -105,6 +124,7 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
                         trailing: const Icon(Icons.add_circle_outline),
                         onTap: () => Navigator.pop(context, f),
                       ),
+                    if (searching && _live != null) OffLiveSection(search: _live!, onTap: _pickOnline),
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: OutlinedButton.icon(

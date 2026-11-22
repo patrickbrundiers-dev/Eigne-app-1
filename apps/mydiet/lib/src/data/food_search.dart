@@ -27,9 +27,23 @@ Future<Map<String, int>> foodUsage(AppDatabase db, {int days = 180, DateTime? no
 ///    within equal fit.
 /// 2. If it finds fewer than [fuzzyBelow] foods, all live foods are scored with an edit
 ///    distance per word and the best are added after the exact hits.
-Future<List<Food>> smartSearchFoods(AppDatabase db, String query, {int limit = 50, int fuzzyBelow = 5}) async {
+Future<List<Food>> smartSearchFoods(AppDatabase db, String query, {int limit = 50, int fuzzyBelow = 5}) async =>
+    (await smartSearch(db, query, limit: limit, fuzzyBelow: fuzzyBelow)).foods;
+
+/// Result of [smartSearch]: the foods to show and how many of them contain all
+/// search words ([exactHits]); the rest are typo-tolerant guesses.
+class FoodSearchResult {
+  const FoodSearchResult(this.foods, this.exactHits);
+  final List<Food> foods;
+  final int exactHits;
+  static const empty = FoodSearchResult([], 0);
+}
+
+/// Like [smartSearchFoods], but also says how many hits are exact (used to decide
+/// whether Open Food Facts is asked while typing, core/online_search.dart).
+Future<FoodSearchResult> smartSearch(AppDatabase db, String query, {int limit = 50, int fuzzyBelow = 5}) async {
   final words = normalizeName(query).split(' ').where((w) => w.isNotEmpty).toList();
-  if (words.isEmpty) return const [];
+  if (words.isEmpty) return FoodSearchResult.empty;
   final exact = await db.searchFoods(query, limit: limit);
   final usage = await foodUsage(db);
   final ranked = rankCandidates<Food>(
@@ -40,9 +54,9 @@ Future<List<Food>> smartSearchFoods(AppDatabase db, String query, {int limit = 5
     favorite: (f) => f.isFavorite,
     minScore: 0,
   );
-  if (ranked.length >= fuzzyBelow) return ranked.take(limit).toList();
+  if (ranked.length >= fuzzyBelow) return FoodSearchResult(ranked.take(limit).toList(), ranked.length);
   final fuzzy = await fuzzyFoods(db, query, limit: limit, exclude: {for (final f in ranked) f.id}, usage: usage);
-  return [...ranked, ...fuzzy].take(limit).toList();
+  return FoodSearchResult([...ranked, ...fuzzy].take(limit).toList(), ranked.length);
 }
 
 /// Only the typo-tolerant part: live foods whose name is similar to [query] (see
