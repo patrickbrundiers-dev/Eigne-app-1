@@ -14,6 +14,14 @@ Neue Abhängigkeiten `local_auth`, `crypto`; Android AppCompat-Theme beim Start 
 Tests: `test/app_lock_test.dart` (5, u. a. RFC-Testvektor), Widget-Test „App-Sperre“. Fingerabdruck auf dem Gerät
 ungeprüft.
 
+## 2026-11-22 – Barrierefreiheit (Aufgabe 2.3)
+
+`RingGauge(semanticLabel:)` + Prozentwert, `MacroBar` als ein Screenreader-Text, Gewichtskurve mit Zusammenfassung.
+Überläufe bei 200 % behoben (Kalorienring skaliert den Innentext, Filter-Chips bei Lebensmitteln umbrechen).
+Tests: zwei Widget-Tests (200 % auf Dashboard, Tagebuch, Gewicht, Essen, Profil; Semantics-Labels), Suite grün.
+Offen: Unterseiten (Rezepte, Wochenplan, Einstellungen) bei 200 % noch nicht automatisch geprüft.
+Nächster Schritt: 3.4 Open-Food-Facts-Textsuche.
+
 ## 2026-11-22 – Homescreen-Widget Android (Aufgabe 6.4, W13)
 
 Phase-2-Thread. `core/widget_summary.dart` (Texte, Tausenderpunkte, freundlicher Status – `gentleStatus` nutzt ihn
