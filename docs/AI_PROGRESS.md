@@ -6,7 +6,7 @@ weiterarbeiten.
 
 ## 2026-11-22 – Datenbank verschlüsselt (7.2)
 
-Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-22: `lib/src/data/db_encryption.dart`
+Patrick (19:10): „Datenbank verschlüsseln“. Umgesetzt nach D-24: `lib/src/data/db_encryption.dart`
 (`prepareEncryptedDatabase`, ohne Flutter-Import), `lib/src/data/app_database_open.dart` (`openAppDatabase`,
 Schlüssel in `flutter_secure_storage`), `AppDatabase.openEncrypted/openPlain`, `main.dart` öffnet darüber.
 Hinweisdialog nach beiseitegelegter Datei, Fehlerseite `StartupErrorApp`, Status unter Einstellungen →
@@ -15,6 +15,74 @@ Tests: `db_encryption_test.dart` (Neuinstallation, Umstellung mit Datenvergleich
 Schlüssel verloren/falsch, Speicher nicht lesbar/beschreibbar, abgebrochene Umstellung) und zwei Widget-Tests in
 `app_test.dart`. Offen: auf Android und Windows ungeprüft (Windows-Build braucht ATL, auf GitHub-Runnern
 vorhanden); Android-Emulator-Test aus #57 kann Schlüssel und Umstellung echt prüfen; 7.2b Sicherungen verschlüsseln.
+
+## 2026-11-22 – Redesign Schritt 6: Profil & Einstellungen (Design 2)
+
+`profile_page.dart`: Profilkarte mit Avatar (Anfangsbuchstabe), Name groß, „Bearbeiten“ und Fakten-Chips;
+„Deine Tagesziele“: Makros, Ballaststoffe und Wasser als `StatStrip` in Makrofarben (kcal-Werte bleiben
+`StatValue`). `settings_page.dart`: Erinnerungen, Health Connect, App-Sperre und Fehlerprotokoll als eine Liste
+in einer Karte; Farbfeld „Frisch (Grün)“ zeigt den echten Design-Akzent (dunkel Limette). Die Seite baut ihre
+Karten jetzt in einer `SingleChildScrollView` statt `ListView`: beim Lazy-Neuaufbau einer Karte wurde derselbe
+im build erzeugte Stream ein zweites Mal abonnieren („Stream has already been listened to“), sichtbar nach der
+Umgruppierung im Test „Alle Daten löschen“. Tests: alle grün, `app_test.dart` prüft die Makro-Leiste im Profil.
+Damit sind alle Bereiche aus REDESIGN.md Abschnitt 5 umgestellt. Offen (nicht Teil der Freigabe): eigene
+Lebensmittel-Bilder statt Anfangsbuchstaben, Unterseiten (Essen, Rezepte, Wochenplan) erben das Design über
+das Theme.
+
+## 2026-11-22 – Redesign Schritt 5: Gewicht & Fortschritt (Design 2)
+
+`weight_page.dart`: Seite heißt „Fortschritt“ (wie die Navigation). Oben großes Trendgewicht (Zahlenschrift 52)
+mit „zuletzt …“, daneben eckige Plus-Taste „Gewicht eintragen“ (ersetzt den schwebenden Knopf, der Inhalte
+verdeckte; Eintragen geht außerdem über das zentrale Plus). Darunter `StatStrip` Pro Woche · BMI · Ziel mit
+Erläuterungszeile (`StatStrip(notes:)` neu). Karte „Fortschritt“ heißt jetzt „Zielfortschritt“ wie die
+Startseiten-Kachel. Plateau-Hinweis und Ziellinie im Diagramm in Warnfarbe aus den Tokens, Listenwerte in
+Zahlenschrift. Rechenwerte unverändert. Tests: `app_test.dart` an neuen Kartentitel angepasst. Nächster Schritt:
+Profil & Einstellungen.
+
+## 2026-11-22 – Redesign Schritt 4: Tagebuch (Design 2)
+
+`diary_page.dart`: Tageskopf als `StatStrip` (Gegessen · Ziel/Ziel (Woche) · Übrig/Zu viel), Kalorienbalken mit
+Screenreader-Text, Makro-Balken in Makrofarbe. Mahlzeitenkarten: Plus als eckige Taste, Einträge mit
+Anfangsbuchstabe (`_FoodInitial`, Platzhalter bis eigene Bilder kommen), zweite Zeile mit farbigen Makropunkten
+(`_EntryLine`, Punkte als Widget, weil Barlow kein „●“ hat), kcal in Zahlenschrift. PC-Tabellen: Kopfzeile über
+`dataTableTheme` (gilt für alle Tabellen). Wischen zum Löschen, Menü, Tabellen-Spalten unverändert. Tests: alle
+grün, `app_test.dart` prüft Kennzahl-Leiste und Makrozeile. Nächster Schritt: Gewicht & Fortschritt.
+
+## 2026-11-22 – Redesign Schritt 3: Startseite (Design 2)
+
+Neue Bausteine `lib/src/ui/design/components.dart`: `ConcentricRings` (Kalorien außen, Protein, Wasser),
+`StatStrip` (Kennzahlen mit farbiger Kante, Beschriftung groß), `LegendRow`. Kachel „Kalorien heute“: Ringe,
+große Zahl „kcal übrig“, Legende in Prozent, Leiste Gegessen · Tagesbudget · Bewegt. Makros untereinander mit
+Prozent (`MacroBar(showPercent:)`). Zahlen ausblenden und Wochenbudget wie bisher. Tests: Komponenten-Test in
+`design_tokens_test.dart`, `app_test.dart` an große Beschriftung angepasst. Nächster Schritt: Tagebuch.
+
+## 2026-11-22 – Redesign Schritt 2: Navigation mit zentralem Plus
+
+Handy: eigene untere Leiste (`_BottomBar` in `home_shell.dart`) Heute · Tagebuch · **+** · Fortschritt · Essen;
+das Plus öffnet `showQuickLogSheet` (Suchen, Barcode, Text, Nur kcal, Gewicht). Profil über den Avatar oben auf
+„Heute“ (Key `profile-avatar`), am PC weiter in der Seitenleiste, dort oben eine Plus-Taste. „Gewicht“ heißt
+in der Navigation jetzt „Fortschritt“ (Seite unverändert). Der Dashboard-Knopf „Eintragen“ entfällt (ersetzt
+durch das Plus). Seitenindizes und Strg+1 … 5 unverändert. Tests angepasst (Avatar, Plus, „Fortschritt“),
+alle 344 grün. Nächster Schritt: Startseite.
+
+## 2026-11-22 – Redesign Schritt 1: Designsystem Design 2 (D-22)
+
+Patrick hat Design 2 „Fitness & Performance“ gewählt. `lib/src/ui/design/tokens.dart` (`SattlyTokens` als
+ThemeExtension: Farben hell/dunkel, Makro- und Statusfarben, `SattlySpace`, `SattlyRadius`, `SattlyFonts`,
+`numberStyle`) und `theme.dart` (`sattlyTheme`, zwischengespeichert). `buildTheme` in `app.dart` delegiert,
+`MacroColors` und `StatValue` nutzen die Tokens. Schrift Barlow + Barlow Condensed statt Inter.
+Wichtig: Das Theme muss zwischengespeichert bleiben, sonst blendet MaterialApp bei jedem Neuaufbau über und
+alle Seiten abonnieren ihre Streams neu (zeigte sich als langsame Widget-Tests). Tests:
+`design_tokens_test.dart` (Kontraste WCAG AA, Tokens im Theme, Theme-Identität, Akzent), alle 344 Tests grün,
+Testlauf dadurch rund doppelt so schnell. Nächster Schritt: Navigation mit zentralem Plus.
+
+## 2026-11-22 – Redesign: Analyse und drei Designvorlagen (Phase 1+2, wartet auf Freigabe)
+
+Thread „Sattly-Design mit drei Vorlagen erneuern“. `docs/design/REDESIGN.md` (Analyse, Vergleich, Empfehlung
+Design 1 „Premium Wellness“) und `docs/design/vorschau.html` (interaktive Vorschau, nur Beispieldaten,
+getrennt vom App-Code). Screenshots in den Projektdateien `sattly/redesign/`. **Kein produktiver Code
+geändert.** Phase 4 (Designsystem als ThemeExtension, dann Bereiche einzeln) erst nach Patricks Freigabe.
+
 ## 2026-11-22 – Mehr Lebensmittel und Open Food Facts beim Tippen (3.6, 3.7)
 
 Thread „Lebensmittel-Datenbank vergrößern mit Live-Suche“, Branch `claude/project-thread-nlurk1`. Kein Schema-Eingriff.

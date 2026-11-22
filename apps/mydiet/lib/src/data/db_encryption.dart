@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:sqlite3/sqlite3.dart';
 
-/// Database encryption at rest (7.2, D-22).
+/// Database encryption at rest (7.2, D-24).
 ///
 /// The database file is encrypted with SQLite3 Multiple Ciphers (selected in pubspec.yaml under
 /// `hooks`). The key is a random 256-bit value that never leaves the device: it lives in the

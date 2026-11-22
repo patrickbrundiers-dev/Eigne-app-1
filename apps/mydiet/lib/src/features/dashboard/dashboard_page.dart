@@ -15,6 +15,8 @@ import '../../core/weight_trend.dart';
 import '../../data/database.dart';
 import '../../data/display_prefs.dart';
 import '../../data/targets.dart';
+import '../../ui/design/components.dart';
+import '../../ui/design/tokens.dart';
 import '../../ui/format.dart';
 import '../../ui/widgets.dart';
 import '../fasting/fasting_card.dart';
@@ -25,7 +27,6 @@ import '../supplements/supplements_view.dart';
 import '../weight/weight_chart.dart';
 import '../weight/weight_entry_sheet.dart';
 import 'activity_sheet.dart';
-import 'quick_log_sheet.dart';
 
 part 'customize_sheet.dart';
 part 'tiles/day_tiles.dart';
@@ -129,12 +130,6 @@ class DashboardPage extends StatelessWidget {
             );
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'dashboard-log',
-        onPressed: () => showQuickLogSheet(context),
-        icon: const Icon(Icons.add),
-        label: const Text('Eintragen'),
-      ),
       body: SafeArea(
         child: StreamBuilder<DashData>(
           stream: stream,
@@ -201,6 +196,28 @@ class _DashboardBody extends StatelessWidget {
                           builder: (_) => DashboardCustomizeSheet(layout: d.layout),
                         ),
                       ),
+                      if (MediaQuery.sizeOf(context).width < 840)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: Tooltip(
+                            message: 'Profil',
+                            child: InkWell(
+                              key: const Key('profile-avatar'),
+                              customBorder: const CircleBorder(),
+                              onTap: () => HomeShellState.of(context)?.go(4),
+                              child: CircleAvatar(
+                                radius: 22,
+                                backgroundColor: t.colorScheme.primaryContainer,
+                                foregroundColor: t.colorScheme.onPrimaryContainer,
+                                child: Text(
+                                  (name?.isNotEmpty ?? false) ? name!.characters.first.toUpperCase() : 'P',
+                                  semanticsLabel: 'Profil',
+                                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

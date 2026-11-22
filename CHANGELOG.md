@@ -7,6 +7,22 @@
   erhalten, bis die verschlüsselte Kopie vollständig geprüft ist. Die Android-Gerätesicherung ist dafür
   abgeschaltet, den Umzug auf ein neues Gerät bitte über Einstellungen → Daten → Export
 
+## 0.7.0 – Neues Design „Fitness & Performance“, 470 weitere Lebensmittel, Online-Suche beim Tippen (2026-11-22)
+
+- Neues Design „Fitness & Performance“, Schritt 1: neue Farben (hell mit Grün, dunkel mit Limette), neue Schrift
+  mit kräftigen Zahlen, einheitliche Karten, Knöpfe und Eingabefelder. Alle Funktionen bleiben wie gehabt;
+  die Farbschemata in den Einstellungen ändern weiterhin die Akzentfarbe
+- Neue Navigation: großes Plus in der Mitte zum Eintragen (Suchen, Barcode, Text, Nur Kalorien, Gewicht).
+  „Gewicht“ heißt jetzt „Fortschritt“, das Profil öffnest du auf dem Handy über deinen Avatar oben auf „Heute“
+- Startseite: Ringe für Kalorien, Protein und Wasser auf einen Blick, große Zahl „kcal übrig“, Leiste mit
+  Gegessen, Tagesbudget und Bewegung, Makronährstoffe mit Prozent vom Ziel
+- Tagebuch: Kopf mit Gegessen, Ziel und Übrig in großer Zahlenschrift, Einträge mit Anfangsbuchstabe und
+  farbigen Punkten für Protein, Kohlenhydrate und Fett; ruhigere Tabellenköpfe am PC
+- Fortschritt: dein Trendgewicht groß oben, daneben ein Knopf zum Eintragen, darunter Tempo pro Woche, BMI und
+  Prognose fürs Ziel. Die Karte „Fortschritt“ heißt jetzt „Zielfortschritt“ wie auf der Startseite
+- Profil: Kopf mit Avatar und Namen, Makroziele farbig wie im Tagebuch. Einstellungen: Erinnerungen,
+  Health Connect, App-Sperre und Fehlerprotokoll in einer Liste; das Farbfeld „Frisch“ zeigt die echte Akzentfarbe
+
 - Lebensmittelsuche: Findet deine eigene Datenbank kaum etwas, sucht Sattly nach einer kurzen Tipp-Pause
   automatisch bei Open Food Facts und zeigt die Treffer direkt unter den eigenen an (auch bei der Zutatensuche
   für Rezepte). Gesendet wird nur der Suchbegriff; Treffer werden wie bisher erst nach dem Prüfen gespeichert.

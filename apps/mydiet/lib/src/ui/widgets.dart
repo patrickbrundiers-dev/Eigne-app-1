@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:material_ui/material_ui.dart';
 
+import 'design/tokens.dart';
 import 'format.dart';
 
 /// Card with a title row, used for dashboard tiles and page sections.
@@ -142,6 +143,7 @@ class MacroBar extends StatelessWidget {
     required this.target,
     required this.color,
     this.unit = 'g',
+    this.showPercent = false,
   });
 
   final String label;
@@ -149,6 +151,9 @@ class MacroBar extends StatelessWidget {
   final double target;
   final Color color;
   final String unit;
+
+  /// Prozent vom Ziel rechts neben dem Wert (Startseite, Design 2).
+  final bool showPercent;
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +175,7 @@ class MacroBar extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: n0(value),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
+                      style: numberStyle(18, color: t.colorScheme.onSurface),
                     ),
                     TextSpan(
                       text: ' / ${n0(target)} $unit',
@@ -179,6 +184,15 @@ class MacroBar extends StatelessWidget {
                   ],
                 ),
               ),
+              if (showPercent)
+                SizedBox(
+                  width: 48,
+                  child: Text(
+                    '${(p * 100).round()} %',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: t.colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 6),
@@ -186,7 +200,7 @@ class MacroBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             child: LinearProgressIndicator(
               value: p.clamp(0.0, 1.0),
-              minHeight: 8,
+              minHeight: 6,
               color: p > 1.1 ? t.colorScheme.error : color,
               backgroundColor: t.colorScheme.surfaceContainerHighest,
             ),
@@ -224,11 +238,7 @@ class StatValue extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              maxLines: 1,
-              style: t.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800, color: valueColor, height: 1.15),
-            ),
+            child: Text(value, maxLines: 1, style: numberStyle(26, color: valueColor ?? t.colorScheme.onSurface)),
           ),
           if (sub != null) Text(sub!, style: t.textTheme.bodySmall?.copyWith(color: t.colorScheme.onSurfaceVariant)),
         ],
@@ -237,17 +247,13 @@ class StatValue extends StatelessWidget {
   }
 }
 
+/// Makro- und Wasserfarben aus dem Designsystem (`ui/design/tokens.dart`).
 class MacroColors {
-  static Color protein(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFF7FB2FF) : const Color(0xFF2F6FD6);
-  static Color carbs(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFFFFC46B) : const Color(0xFFD98A00);
-  static Color fat(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFFFF8F8F) : const Color(0xFFD14B4B);
-  static Color fiber(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFF8FD99B) : const Color(0xFF3B9A4B);
-  static Color water(BuildContext c) =>
-      Theme.of(c).brightness == Brightness.dark ? const Color(0xFF6FD3F0) : const Color(0xFF1C8DB5);
+  static Color protein(BuildContext c) => c.tokens.protein;
+  static Color carbs(BuildContext c) => c.tokens.carbs;
+  static Color fat(BuildContext c) => c.tokens.fat;
+  static Color fiber(BuildContext c) => c.tokens.fiber;
+  static Color water(BuildContext c) => c.tokens.water;
 }
 
 void showMessage(BuildContext context, String text, {SnackBarAction? action}) {

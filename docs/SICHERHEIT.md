@@ -18,7 +18,7 @@ Grundsatz: so wenig Daten wie nötig, so lange wie möglich nur auf dem eigenen 
 | Eingaben | Wertebereiche für Gewicht, Mengen, Nährwerte; Plausibilitätsprüfung von Nährwerten; SQL nur über Platzhalter |
 | Medizinische Aussagen | Hinweise sind regelbasiert und ausdrücklich keine Beratung; Sicherheitsgrenzen beim Kalorienziel (max. 1 % Gewichtsverlust/Woche, min. 1500/1200 kcal) |
 
-### Verschlüsselte Datenbank (7.2, D-22)
+### Verschlüsselte Datenbank (7.2, D-24)
 
 - Die Datenbankdatei `mydiet.sqlite` ist mit SQLite3 Multiple Ciphers verschlüsselt (Standardverfahren
   ChaCha20-Poly1305, Schlüsselableitung mit PBKDF2). Die Bibliothek kommt über `package:sqlite3`

@@ -7,6 +7,7 @@ import 'data/database.dart';
 import 'features/lock/lock_gate.dart';
 import 'features/home_shell.dart';
 import 'features/profile/onboarding_page.dart';
+import 'ui/design/theme.dart';
 
 /// Gives every widget access to the database.
 class AppScope extends InheritedWidget {
@@ -39,36 +40,10 @@ const colorSchemes = <String, (String, Color)>{
   'rose': ('Rosé', Color(0xFFC2416B)),
 };
 
-ThemeData buildTheme(Color seed, Brightness brightness) {
-  final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness);
-  final base = ThemeData(colorScheme: scheme, useMaterial3: true, brightness: brightness, fontFamily: 'Inter');
-  return base.copyWith(
-    scaffoldBackgroundColor: brightness == Brightness.light ? scheme.surfaceContainerLowest : scheme.surface,
-    cardTheme: CardThemeData(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      color: brightness == Brightness.light ? scheme.surface : scheme.surfaceContainer,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.6)),
-      ),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      isDense: true,
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      scrolledUnderElevation: 0,
-      titleTextStyle: base.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-    ),
-    navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: brightness == Brightness.light ? scheme.surface : scheme.surfaceContainer,
-      indicatorColor: scheme.primaryContainer,
-    ),
-  );
-}
+/// App-Theme aus dem Sattly-Designsystem (`ui/design/`). Das Farbschema „Frisch (Grün)“ nutzt den
+/// Sattly-Akzent (hell Grün, dunkel Limette); die anderen Schemata ersetzen nur die Akzentfarbe.
+ThemeData buildTheme(Color seed, Brightness brightness) =>
+    sattlyTheme(brightness, accent: seed == colorSchemes['green']!.$2 ? null : seed);
 
 class MyDietApp extends StatelessWidget {
   const MyDietApp({super.key, required this.db, this.protection = DbProtection.unsupported, this.notice});

@@ -10,6 +10,8 @@ import '../data/targets.dart' show todayDayKey;
 import 'diary/food_picker_page.dart';
 
 import 'dashboard/dashboard_page.dart';
+import 'dashboard/quick_log_sheet.dart';
+import '../ui/design/tokens.dart';
 import 'diary/diary_page.dart';
 import 'foods/food_hub_page.dart';
 import 'profile/profile_page.dart';
@@ -118,13 +120,20 @@ class HomeShellState extends State<HomeShell> {
     super.dispose();
   }
 
+  /// Bereiche in fester Reihenfolge (Index = Seite, Strg+1 … 5).
   static const _dest = [
     (Icons.space_dashboard_outlined, Icons.space_dashboard, 'Heute'),
-    (Icons.restaurant_menu_outlined, Icons.restaurant_menu, 'Tagebuch'),
-    (Icons.monitor_weight_outlined, Icons.monitor_weight, 'Gewicht'),
-    (Icons.egg_alt_outlined, Icons.egg_alt, 'Essen'),
+    (Icons.menu_book_outlined, Icons.menu_book, 'Tagebuch'),
+    (Icons.insights_outlined, Icons.insights, 'Fortschritt'),
+    (Icons.restaurant_outlined, Icons.restaurant, 'Essen'),
     (Icons.person_outline, Icons.person, 'Profil'),
   ];
+
+  /// Handy-Leiste (Design 2): Heute · Tagebuch · Plus · Fortschritt · Essen. Profil über den Avatar oben auf „Heute“.
+  static const _phoneTabs = [0, 1, -1, 2, 3];
+
+  /// Zentrales „Eintragen“: Mahlzeit und Weg wählen (Suchen, Barcode, Text, Nur kcal, Gewicht).
+  void openLog() => showQuickLogSheet(context);
 
   @override
   Widget build(BuildContext context) {
@@ -147,10 +156,21 @@ class HomeShellState extends State<HomeShell> {
               onDestinationSelected: go,
               labelType: NavigationRailLabelType.all,
               leading: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Tooltip(
-                  message: appName,
-                  child: Image.asset(appLogoAsset, width: 40, height: 40, semanticLabel: appName),
+                padding: const EdgeInsets.only(top: 16, bottom: 8),
+                child: Column(
+                  children: [
+                    Tooltip(
+                      message: appName,
+                      child: Image.asset(appLogoAsset, width: 40, height: 40, semanticLabel: appName),
+                    ),
+                    const SizedBox(height: 16),
+                    FloatingActionButton(
+                      heroTag: 'shell-log',
+                      tooltip: 'Eintragen (Strg+E)',
+                      onPressed: openLog,
+                      child: const Icon(Icons.add, size: 28),
+                    ),
+                  ],
                 ),
               ),
               trailing: Expanded(
@@ -171,7 +191,7 @@ class HomeShellState extends State<HomeShell> {
                   NavigationRailDestination(icon: Icon(d.$1), selectedIcon: Icon(d.$2), label: Text(d.$3)),
               ],
             ),
-            const VerticalDivider(width: 1),
+            VerticalDivider(width: 1, color: Theme.of(context).dividerColor),
             Expanded(child: body),
           ],
         ),
@@ -179,13 +199,124 @@ class HomeShellState extends State<HomeShell> {
     }
     return Scaffold(
       body: body,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: go,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        destinations: [
-          for (final d in _dest) NavigationDestination(icon: Icon(d.$1), selectedIcon: Icon(d.$2), label: d.$3),
-        ],
+      bottomNavigationBar: _BottomBar(index: _index, onSelect: go, onLog: openLog),
+    );
+  }
+}
+
+/// Untere Leiste auf dem Handy mit erhöhter Plus-Taste in der Mitte.
+class _BottomBar extends StatelessWidget {
+  const _BottomBar({required this.index, required this.onSelect, required this.onLog});
+  final int index;
+  final ValueChanged<int> onSelect;
+  final VoidCallback onLog;
+
+  @override
+  Widget build(BuildContext context) {
+    final tk = context.tokens;
+    return Material(
+      color: tk.surface,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: tk.line)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: SizedBox(
+            height: 68,
+            child: Row(
+              children: [
+                for (final i in HomeShellState._phoneTabs)
+                  Expanded(
+                    child: i < 0
+                        ? Center(
+                            child: Semantics(
+                              button: true,
+                              label: 'Eintragen',
+                              excludeSemantics: true,
+                              child: Tooltip(
+                                message: 'Eintragen',
+                                child: Material(
+                                  color: tk.primary,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(SattlyRadius.fab)),
+                                  ),
+                                  child: InkWell(
+                                    key: const Key('nav-log'),
+                                    customBorder: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(SattlyRadius.fab)),
+                                    ),
+                                    onTap: onLog,
+                                    child: SizedBox(
+                                      width: 56,
+                                      height: 48,
+                                      child: Icon(Icons.add, size: 30, color: tk.onPrimary),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : _NavItem(
+                            icon: index == i ? HomeShellState._dest[i].$2 : HomeShellState._dest[i].$1,
+                            label: HomeShellState._dest[i].$3,
+                            selected: index == i,
+                            onTap: () => onSelect(i),
+                          ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({required this.icon, required this.label, required this.selected, required this.onTap});
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final tk = context.tokens;
+    final color = selected ? tk.ink : tk.muted;
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              width: 52,
+              height: 30,
+              decoration: BoxDecoration(
+                color: selected ? tk.primarySoft : Colors.transparent,
+                borderRadius: BorderRadius.circular(SattlyRadius.control),
+              ),
+              child: Icon(icon, size: 24, color: selected ? tk.primaryInk : tk.muted),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: TextStyle(
+                fontFamily: SattlyFonts.body,
+                fontSize: 12,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -194,7 +325,7 @@ class HomeShellState extends State<HomeShell> {
 /// Shown with F1 or Strg+/ (and from the keyboard button in the side navigation).
 const shortcutHelp = [
   ('Strg+E', 'Eintragen: Lebensmittel für die aktuelle Mahlzeit suchen'),
-  ('Strg+1 … 5', 'Heute, Tagebuch, Gewicht, Essen, Profil'),
+  ('Strg+1 … 5', 'Heute, Tagebuch, Fortschritt, Essen, Profil'),
   ('Alt+← / →', 'Tagebuch: Tag zurück/vor · Wochenplan: Woche zurück/vor'),
   ('Alt+Pos1', 'Zurück zu heute'),
   ('Wochenplan', 'Einträge auf einen anderen Tag ziehen (mit Strg: kopieren)'),
