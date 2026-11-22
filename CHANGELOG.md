@@ -25,6 +25,9 @@
   Tage verteilt (höchstens +20 %, nie unter dem Mindestwert, Tage ohne Einträge zählen als Tagesziel)
 - Zahlen ausblenden (Einstellungen): Dashboard und Tagebuch zeigen nur Fortschritt und freundliche Hinweise
   statt Kalorien und Gramm
+- Sicherungen: täglich automatisch eine lokale Sicherung (die letzten 14 bleiben), „Jetzt sichern“ und
+  Wiederherstellen in den Einstellungen; vor jeder Wiederherstellung wird der aktuelle Stand gesichert
+- CSV-Export für Tagebuch und Gewicht (Semikolon, Dezimalkomma, öffnet direkt in Excel)
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

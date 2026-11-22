@@ -459,6 +459,13 @@ class AppDatabase extends _$AppDatabase {
             ..orderBy([(e) => OrderingTerm.asc(e.createdAt)]))
           .get();
 
+  /// All live diary entries, oldest first (for the CSV export).
+  Future<List<DiaryEntry>> allDiary() =>
+      (select(diaryEntries)
+            ..where((e) => e.deletedAt.isNull())
+            ..orderBy([(e) => OrderingTerm.asc(e.dayKey), (e) => OrderingTerm.asc(e.createdAt)]))
+          .get();
+
   Future<String> logFood({
     required String day,
     required String mealSlotId,
