@@ -426,6 +426,25 @@ class AppDatabase extends _$AppDatabase {
     return [for (final i in ids) ?byId[i]];
   }
 
+  /// Foods most often logged in [mealSlotId] during the last [days] days, most
+  /// frequent first (ties: most recent first). Breakfast suggests other foods than dinner.
+  Future<List<Food>> suggestedFoods({required String mealSlotId, int limit = 8, int days = 60, DateTime? now}) async {
+    final today = now ?? DateTime.now();
+    final from = dayKey(DateTime(today.year, today.month, today.day - days));
+    final rows = await customSelect(
+      'SELECT food_id, COUNT(*) AS n, MAX(created_at) AS last FROM diary_entries '
+      'WHERE deleted_at IS NULL AND food_id IS NOT NULL AND meal_slot_id = ? AND day_key >= ? '
+      'GROUP BY food_id HAVING n >= 2 ORDER BY n DESC, last DESC LIMIT ?',
+      variables: [Variable(mealSlotId), Variable(from), Variable(limit)],
+      readsFrom: {diaryEntries},
+    ).get();
+    final ids = rows.map((r) => r.read<String>('food_id')).toList();
+    if (ids.isEmpty) return [];
+    final found = await (select(foods)..where((f) => f.id.isIn(ids) & f.deletedAt.isNull())).get();
+    final byId = {for (final f in found) f.id: f};
+    return [for (final i in ids) ?byId[i]];
+  }
+
   // ---------------------------------------------------------------- diary
 
   Stream<List<DiaryEntry>> watchDiary(String day) =>
@@ -468,6 +487,47 @@ class AppDatabase extends _$AppDatabase {
         saturatedFat100: food.saturatedFat,
         fiber100: food.fiber,
         salt100: food.salt,
+      ),
+    );
+    return id;
+  }
+
+  /// Brand shown on quick entries; marks the values as an estimate.
+  static const quickEntryBrand = 'Schnelleintrag (Schätzung)';
+
+  /// Logs calories (and optionally macros) without a food, e.g. for a restaurant meal.
+  /// Stored as one portion whose values are kept "per 100" × 100, so the diary math
+  /// stays the same for every entry.
+  Future<String> logQuickEntry({
+    required String day,
+    required String mealSlotId,
+    required String label,
+    required double kcal,
+    double protein = 0,
+    double carbs = 0,
+    double fat = 0,
+  }) async {
+    if (!(kcal > 0) || kcal > 10000) throw ArgumentError('Die Kalorien müssen zwischen 1 und 10000 liegen.');
+    if (protein < 0 || carbs < 0 || fat < 0) throw ArgumentError('Nährwerte dürfen nicht negativ sein.');
+    final id = newId();
+    final name = label.trim().isEmpty ? 'Schnelleintrag' : label.trim();
+    await into(diaryEntries).insert(
+      DiaryEntriesCompanion.insert(
+        id: Value(id),
+        dayKey: day,
+        mealSlotId: mealSlotId,
+        foodName: name.length > 120 ? name.substring(0, 120) : name,
+        brand: const Value(quickEntryBrand),
+        unit: 'Portion',
+        amount: 1,
+        kcal100: kcal * 100,
+        protein100: protein * 100,
+        carbs100: carbs * 100,
+        sugar100: 0,
+        fat100: fat * 100,
+        saturatedFat100: 0,
+        fiber100: 0,
+        salt100: 0,
       ),
     );
     return id;

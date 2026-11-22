@@ -18,6 +18,9 @@
 - Wochen-Check auf der Gewichtsseite: echter Verbrauch aus Aufnahme und Gewichtsverlauf der letzten 28 Tage,
   unvollständige Tage werden ausgelassen, Vorschlag für das Kalorienziel mit Rechenweg (höchstens 300 kcal
   Änderung auf einmal, nie unter dem Mindestwert), gilt erst nach Bestätigung
+- Schnell-Erfassung: „Oft zum Frühstück/Abendessen …“ schlägt je Mahlzeit die Lebensmittel vor, die dort in den
+  letzten 60 Tagen am häufigsten eingetragen wurden; Schnelleintrag nur mit Kalorien (Makros optional), als
+  Schätzung gekennzeichnet; Mahlzeit auf ein beliebiges Datum kopieren
 
 ## 0.1.0 – Phase 1: Grundsystem (2026-11-22)
 

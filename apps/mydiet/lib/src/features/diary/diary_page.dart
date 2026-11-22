@@ -214,6 +214,8 @@ class _MealCard extends StatelessWidget {
                       const PopupMenuItem(value: 'yesterday', child: Text('Vom Vortag übernehmen')),
                       if (entries.isNotEmpty && day != todayDayKey())
                         const PopupMenuItem(value: 'toToday', child: Text('Nach heute kopieren')),
+                      if (entries.isNotEmpty)
+                        const PopupMenuItem(value: 'toDate', child: Text('Auf anderes Datum kopieren …')),
                     ],
                   ),
                 if (s != null)
@@ -313,6 +315,20 @@ class _MealCard extends StatelessWidget {
       if (context.mounted) {
         showMessage(context, n == 0 ? 'Am Vortag war ${s.name} leer.' : '$n Einträge vom Vortag übernommen');
       }
+    } else if (v == 'toDate') {
+      final from = parseDayKey(day);
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime(from.year, from.month, from.day + 1),
+        firstDate: DateTime(from.year - 1),
+        lastDate: DateTime(from.year + 1, 12, 31),
+        helpText: '${s.name} kopieren nach',
+      );
+      if (picked == null || !context.mounted) return;
+      final to = dayKey(picked);
+      if (to == day) return;
+      n = await db.copyMeal(fromDay: day, fromSlotId: s.id, toDay: to);
+      if (context.mounted) showMessage(context, '$n Einträge nach ${dateShort(picked)} kopiert');
     } else {
       n = await db.copyMeal(fromDay: day, fromSlotId: s.id, toDay: todayDayKey());
       if (context.mounted) {
