@@ -287,6 +287,8 @@ Aussagekraft: reine Sortierhilfe, keine Nährwertberechnung. In „Als Text eint
 - „Zahlen ausblenden“ gilt auch hier: dann nur der freundliche Status wie im Tagebuch.
 - Die App aktualisiert das Widget bei jeder Änderung, solange sie läuft. Ist der gespeicherte Tag nicht heute
   (z. B. nach Mitternacht), zeigt das Widget „Heute noch nichts eingetragen“ statt alter Zahlen.
+- Wasser: Zeile „Wasser X“ (unter 1 l in ml, sonst in l mit bis zu zwei Nachkommastellen) und Knopf „+ 250 ml“.
+  Der Knopf öffnet die App mit `sattly://water?ml=250`; nur 50–1000 ml werden angenommen und für heute eingetragen.
 
 ## App-Sperre (`core/app_lock.dart`)
 

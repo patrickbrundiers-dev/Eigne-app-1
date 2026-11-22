@@ -19,6 +19,23 @@ Datenbanktest „Neue Basis-Lebensmittel kommen dazu, gelöschte nicht zurück�
 Offen: FTS5-Suche (Schema v7 war reserviert) zurückgestellt, bis die Datenbank deutlich wächst; alkoholische
 Getränke brauchen ein Alkohol-Feld; weitere Lebensmittel einfach in `auswahl.csv` ergänzen und neu erzeugen.
 
+## 2026-11-22 – Tagebuch als Tabelle am PC (Aufgabe 2.5 fertig)
+
+Phase-2-Thread. `features/diary/diary_table.dart` (`DiaryColumn`, `DiaryTable`, Setting `diaryTableColumns`),
+ab 900 px je Mahlzeitkarte statt der Liste; „Zahlen ausblenden“ lässt nur Menge/Marke. Spaltenwahl jetzt
+generisch in `ui/table_columns.dart` (`parseColumns`, `encodeColumns`, `chooseColumns`), die Lebensmittel-Tabelle
+nutzt sie mit. Datenschutzerklärung um Health Connect, Widget, App-Sperre und Berechtigungen ergänzt (7.3).
+Tests: `test/diary_table_test.dart` (3), Widget-Test „PC: Tagebuch als Tabelle“.
+
+## 2026-11-22 – Widget: Wasser +250 ml (W13, Teil 2)
+
+Phase-2-Thread. `widgetSummary` bekommt Wasser (`waterText`), `waterFromWidgetLink` prüft den Link
+`sattly://water?ml=…` (50–1000 ml). `HomeWidgetBridge.launches()` liefert Start- und Klick-Links des Widgets,
+`startHomeWidgetSync` trägt das Wasser für heute ein. Android: Knopf und Wasserzeile im Layout, Launch-Intent-Filter
+im Manifest, Widget zwei Zellen hoch. Kein Schema, keine neue Abhängigkeit.
+
+Tests: `home_widget_test.dart` +1 und Klick-Test im Datentest. Auf dem Gerät ungeprüft.
+
 ## 2026-11-22 – Lebensmittel-Tabelle am PC (Aufgabe 2.5, Teil Lebensmittel)
 
 `features/foods/food_table.dart` (`FoodColumn`, `FoodTable`, Spaltenwahl im Setting `foodTableColumns`), ab 900 px
